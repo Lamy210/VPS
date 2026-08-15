@@ -5,7 +5,7 @@ This file tracks the provider-verification queue. It is not a recommendation lis
 ## Counts
 
 - Discovery seed entries: maintained in `data/provider-candidates.seed.yaml`
-- Official-source verification batches completed: 10
+- Official-source verification batches completed: 11
 - Providers in verified batch 001: 9
 - Providers in verified batch 002: 7
 - Providers in verified batch 003: 12
@@ -16,9 +16,10 @@ This file tracks the provider-verification queue. It is not a recommendation lis
 - Providers in verified batch 008: 11
 - Providers in verified batch 009: 4
 - Providers in verified batch 010: 11
-- Total unique provider records in official-source verification batches: 92
-- Targeted follow-up files: 1
-- Benchmark-ready resources: 1
+- Providers in verified batch 011: 8
+- Total unique provider records in official-source verification batches: 100
+- Targeted follow-up files: 2
+- Benchmark-ready resources: 2
 - Benchmark-measured resources: 0
 
 ## Completed batches
@@ -53,7 +54,10 @@ Advin Servers, HostBrr, HostSlick, UltaHost.
 ### Batch 010 — Asia-focused local/regional providers
 FormoHost, FussionHost, ServerUtama, Herza Cloud, GOFIBER, Kencang, CloudXact, Rumahweb, H2Cloud, Onie Cloud, ModernOne / Nocser.
 
-Verified source files are stored as `results/verified/batch-001.yaml` through `results/verified/batch-010.yaml`.
+### Batch 011 — IX/ecosystem discovery converted to official records
+AFRICLOUD, NoAck Hosting, OrionVM, D4 Networks, FyfeWeb, Free Range Cloud, Netbela, EstNOC.
+
+Verified source files are stored as `results/verified/batch-001.yaml` through `results/verified/batch-011.yaml`.
 
 ## Targeted follow-ups
 
@@ -63,6 +67,13 @@ Verified source files are stored as `results/verified/batch-001.yaml` through `r
 - KVMVPS.co.za: dedicated CPU/KVM/NVMe/snapshot/backup facts reconfirmed; exact 16 GB custom price, private network, port speed, and explicit current SLA remain unresolved.
 - Cherry Servers: a Tokyo 16 GB dedicated-resource VDS is pinned to an exact current plan and price; it fails the current database budget.
 - IONOS: Memory Cube S/M pricing is reconfirmed; transfer allowance, public port speed, and the reusable profile's KVM requirement remain unresolved.
+
+`results/verified/followup-002.yaml` resolves several high-priority gaps:
+
+- HostEons: official product and knowledgebase evidence now establishes that the Hybrid/VDS product family is KVM-based; Hybrid Special 2 therefore clears the remaining standard-compute virtualization blocker.
+- OrangeVPS: IPv4 inclusion is confirmed for VPS products, but exact BASIC NVMe hypervisor technology remains unresolved.
+- Onie Cloud: VPC, 10 Gbps shared networking, dual stack, REST API/CLI/Python SDK, hourly billing, SLA, autoscaling, load balancing and backup/snapshot capabilities are strengthened; public-cloud hypervisor and normalized TCO remain unresolved.
+- HostBrr: exact EPYC-8GBrr resources, IPv4/IPv6, backup slot and KVM product-family evidence are now confirmed; stable current numeric price is the remaining standard-compute blocker.
 
 ## Strict derived filtering
 
@@ -74,16 +85,17 @@ Derived files currently include:
 
 ### Standard compute
 
-Current clear advertised-specification pass:
+Current clear advertised-specification passes after targeted follow-up:
 
 - ServaRica KVM Slim Slice 2.
+- HostEons Hybrid Special 2.
 
 High-priority blocked candidates include:
 
-- Onie Cloud VM 4-8: 4 vCPU, 8 GB, 150 GB NVMe, 7 TB, 10 Gbps, IPv4/IPv6, VPC, API/CLI/Python SDK, hourly billing, autoscaling, load balancing, snapshots, and automated backup; blocked by KVM verification, normalized TCO, and promotional-price persistence.
-- Advin Servers Miami Standard XS: current advertised 6 USD promotion / 8 USD reference, 4 shared-burstable vCPU, 8 GB, 80 GB NVMe, 5 TB, 10 Gbps, KVM; blocked by explicit IPv4 verification and promotional-price persistence.
-- HostBrr EPYC 8 GB: strong EPYC 9004 / DDR5 ECC / NVMe / 10 Gbps resources; blocked by stable current price and exact product virtualization verification.
-- CloudXact, Kencang, ServerUtama, Rumahweb, OrangeVPS, HostEons, BulutVDS, HostHatch, Contabo, Hetzner, IONOS, SferaHost, Netlen, ITMCloud, SmartHost, and IPXON remain blocked by one or more explicit unknown hard fields.
+- Onie Cloud VM 4-8: strong Asia-local/API-driven resource match; blocked by exact public-cloud hypervisor, normalized TCO, and promotion persistence.
+- Advin Servers Miami Standard XS: strong price/specification match; blocked by explicit IPv4 verification and promotion persistence.
+- HostBrr EPYC 8 GB: KVM, IPv4/IPv6, backup slot, EPYC 9004, NVMe and 10 Gbps are now confirmed; blocked only by stable current numeric price.
+- CloudXact, Kencang, ServerUtama, Rumahweb, OrangeVPS, BulutVDS, HostHatch, Contabo, Hetzner, IONOS, SferaHost, Netlen, ITMCloud, SmartHost, and IPXON remain blocked by one or more explicit unknown hard fields.
 
 A provider-advertised hard-filter pass is not a final recommendation. It advances the resource to benchmark and operational verification.
 
@@ -93,8 +105,6 @@ Current `clear_pass` is empty.
 
 Strong near-matches include Advin Servers, HostBrr, VSYS Host, VPSnet, ServaRica, Onidel, BulutVDS, netcup, BDIX Web Host, BengalCloud, Hostinger, and ITMCloud. Each is blocked by one or more hard requirements such as private networking, reliable backups, snapshot semantics, SLA, KVM, exact current price, port speed, IPv4, or normalized TCO.
 
-Advin's current backup documentation describes the backup system as experimental/best-effort, so it is not treated as satisfying the strict database backup requirement.
-
 ### Managed Kubernetes
 
 Current `clear_pass` is empty because no verified record yet covers every hard field together. UpCloud, Scaleway, Exoscale, DigitalOcean, Vultr, GKE, and AKS are among the shortest-path follow-up candidates.
@@ -103,25 +113,36 @@ Current `clear_pass` is empty because no verified record yet covers every hard f
 
 `results/benchmark/queue.yaml` separates resources that are ready for measured validation from candidates that are still blocked by source-verification gaps.
 
-Current benchmark-ready resource:
+Current benchmark-ready standard-compute resources:
 
-- ServaRica KVM Slim Slice 2 for the standard-compute profile.
+- ServaRica KVM Slim Slice 2.
+- HostEons Hybrid Special 2.
 
-High-priority blocked benchmark candidates now also include Onie Cloud, Advin Servers, and HostBrr for standard compute.
+High-priority blocked benchmark candidates include Onie Cloud, Advin Servers, and HostBrr for standard compute.
 
 No benchmark has been executed or claimed yet. The queue defines reproducible CPU, storage, database, network, and stability checks and requires exact region/plan/OS/kernel/tool metadata for future measurements.
+
+## FX and TCO normalization
+
+`docs/fx-tco-policy.md` defines the cross-currency and total-cost rules used by derived comparisons.
+
+Key rules:
+
+- preserve provider-native prices;
+- convert only in derived outputs with a timestamped FX snapshot;
+- keep ordinary monthly, hourly-cap, annualized, multi-year, promotional, recurring-promo, renewal, and setup-fee prices separate;
+- include required IPv4, private network, storage, backup, load balancer, NAT, egress and taxes in effective TCO when the active profile requires them;
+- do not force a ranking when normal FX movement can reverse two nearly equal prices.
 
 ## Notable classification findings
 
 - A bargain headline price is frequently invalidated by a hard network, storage, contract, virtualization, IPv4, transfer, or availability requirement.
-- ServaRica remains the strongest strict standard-compute advertised-specification match and is benchmark-ready.
-- Onie Cloud is one of the strongest newly verified Asia-local API-driven compute leads, but strict filtering correctly withholds pass status until virtualization and TCO/price persistence are resolved.
-- Advin Servers is a particularly strong global price/specification lead, but strict filtering correctly withholds pass status until IPv4 inclusion and price persistence are verified.
-- HostBrr exposes compelling EPYC 9004 memory-optimized shapes, but the current checkout did not expose stable numeric prices during verification.
-- FormoHost Taiwan, FussionHost Manila, GOFIBER Vietnam, and ModernOne Malaysia demonstrate how local presence can still fail generic requirements due RAM, transfer, price, or port-speed hard limits.
-- Herza Cloud Manila provides KVM and a shared 10 Gbps port, but its 8 GB plan exceeds the current bargain-compute budget.
-- H2Cloud exposes inexpensive 10 Gbps/KVM/NVMe Vietnam plans, but the verified 8 GB high-speed tier includes only 1 TB/month and was out of stock.
-- ServerUtama, CloudXact, Kencang, and Rumahweb remain useful near-matches because only a small number of hard fields are unresolved.
+- ServaRica and HostEons are now the two strict standard-compute advertised-specification matches ready for benchmark validation.
+- Onie Cloud remains one of the strongest Asia-local API-driven compute leads, but strict filtering correctly withholds pass status until hypervisor and TCO/promotion questions are resolved.
+- HostBrr is now technically much closer to strict clearance; current numeric price is the remaining standard-compute blocker for the selected EPYC 8 GB product.
+- AFRICLOUD, OrionVM and Netbela expand the catalog beyond bargain VPS into regional/wholesale/configurable cloud classes and should not be ranked purely by RAM price.
+- NoAck Hosting and FyfeWeb demonstrate why the public-port hard floor matters even when regional/network qualities are otherwise attractive.
+- EstNOC provides unusually broad regional coverage, including Tokyo, but its currently listed Japan base tiers do not reach the reusable 8 GB floor.
 - Annualized, promotional, and renewal pricing remain separate data fields and are never silently treated as ordinary monthly prices.
 - Marketing geography is stored separately from actual datacenter geography when the provider exposes a mismatch or ambiguity.
 
@@ -139,40 +160,30 @@ Common unresolved fields include:
 - Terraform/OpenTofu support when only a REST API is documented;
 - dynamic price tables that cannot be captured;
 - promotional versus renewal pricing and minimum contract term;
-- local-currency conversion policy;
+- local-currency conversion snapshot;
 - stock / location availability;
 - marketing location versus actual datacenter;
 - fair-use definitions for `unlimited` or `unmetered` traffic.
 
 ## Next official-verification queue
 
-### Batch 011 — more Asia/local discovery
-
-- additional Taiwan local cloud/VPS providers
-- Vietnam providers with 8 GB and 1+ Gbps signals
-- Indonesia providers with KVM, IPv4, and explicit port speeds
-- Philippines local providers not already counted
-- India/Pakistan/Bangladesh providers not already counted
-- South Korea/Hong Kong regional providers outside the major cloud set
-
-### Batch 012 — Europe and global low-cost discovery
+### Batch 012 — additional global/Europe/Asia discovery
 
 - remaining VPS index candidates with 8 GB or configurable-memory signals
 - regional Root Server / VDS providers not yet normalized into the verified set
 - API/hourly providers absent from major cloud comparisons
+- South Korea, Hong Kong, Taiwan and India/Pakistan local providers not yet counted
 
-### Follow-up 002 — hard-filter unknown reduction
+### Follow-up 003 — hard-filter unknown reduction
 
-- Onie Cloud KVM virtualization, ordinary monthly price/TCO, and promotion persistence
-- CloudXact exact public port speed and setup-fee-inclusive TCO
-- Kencang IPv4 and port-floor semantics
-- ServerUtama public port and datacenter geography
-- Rumahweb public port and IPv4
-- Advin Servers IPv4 inclusion and non-promotional monthly price behavior
-- HostBrr stable 8/16 GB pricing and exact product virtualization
+- Onie Cloud public hypervisor and ordinary monthly TCO
+- Advin Servers IPv4 inclusion and promotion persistence
+- HostBrr stable current 8/16 GB pricing
+- OrangeVPS BASIC NVMe virtualization
+- BulutVDS EPYC virtualization
 - VSYS Host private-network verification
 - VPSnet private-network verification
-- ServaRica database-node network/backup/SLA verification
+- ServaRica database-node private-network/backup/SLA verification
 - Onidel current 16 GB availability/price capture
 - UpCloud managed-Kubernetes monitoring and worker-shape verification
 - Scaleway managed-Kubernetes load-balancer/monitoring/worker-shape verification
