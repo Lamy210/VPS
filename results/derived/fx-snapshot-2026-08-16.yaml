@@ -1,0 +1,59 @@
+schema_version: 1
+observed_at: 2026-08-15T20:54:00Z
+purpose: derived_shortlist_fx_normalization
+source:
+  type: live_exchange_rate_source
+  pair: EUR_USD
+  rate: 1.1569
+  semantics: 1_EUR_equals_1_1569_USD
+  note: The runtime exchange-rate source reported this market rate at the stated timestamp. Refresh within seven days for shortlisting and on the decision date for purchase.
+
+conversions:
+  - provider: GS_Webservices
+    plan: ng_Cloud_L
+    native_eur: 13.03
+    usd_at_snapshot: 15.0744
+    profile: standard-compute
+    budget_usd: 15
+    budget_result: fail
+    notes:
+      - Native price includes VAT according to the provider page.
+      - The result exceeds the hard budget by only about 0.5 percent; future FX snapshots may change the budget result, but the current strict derivation must use the current snapshot.
+
+  - provider: dogado
+    plan: Cloud_Server_M_4_0
+    native_eur: 10.99
+    usd_at_snapshot: 12.7143
+    profile: standard-compute
+    budget_usd: 15
+    budget_result: pass
+    notes:
+      - Budget clears at this FX snapshot; KVM remains a separate technical blocker.
+
+  - provider: Hexabyte
+    plan: e3_large
+    native_eur: 7.69
+    usd_at_snapshot: 8.89656
+    profile: standard-compute
+    budget_usd: 15
+    budget_result: pass
+    notes:
+      - Budget clears; KVM acceleration, public port speed, and current stock remain separate blockers.
+
+  - provider: quicksrv
+    plan: AMS_Standard_8
+    native_eur: 7.99
+    usd_at_snapshot: 9.24363
+    profile: standard-compute
+    budget_usd: 15
+    budget_result: pass
+    notes:
+      - Budget clears; a numeric monthly fair-use transfer allowance remains unresolved.
+
+  - provider: Alpenhost
+    plan: Silber_vServer
+    native_eur: 14.79
+    usd_at_snapshot: 17.1106
+    profile: standard-compute
+    budget_usd: 15
+    budget_result: fail
