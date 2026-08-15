@@ -6,8 +6,8 @@ Machine-readable status: `results/derived/research-status.yaml`.
 
 ## Current counts
 
-- Official-source verification batches: **13**
-- Unique verified provider records: **116**
+- Official-source verification batches: **14**
+- Unique verified provider records: **126**
 - Targeted follow-up files: **4**
 - Strict standard-compute passes: **3**
 - Strict database-node passes: **0**
@@ -30,8 +30,9 @@ Machine-readable status: `results/derived/research-status.yaml`.
 - Batch 011: AFRICLOUD, NoAck Hosting, OrionVM, D4 Networks, FyfeWeb, Free Range Cloud, Netbela, EstNOC.
 - Batch 012: NAVER Cloud Platform, NHN Cloud, KT Cloud, LayerStack, E2E Cloud, Cyfuture Cloud, Chief Telecom, CtrlS, Yotta.
 - Batch 013: Brightbox, Krystal Cloud / Katapult, TransIP, Aruba Cloud, Leaseweb, Cleura, Open Telekom Cloud.
+- Batch 014: CloudCone, BandwagonHost, GigsGigsCloud, Crunchbits, RamNode, OneProvider, Cloudzy, QuantVPS, VPSServer, Hostwinds.
 
-Source files are `results/verified/batch-001.yaml` through `results/verified/batch-013.yaml`.
+Source files are `results/verified/batch-001.yaml` through `results/verified/batch-014.yaml`.
 
 ## Targeted follow-ups
 
@@ -71,7 +72,14 @@ Clear advertised-specification passes:
 
 These are advertised-specification passes only. They are not performance recommendations until measured validation is completed.
 
-High-priority blocked candidates include Onie Cloud, HostBrr, CloudXact, Kencang, ServerUtama, Rumahweb, OrangeVPS, BulutVDS, Aruba Cloud, LayerStack, and others whose remaining hard fields are explicitly documented in `results/derived/standard-compute-strict.yaml`.
+High-priority blocked candidates include Onie Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, CloudXact, Kencang, ServerUtama, Rumahweb, OrangeVPS, BulutVDS, Aruba Cloud, LayerStack, and others whose remaining hard fields are explicitly documented in `results/derived/standard-compute-strict.yaml`.
+
+Batch 014 adds several useful classification examples:
+
+- **CloudCone SSD VPS 5** clears the technical CPU/RAM/storage/transfer/port/IPv4/KVM floors at a displayed **$4.79/month equivalent**, but it is **$57.59 billed annually in advance**. Annualized prepaid pricing is not silently treated as ordinary month-to-month pricing.
+- **Crunchbits Xeon 6146 VDS 8 GB** is **$8/month** with one dedicated physical core / two threads, 150 GB NVMe, 20 TB and 2.5 Gbps. The repository does not silently convert CPU threads into the profile's `min_vcpu` count, and the exact VDS hypervisor remains separately verified.
+- **VPSServer** has KVM/NVMe/public-IP/hourly billing and global regions, but its public configurator did not expose a stable exact 8 GB price/port snapshot in the parsed page.
+- BandwagonHost, GigsGigsCloud, RamNode, OneProvider, Cloudzy, QuantVPS, and Hostwinds are technically capable but fail the current $15 standard-compute budget on the verified 8 GB tiers.
 
 ### Database node
 
@@ -81,7 +89,7 @@ Shortest-path candidates:
 
 - **VPSnet** — private network + normalized TCO remain.
 - **ServaRica** — private network + snapshots + independent backup remain.
-- **VSYS Host** — customer-configurable private network remains.
+- **VSYS Host** — customer-configurable private network applicability/TCO remains to be pinned for the selected Singapore VPS architecture.
 - **Onidel** — exact current 16 GB plan/price + KVM remain.
 
 Other near-matches include HostBrr, Advin Servers, BulutVDS, netcup, BDIX Web Host, BengalCloud, Hostinger, and ITMCloud.
@@ -107,7 +115,7 @@ No benchmark result has been executed or claimed yet.
 
 ## Data validation
 
-The repository now runs `.github/workflows/validate-research-data.yml` on relevant pull-request changes.
+The repository runs `.github/workflows/validate-research-data.yml` on relevant pull-request changes.
 
 CI checks include:
 
@@ -119,8 +127,6 @@ CI checks include:
 - `research-status.yaml` batch/provider/follow-up counts;
 - strict clear-pass counts;
 - validation-ready queue count.
-
-The workflow currently uses `actions/checkout@v7` and `actions/setup-python@v7` and is green on the research branch.
 
 ## FX and TCO
 
@@ -137,17 +143,18 @@ The workflow currently uses `actions/checkout@v7` and `actions/setup-python@v7` 
 - Unknown hard fields never silently pass.
 - `Up to` bandwidth is not automatically treated as a guaranteed hard floor.
 - VPS/VDS naming does not prove KVM, IPv4, private networking, or dedicated CPU.
+- Physical threads are not silently substituted for explicit vCPU/core requirements.
 - Marketing geography does not prove datacenter geography.
 - Snapshots do not automatically satisfy independent-backup requirements.
 - Provider-advertised performance is not benchmark evidence.
-- Promotional or annualized pricing is not ordinary month-to-month pricing.
+- Promotional or annualized prepaid pricing is not ordinary month-to-month pricing.
 
 ## Next work
 
 Highest-value next steps:
 
 1. Reduce remaining database-node unknowns for VPSnet, ServaRica, VSYS Host, and Onidel.
-2. Pin concrete managed-Kubernetes worker architectures for Scaleway, Exoscale, and DigitalOcean.
-3. Resolve standard-compute unknowns for Onie Cloud, HostBrr, OrangeVPS, and BulutVDS.
-4. Continue Batch 014 beyond 116 verified providers.
+2. Resolve standard-compute unknowns for Onie Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, OrangeVPS, and BulutVDS.
+3. Pin concrete managed-Kubernetes worker architectures for Scaleway, Exoscale, and DigitalOcean.
+4. Continue Batch 015 beyond 126 verified providers.
 5. Execute measured validation only after the exact plan/region is pinned and the user chooses to spend on the candidate instance.
