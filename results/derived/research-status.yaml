@@ -1,0 +1,79 @@
+schema_version: 1
+updated_at: 2026-08-16
+scope: public_requirement_driven_infrastructure_resource_research
+
+counts:
+  verification_batches: 13
+  unique_verified_providers: 116
+  targeted_followup_files: 3
+  strict_clear_passes:
+    standard_compute: 2
+    database_node: 0
+    managed_kubernetes: 1
+  validation_ready_resources: 3
+  measured_benchmark_resources: 0
+
+strict_clear_passes:
+  standard_compute:
+    - provider: ServaRica
+      plan: KVM_Slim_Slice_2
+      validation_ready: true
+    - provider: HostEons
+      plan: Hybrid_Special_2
+      validation_ready: true
+  database_node: []
+  managed_kubernetes:
+    - provider: UpCloud
+      service: Managed_Kubernetes
+      worker_plan: PREMIUM-2xCPU-4GB
+      validation_ready: true
+
+high_priority_unknown_reduction:
+  standard_compute:
+    - Onie_Cloud
+    - Advin_Servers
+    - HostBrr
+    - OrangeVPS
+    - BulutVDS
+    - Aruba_Cloud
+    - LayerStack
+  database_node:
+    - VPSnet
+    - ServaRica
+    - VSYS_Host
+    - Onidel
+    - HostBrr
+  managed_kubernetes:
+    - Scaleway
+    - Exoscale
+    - DigitalOcean
+    - Vultr
+    - Google_Cloud
+    - Microsoft_Azure
+    - NAVER_Cloud_Platform
+
+latest_batches:
+  - batch: 12
+    focus: east_and_south_asia_regional_cloud
+    providers: [NAVER_Cloud_Platform, NHN_Cloud, KT_Cloud, LayerStack, E2E_Cloud, Cyfuture_Cloud, Chief_Telecom, CtrlS, Yotta]
+  - batch: 13
+    focus: european_regional_public_cloud
+    providers: [Brightbox, Krystal_Cloud, TransIP, Aruba_Cloud, Leaseweb, Cleura, Open_Telekom_Cloud]
+
+next_work:
+  - Reduce technical unknowns on near-pass resources before spending on benchmarks.
+  - Apply timestamped FX snapshots only after technical hard requirements are cleared.
+  - Operationally validate UpCloud Managed Kubernetes autoscaling, provisioning, networking, observability, and TCO.
+  - Benchmark ServaRica and HostEons only on exact verified plans and regions.
+  - Continue Batch 014 with unverified regional/API providers while keeping provider identity normalization strict.
+  - Add automated schema validation and derived-status consistency checks before merging the research branch.
+
+quality_invariants:
+  - unknown_hard_fields_never_pass
+  - provider_advertised_performance_is_not_benchmark_evidence
+  - promotional_and_renewal_prices_are_separate
+  - native_currency_is_preserved
+  - marketing_region_does_not_prove_datacenter_region
+  - snapshots_do_not_automatically_equal_independent_backups
+  - up_to_bandwidth_does_not_automatically_equal_guaranteed_bandwidth
+  - provider_count_excludes_targeted_followup_duplicates
