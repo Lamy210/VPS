@@ -2,8 +2,8 @@ schema_version: 1
 updated_at: 2026-08-16
 purpose: benchmark_readiness_queue
 rules:
-  - A provider is `ready` only after all hard requirements for the target profile are verified.
-  - `blocked` means benchmark spend should wait until the listed verification blockers are resolved.
+  - A provider is ready only after all hard requirements for the target profile are verified.
+  - Blocked entries mean benchmark spend should wait until the listed verification blockers are resolved.
   - No benchmark result is implied by appearing in this queue.
   - Provider-advertised benchmark claims are not stored as measured evidence.
   - Shared uplink speed is not a guaranteed sustained-throughput result.
