@@ -3,8 +3,8 @@ updated_at: 2026-08-16
 scope: public_requirement_driven_infrastructure_resource_research
 
 counts:
-  verification_batches: 17
-  unique_verified_providers: 156
+  verification_batches: 18
+  unique_verified_providers: 166
   targeted_followup_files: 4
   strict_clear_passes:
     standard_compute: 4
@@ -35,27 +35,29 @@ strict_clear_passes:
       validation_ready: true
 
 high_priority_unknown_reduction:
-  standard_compute: [ServerCheap, quicksrv, Alpenhost, Hivelocity, HostUp, Webyne, Onie_Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, OrangeVPS, BulutVDS, CloudXact, Kencang]
-  database_node: [Server_Optima, VPSnet, ServaRica, VSYS_Host, Onidel, Alpenhost, HostUp, Webyne]
+  standard_compute: [SprintCDN, GS_Webservices, dogado, ServerCheap, quicksrv, OnetSolutions, Hexabyte, Alpenhost, Hivelocity, HostUp, Webyne, Onie_Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, OrangeVPS, BulutVDS]
+  database_node: [Server_Optima, VPSnet, ServaRica, VSYS_Host, Onidel, OnetSolutions, Alpenhost]
   managed_kubernetes: [Scaleway, Exoscale, DigitalOcean, Vultr, Google_Cloud, Microsoft_Azure, NAVER_Cloud_Platform]
 
 latest_batches:
-  - batch: 16
-    focus: low_cost_and_database_oriented_vps
-    providers: [ServerCheap, Server_Optima, MonoVM, Rad_Web_Hosting, Alpenhost, RackGenius, VoyraCloud, quicksrv, InMotion_Hosting, HostArmada]
   - batch: 17
     focus: regional_vps_and_emerging_cloud_platforms
     providers: [Hivelocity, Fasthosts, HostUp, Hostman, Webyne, Serverwala, ScalaHosting, Arct_Cloud, Raff, OneGbits]
+  - batch: 18
+    focus: european_and_network_focused_vps_cloud
+    providers: [BlastVPS, dogado, Genesis_Public_Cloud, Linkdata, OnetSolutions, SprintCDN, NoBull_Networks, TakeHost, Hexabyte, GS_Webservices]
 
 next_work:
+  - Verify SprintCDN selected-plan IPv4 inclusion; it is one hard field away from a standard-compute pass.
+  - Apply timestamped FX/TCO normalization to GS Webservices ng-Cloud L and other technically complete EUR candidates.
+  - Verify dogado selected Cloud Server KVM/QEMU-KVM implementation rather than generic full virtualization.
+  - Resolve OnetSolutions HP-8 price discrepancy and VAT/TCO semantics.
+  - Verify Hexabyte KVM acceleration and selected-instance public port after stock returns.
   - Capture Server Optima independent Full Backup price and calculate effective database-node TCO.
-  - Find explicit ServerCheap VPS public port speed and quicksrv numeric fair-use transfer allowance.
-  - Resolve Hivelocity IPv4/virtualization/sale persistence, HostUp networking/IP/hypervisor, and Webyne transfer/hypervisor/IP hard fields.
-  - Reduce database-node unknowns for VPSnet, ServaRica, VSYS Host, Onidel, and Server Optima.
-  - Apply timestamped FX snapshots only after technical hard requirements are cleared.
+  - Continue unknown reduction for ServerCheap, quicksrv, HostBrr, OrangeVPS, BulutVDS, Crunchbits, and VPSServer.
   - Operationally validate UpCloud Managed Kubernetes only after spend is explicitly chosen.
   - Benchmark strict standard-compute passes only after spend is explicitly chosen.
-  - Continue Batch 018 while keeping provider identity normalization strict.
+  - Continue Batch 019 while keeping provider identity normalization strict.
 
 quality_invariants:
   - unknown_hard_fields_never_pass
@@ -66,7 +68,10 @@ quality_invariants:
   - physical_threads_are_not_silently_counted_as_vcpu
   - shared_port_speed_is_not_guaranteed_sustained_throughput
   - up_to_bandwidth_is_not_guaranteed_sustained_throughput
+  - full_virtualization_does_not_prove_kvm
+  - openstack_or_qemu_does_not_prove_kvm_acceleration
   - native_currency_is_preserved
+  - official_price_conflicts_remain_unresolved
   - marketing_region_does_not_prove_datacenter_region
   - snapshots_do_not_automatically_equal_independent_backups
   - provider_count_excludes_targeted_followup_duplicates
