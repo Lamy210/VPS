@@ -30,6 +30,14 @@ clear_pass:
       - Final purchase suitability still depends on independent CPU, storage, and network measurements.
 
 blocked_by_unknown:
+  - provider: Onie_Cloud
+    plan: VM_4_8
+    source_batch: results/verified/batch-010.yaml
+    verified_strengths: [4_vcpu, 8gb_ram, 150gb_nvme, 7tb_transfer, 10gbps, ipv4, ipv6, vpc, api, cli, python_sdk, hourly_billing, autoscaling, load_balancing, snapshots, automated_backups]
+    unresolved_hard_requirements: [kvm_virtualization, normalized_usd_tco, promotional_price_persistence]
+    strict_status: unknown
+    benchmark_priority_after_clearance: high
+
   - provider: Advin_Servers
     plan: KVM_Standard_XS_Miami
     source_batch: results/verified/batch-009.yaml
@@ -48,6 +56,34 @@ blocked_by_unknown:
     unresolved_hard_requirements: [current_numeric_price, exact_kvm_virtualization_for_product_group]
     strict_status: unknown
     benchmark_priority_after_clearance: high
+
+  - provider: CloudXact
+    plan: KVM_2
+    source_batch: results/verified/batch-010.yaml
+    verified_strengths: [2_vcpu, 8gb_ram, 100gb_nvme, 8tb_transfer, ipv4, ipv6, kvm, public_api, weekly_backup]
+    unresolved_hard_requirements: [public_port_at_least_1gbps, normalized_usd_tco_with_setup_fee]
+    strict_status: unknown
+
+  - provider: Kencang
+    plan: K_4
+    source_batch: results/verified/batch-010.yaml
+    verified_strengths: [4_vcpu, 8gb_ram, 100gb_ssd, unlimited_transfer, kvm, up_to_1gbps]
+    unresolved_hard_requirements: [ipv4_included, guaranteed_or_qualifying_1gbps_port, normalized_usd_tco]
+    strict_status: unknown
+
+  - provider: ServerUtama
+    plan: VPS_12GB
+    source_batch: results/verified/batch-010.yaml
+    verified_strengths: [4_vcpu, 12gb_ram, 100gb_storage, 15tb_transfer, ipv4, kvm, automatic_backup_rotations, sla_99_9]
+    unresolved_hard_requirements: [public_port_at_least_1gbps, normalized_usd_tco, exact_datacenter_geography]
+    strict_status: unknown
+
+  - provider: Rumahweb
+    plan: XL
+    source_batch: results/verified/batch-010.yaml
+    verified_strengths: [4_vcpu, 8gb_ram, 160gb_ssd, unlimited_transfer, kvm, two_availability_zones, sla_99_9]
+    unresolved_hard_requirements: [ipv4_included, public_port_at_least_1gbps, normalized_usd_tco]
+    strict_status: unknown
 
   - provider: OrangeVPS
     plan: BASIC_3_NVMe
@@ -134,6 +170,30 @@ blocked_by_unknown:
     strict_status: unknown
 
 clear_fail_examples:
+  - provider: FormoHost
+    source_batch: results/verified/batch-010.yaml
+    reason: largest_verified_taiwan_plan_has_only_6gb_ram_1tb_transfer_and_100mbps_port
+
+  - provider: FussionHost
+    source_batch: results/verified/batch-010.yaml
+    reason: verified_8gb_manila_tier_costs_39_99_usd_and_has_50gb_storage_1tb_transfer_100mbps
+
+  - provider: Herza_Cloud
+    source_batch: results/verified/batch-010.yaml
+    reason: verified_8gb_manila_tier_costs_20_50_usd
+
+  - provider: GOFIBER
+    source_batch: results/verified/batch-010.yaml
+    reason: verified_8gb_vietnam_tier_has_only_200mbps_port
+
+  - provider: H2Cloud
+    source_batch: results/verified/batch-010.yaml
+    reason: verified_8gb_high_speed_tier_has_only_1tb_monthly_transfer_and_was_out_of_stock
+
+  - provider: ModernOne
+    source_batch: results/verified/batch-010.yaml
+    reason: verified_8gb_cloud_server_costs_75_usd_and_has_only_50mbps_port
+
   - provider: CloudBlast
     source_batch: results/verified/batch-002.yaml
     reason: verified_8gb_tier_has_less_than_60gb_local_storage
@@ -195,6 +255,10 @@ clear_fail_examples:
     reason: no_observed_linux_fixed_tier_provides_8gb_at_or_below_15_usd
 
 next_verification_actions:
+  - Verify KVM implementation and normalized ordinary monthly TCO for Onie Cloud VM 4-8; it is now a high-priority Asia/API-driven near-match.
+  - Resolve CloudXact exact per-plan public port speed and apply FX/setup-fee TCO.
+  - Verify Kencang IPv4 inclusion and whether the advertised up-to-1-Gbps link satisfies the profile's port requirement.
+  - Verify ServerUtama and Rumahweb exact public port characteristics, datacenter details, IPv4 where unresolved, and normalized TCO.
   - Verify IPv4 inclusion and promotional-price persistence for Advin Servers Miami Standard XS.
   - Capture stable current HostBrr pricing and exact KVM status for the selected memory-optimized product.
   - Verify virtualization technology for OrangeVPS BASIC NVMe.
