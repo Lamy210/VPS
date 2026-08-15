@@ -1,0 +1,417 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch focuses on strong low-cost leads, database-oriented VPS products, and additional regional KVM providers.
+  - DDoS-protection capacity is never treated as public VPS port speed.
+  - Up-to/shared network values are recorded without implying guaranteed sustained throughput.
+  - Backup feature availability does not imply that backup cost is included in the advertised VM base price.
+  - Long-term promotional prices remain separate from ordinary/renewal prices.
+
+providers:
+  - canonical_name: ServerCheap
+    confidence: A
+    resource_classes: [bargain_vps]
+    verified_regions: [Dallas]
+    offers:
+      - plan: NVMe_KVMb_10GB_New
+        currency: USD
+        monthly_base: 6.80
+        billing_term: monthly
+        vcpu: 4
+        memory_gb: 10
+        local_storage_gb: 80
+        storage_type: nvme
+        monthly_transfer_tb: 6
+        ipv4_included: 1
+        ipv6_prefix: /64
+        snapshots_included: 1
+        virtualization: kvm
+        public_port_mbps: unknown
+        ddos_protection_gbps: 10
+      - plan: NVMe_KVM_14GB_New
+        currency: USD
+        monthly_base: 8.89
+        billing_term: monthly
+        vcpu: 4
+        memory_gb: 14
+        local_storage_gb: 100
+        storage_type: nvme
+        monthly_transfer_tb: 8
+        ipv4_included: 1
+        ipv6_prefix: /64
+        snapshots_included: 1
+        virtualization: kvm
+        public_port_mbps: unknown
+    availability:
+      sla_percent: 99.9
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The 10 GB plan clears price, CPU, RAM, NVMe, transfer, IPv4, KVM, and monthly-billing requirements.
+          - The provider explicitly labels 10 Gbps as DDoS protection capacity, not VPS port speed; no qualifying public-port speed was found in the current official VPS pages.
+    sources:
+      - https://servercheap.com/vps/
+      - https://servercheap.com/clients/store/vps-new-panel
+
+  - canonical_name: Server_Optima
+    display_name: Server Optima
+    confidence: A
+    resource_classes: [database_oriented_vps, ha_vps, regional_vps]
+    verified_regions: [California, New_York, Sydney]
+    offers:
+      - plan: AMD_EPYC_7763_Plan_1
+        currency: USD
+        monthly_base: 19.20
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 200
+        storage_type: nvme_raid10
+        transfer: unmetered
+        port_mbps: 1000
+        virtualization: kvm
+      - plan: HA_AMD_EPYC_7763_Plan_1
+        currency: USD
+        monthly_base: 23.92
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 200
+        storage_type: nvme_block_storage
+        storage_replication: 3
+        transfer: unmetered
+        port_mbps: 1000
+        virtualization: kvm
+    network:
+      private_network: true
+      customer_created_vlan: true
+    operations:
+      snapshots_supported: true
+      full_backup_supported: true
+      exact_full_backup_price_for_selected_vps: unknown
+      firewall_supported: true
+      ha_supported: true
+    availability:
+      service_availability_commitment_percent: 99.9
+      network_uptime_sla_percent: 99.9
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The smallest verified 16 GB Linux VPS costs 19.20 USD/month, above the 15 USD standard-compute ceiling.
+      database-node:
+        status: unknown
+        notes:
+          - AMD EPYC 7763 Plan 1 clears the database profile's base price, 4-vCPU, 16-GB, 200-GB NVMe, 1-Gbps unmetered, KVM, private-network, snapshot, and 99.9-percent availability requirements.
+          - Server Optima states that Full Backup is supported, but the current public VPS page does not pin the selected plan's independent-backup charge. Effective TCO including the required backup remains unresolved rather than assumed to be included.
+          - The HA variant is also below 30 USD before backup add-ons and uses replicated NVMe block storage.
+    sources:
+      - https://www.serveroptima.com/vps
+      - https://www.serveroptima.com/sla
+
+  - canonical_name: MonoVM
+    confidence: A
+    resource_classes: [regional_vps]
+    offers:
+      - plan: Streaming_VPS_8192MB
+        currency: USD
+        monthly_base: 65.50
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 60
+        storage_type: nvme
+        transfer: unlimited
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The current 8 GB NVMe streaming VPS costs 65.50 USD/month, far above the reusable 15 USD ceiling.
+    sources:
+      - https://monovm.com/streaming-vps/
+
+  - canonical_name: Rad_Web_Hosting
+    display_name: Rad Web Hosting
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Tokyo, United_States, Europe, Asia_Pacific]
+    offers:
+      - plan: KVM_SSD_8
+        currency: USD
+        promotional_monthly_36_month_term: 39.50
+        regular_reference_monthly: 99.00
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 128
+        storage_type: nvme_or_ssd_raid10_by_location_page
+        monthly_transfer_tb: 4
+        port_mbps: 1000
+        ipv4_included: 1
+        ipv6_prefix: /64
+        virtualization: kvm
+      - plan: KVM_SSD_16
+        currency: USD
+        promotional_monthly_36_month_term: 79.40
+        regular_reference_monthly: 199.00
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 256
+        storage_type: nvme_or_ssd_raid10_by_location_page
+        monthly_transfer_tb: 8
+        port_mbps: 1000
+        ipv4_included: 1
+        ipv6_prefix: /64
+        virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - Even the 36-month promotional 8 GB price is 39.50 USD/month.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB tier is above the 30 USD budget even before other database requirements are evaluated.
+    sources:
+      - https://radwebhosting.com/tokyo-vps
+      - https://radwebhosting.com/dedicated-servers/kvm-vps-servers
+
+  - canonical_name: Alpenhost
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Vienna]
+    offers:
+      - plan: Silber_vServer
+        currency: EUR
+        monthly_base: 14.79
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 150
+        storage_type: nvme_ceph
+        transfer: unlimited_fair_use
+        port_mbps: 10000
+        ipv4_included: true
+        ipv6_included: true
+        backup_included: true
+        snapshots_included: true
+        virtualization: kvm
+      - plan: Gold_vServer
+        currency: EUR
+        monthly_base: 24.99
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 250
+        storage_type: nvme_ceph
+        transfer: unlimited_fair_use
+        port_mbps: 10000
+        ipv4_included: true
+        ipv6_included: true
+        backup_included: true
+        snapshots_included: true
+        virtualization: kvm
+    availability:
+      advertised_percent: 99.99
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The 8 GB tier clears technical requirements and ordinary EUR headline pricing is close to the 15 USD ceiling.
+          - Strict pass requires timestamped EUR-to-USD effective TCO normalization; traffic is also described as unlimited under provider fair-use terms.
+      database-node:
+        status: unknown
+        notes:
+          - The 16 GB Gold tier clears CPU, RAM, NVMe, port, KVM, snapshot, backup, and advertised-availability requirements at 24.99 EUR.
+          - Required private networking is not established by the current official product page, and USD TCO still requires timestamped FX normalization.
+    sources:
+      - https://alpenhost.at/vps-hosting/
+
+  - canonical_name: RackGenius
+    confidence: A
+    resource_classes: [configurable_vps, performance_vps]
+    verified_regions: [United_States]
+    value_node:
+      cpu_family: AMD_EPYC_7542
+      virtualization: kvm
+      starting_plan:
+        monthly_usd: 5
+        vcpu: 2
+        memory_gb: 2
+        storage_gb: 25
+        storage_type: u2_raid1
+        monthly_transfer_tb: 2
+        port_mbps: 10000
+        port_allocation: shared
+        ipv4_included: 1
+        ipv6_prefix: /64
+      exact_8gb_plan_price: unknown_dynamic_plan_selector
+    operations:
+      backups_included: true
+      backup_retention_min_days: 7
+      on_demand_backup: true
+      hourly_billing_available_by_support: true
+    availability:
+      sla_percent: 99.95
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - KVM, EPYC, U.2/NVMe-class storage, 10-Gbps shared uplink, IPv4/IPv6, backups, and scalable resources are verified.
+          - The public page's interactive selector does not expose a stable exact 8 GB plan price/storage/transfer snapshot in the parsed source, so the budget and capacity hard filters remain unresolved.
+    sources:
+      - https://rackgenius.com/vps
+
+  - canonical_name: VoyraCloud
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Los_Angeles, Washington, Frankfurt, London, Singapore, Ho_Chi_Minh]
+    cloud_vps:
+      plans:
+        - {plan: 1c1g, monthly_usd: 4.5, vcpu: 1, memory_gb: 1, storage_gb: 20, monthly_transfer_tb: 0.5, port_mbps: 200}
+        - {plan: 2c2g, monthly_usd: 9, vcpu: 2, memory_gb: 2, storage_gb: 40, monthly_transfer_tb: 1, port_mbps: 200}
+        - {plan: 4c4g, monthly_usd: 18, vcpu: 4, memory_gb: 4, storage_gb: 80, monthly_transfer_tb: 2, port_mbps: 200}
+      virtualization: kvm
+      exact_linux_8gb_plan: not_published_in_current_official_guide
+    windows_vps:
+      plan_8gb:
+        monthly_usd: 24
+        vcpu: 4
+        memory_gb: 8
+        storage_gb: 120
+        monthly_transfer_tb: 2
+        port_mbps: 200
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - No current published Linux Cloud VPS reaches 8 GB in the official purchase guide, and the published 8 GB Windows tier has only a 200 Mbps port and costs 24 USD/month.
+    sources:
+      - https://docs.voyracloud.com/docs/purchase-guide
+      - https://www.voyracloud.com/pricing
+
+  - canonical_name: quicksrv
+    confidence: A
+    resource_classes: [performance_vps, regional_vps]
+    verified_regions: [Amsterdam, United_Kingdom]
+    offers:
+      - plan: AMS_Standard_8
+        currency: EUR
+        monthly_base_vat_included: 7.99
+        vcpu: 3
+        memory_gb: 8
+        local_storage_gb: 180
+        storage_type: nvme
+        port_mbps: 40000
+        port_allocation: shared
+        transfer_policy: fair_use
+        explicit_transfer_tb: unknown
+        ipv4_included: true
+        virtualization: kvm
+        daily_offsite_backup_included: true
+        backup_retention_days: 3
+      - plan: AMS_Standard_16
+        currency: EUR
+        monthly_base_vat_included: 15.99
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 350
+        storage_type: nvme
+        port_mbps: 40000
+        port_allocation: shared
+        transfer_policy: fair_use
+        explicit_transfer_tb: unknown
+        ipv4_included: true
+        virtualization: kvm
+        daily_offsite_backup_included: true
+        backup_retention_days: 3
+    contract:
+      monthly_billing: true
+      no_contract: true
+      setup_fee: 0
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The 8 GB Amsterdam plan clears CPU/RAM/NVMe/port/KVM/IPv4/contract dimensions and has a low VAT-inclusive EUR price.
+          - The provider does not publish a numeric fair-use transfer allowance on the current page, so the hard >=2 TB transfer requirement remains unresolved; USD TCO is also derived later via timestamped FX.
+      database-node:
+        status: unknown
+        notes:
+          - The 16 GB tier has 4 vCPU, NVMe, backups and strong uplink, but explicit transfer allowance, private networking, snapshots, SLA threshold, and USD TCO remain unresolved.
+    sources:
+      - https://quicksrv.io/
+
+  - canonical_name: InMotion_Hosting
+    display_name: InMotion Hosting
+    confidence: A
+    resource_classes: [managed_vps, cloud_vps]
+    offers:
+      - plan: VPS_4_vCPU
+        currency: USD
+        promotional_monthly_24_month_term: 9.99
+        renewal_monthly: 16.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 5
+        dedicated_ipv4_count: 2
+      - plan: Cloud_VPS_8GB_NVMe
+        currency: USD
+        monthly_base: 56
+        vcpu: 8
+        memory_gb: 8
+        local_storage_gb: 150
+        storage_type: nvme
+        monthly_transfer_tb: 7
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The managed VPS 8 GB promotional value is below 15 USD but requires a 24-month term and renews at 16.99 USD; public port speed and KVM semantics for that selected managed product are not pinned here.
+          - The ordinary Cloud VPS 8 GB NVMe tier is 56 USD/month and clearly fails the budget.
+    sources:
+      - https://www.inmotionhosting.com/pricing
+      - https://www.inmotionhosting.com/cloud-vps
+
+  - canonical_name: HostArmada
+    confidence: A
+    resource_classes: [managed_vps, unmanaged_vps]
+    verified_regions: [London, Frankfurt, Dallas, Montreal, Singapore, Sydney]
+    offers:
+      - plan: Fusion
+        currency: USD
+        promotional_annualized_monthly: 10.74
+        regular_monthly_reference: 21.48
+        promotion_billing_term_months: 12
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 5
+        virtualization: kvm
+        backup_included: true
+        snapshot_included: true
+      - plan: Ignition
+        currency: USD
+        promotional_annualized_monthly: 16.89
+        regular_monthly_reference: 42.23
+        promotion_billing_term_months: 12
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: nvme
+        monthly_transfer_tb: 8
+        virtualization: kvm
+        backup_included: true
+        snapshot_included: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Fusion meets CPU/RAM/NVMe/transfer/KVM dimensions, but the verified 10.74 USD display is a 12-month prepaid promotional equivalent and regular price is 21.48 USD/month.
+          - Exact public port speed and selected-plan IPv4 inclusion are not pinned in this record, so the profile remains unknown rather than treating the prepaid headline as an ordinary monthly pass.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB regular reference price is 42.23 USD/month, above the current 30 USD ceiling even before private-network/SLA checks.
+    sources:
+      - https://www.hostarmada.com/vps-hosting/
+      - https://www.hostarmada.com/pricing/
