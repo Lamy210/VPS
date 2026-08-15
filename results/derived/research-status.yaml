@@ -3,8 +3,8 @@ updated_at: 2026-08-16
 scope: public_requirement_driven_infrastructure_resource_research
 
 counts:
-  verification_batches: 15
-  unique_verified_providers: 136
+  verification_batches: 16
+  unique_verified_providers: 146
   targeted_followup_files: 4
   strict_clear_passes:
     standard_compute: 4
@@ -35,31 +35,34 @@ strict_clear_passes:
       validation_ready: true
 
 high_priority_unknown_reduction:
-  standard_compute: [Onie_Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, OrangeVPS, BulutVDS, CloudXact, Kencang, Aruba_Cloud, LayerStack]
-  database_node: [VPSnet, ServaRica, VSYS_Host, Onidel, HostBrr]
+  standard_compute: [ServerCheap, quicksrv, Alpenhost, Onie_Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, OrangeVPS, BulutVDS, CloudXact, Kencang]
+  database_node: [Server_Optima, VPSnet, ServaRica, VSYS_Host, Onidel, Alpenhost]
   managed_kubernetes: [Scaleway, Exoscale, DigitalOcean, Vultr, Google_Cloud, Microsoft_Azure, NAVER_Cloud_Platform]
 
 latest_batches:
-  - batch: 14
-    focus: global_low_cost_and_configurable_vps_vds
-    providers: [CloudCone, BandwagonHost, GigsGigsCloud, Crunchbits, RamNode, OneProvider, Cloudzy, QuantVPS, VPSServer, Hostwinds]
   - batch: 15
     focus: low_cost_kvm_and_configurable_cloud
     providers: [InterServer, BuyVM, Clouding_io, mivoCloud, EthernetServers, HostNamaste, HostSailor, V_PS, Togglebox, Bacloud]
+  - batch: 16
+    focus: low_cost_and_database_oriented_vps
+    providers: [ServerCheap, Server_Optima, MonoVM, Rad_Web_Hosting, Alpenhost, RackGenius, VoyraCloud, quicksrv, InMotion_Hosting, HostArmada]
 
 next_work:
-  - Reduce technical and contract unknowns on CloudCone, Crunchbits, VPSServer, Onie Cloud, HostBrr, OrangeVPS, and BulutVDS.
+  - Capture Server Optima independent Full Backup price and calculate effective database-node TCO.
+  - Find explicit ServerCheap VPS public port speed.
+  - Find a numeric quicksrv fair-use transfer allowance.
   - Reduce database-node unknowns for VPSnet, ServaRica, VSYS Host, and Onidel.
   - Apply timestamped FX snapshots only after technical hard requirements are cleared.
-  - Operationally validate UpCloud Managed Kubernetes autoscaling, provisioning, networking, observability, and TCO.
-  - Benchmark ServaRica, HostEons, Advin Servers, and InterServer only on exact verified plans and regions.
-  - Continue Batch 016 with additional unverified regional/API providers while keeping provider identity normalization strict.
+  - Operationally validate UpCloud Managed Kubernetes only after spend is explicitly chosen.
+  - Benchmark strict standard-compute passes only after spend is explicitly chosen.
+  - Continue Batch 017 while keeping provider identity normalization strict.
 
 quality_invariants:
   - unknown_hard_fields_never_pass
   - provider_advertised_performance_is_not_benchmark_evidence
   - promotional_and_renewal_prices_are_separate
   - annualized_prepaid_price_is_not_ordinary_monthly_price
+  - ddos_capacity_is_not_public_port_speed
   - physical_threads_are_not_silently_counted_as_vcpu
   - shared_port_speed_is_not_guaranteed_sustained_throughput
   - native_currency_is_preserved
