@@ -1,0 +1,138 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+purpose: targeted_followup
+notes:
+  - Existing providers only; this file does not increase the unique-provider count.
+  - This follow-up prioritizes hard-field closure rather than adding new discovery records.
+
+providers:
+  - canonical_name: UpCloud
+    source_batch: results/verified/batch-001.yaml
+    target_profile: managed-kubernetes
+    resolved:
+      managed_kubernetes: true
+      worker_plan_families_supported: [starter, premium, cloud_native, gpu]
+      selected_worker_plan: PREMIUM-2xCPU-4GB
+      selected_worker_vcpu: 2
+      selected_worker_memory_gb: 4
+      selected_worker_storage_gb: 50
+      selected_worker_storage_type: maxiops_ssd
+      selected_worker_public_port_mbps: 1000
+      selected_worker_ipv4_included: true
+      selected_worker_ipv6_included: true
+      private_network_required_by_cluster: true
+      private_network_available: true
+      managed_load_balancer_available: true
+      complimentary_managed_load_balancer_tier: true
+      api: true
+      terraform: true
+      native_cluster_autoscaler: true
+      node_group_min_max: true
+      node_group_scale_to_zero: true
+      monitoring_integration: true
+      monitoring_examples: [prometheus, opentelemetry, grafana]
+      development_control_plane_usd_month: 0
+    evidence_notes:
+      - The current Managed Kubernetes pricing page explicitly permits Starter, Premium, Cloud Native and GPU worker plans.
+      - Current Cloud Server configuration documentation defines PREMIUM-2xCPU-4GB with 2 CPU, 4 GB RAM and 50 GB MaxIOPS storage; Premium includes IPv4/IPv6 and 1000 Mbps public Internet.
+      - Managed Kubernetes guides document private networks, Terraform deployment, Cluster Autoscaler, Managed Load Balancer integration, and Prometheus/OpenTelemetry monitoring patterns.
+    strict_effect:
+      managed-kubernetes: clear_pass_candidate
+    sources:
+      - https://upcloud.com/global/pricing/
+      - https://upcloud.com/docs/products/cloud-servers/configurations/
+      - https://upcloud.com/docs/products/networking/public-network/
+      - https://upcloud.com/docs/products/managed-kubernetes/
+      - https://upcloud.com/docs/guides/managed-kubernetes/
+      - https://upcloud.com/docs/guides/deploy-managed-kubernetes-cluster-terraform/
+      - https://upcloud.com/resources/tutorials/monitoring-upcloud-prometheus-part-1/
+      - https://upcloud.com/global/resources/tutorials/how-to-deploy-opentelemetry-on-upcloud-managed-kubernetes/
+
+  - canonical_name: ServaRica
+    source_batch: results/verified/batch-003.yaml
+    target_profile: database-node
+    resolved:
+      kvm_virtualization: true
+      sla_percent_at_least: 99.9
+      selected_plan: Unified_Slim_4
+      selected_plan_monthly_usd: 12
+      selected_plan_dedicated_cpu: 4
+      selected_plan_memory_gb: 16
+      selected_plan_nvme_gb: 500
+      selected_plan_transfer_tb: 16
+      selected_plan_port_gbps: 10
+      ipv4_included: true
+    current_alternative:
+      plan: V3_KVM_Slice_16
+      monthly_usd: 18
+      dedicated_cpu: 16
+      memory_gb: 16
+      nvme_gb: 480
+      transfer_tb_at_10gbps: 48
+      ipv4_included: true
+    unresolved:
+      - private_network
+      - snapshots
+      - independent_backups_for_selected_kvm_plan
+    evidence_notes:
+      - Current official offer and client-cart pages explicitly identify KVM and the selected compute/storage/network resources.
+      - The official FAQ/home page establishes a 99.9%-and-above normal-operation SLA and a 99.99% network-SLA claim.
+      - ServaRica mentions daily-backup add-ons and backups for some storage systems, but the current evidence does not establish an independent backup and snapshot product for the selected KVM plan, so those hard fields remain unresolved.
+    sources:
+      - https://servarica.com/all-offers/
+      - https://servarica.com/slim-kvm-plans/
+      - https://servarica.com/faq/
+      - https://clients.servarica.com/store/v3-kvm-slices
+
+  - canonical_name: VPSnet
+    source_batch: results/verified/batch-005.yaml
+    target_profile: database-node
+    resolved:
+      selected_plan: KVM_3
+      kvm_virtualization: true
+      memory_gb: 16
+      vcpu: 4
+      nvme_gb: 100
+      storage_architecture: replicated_ceph_nvme
+      transfer_tb: 30
+      public_port_mbps: 1000
+      daily_backups: true
+      backups_stored_on_separate_remote_server: true
+      backup_retention_days: 7
+      snapshots: true
+      sla_percent: 99.95
+      rest_api: true
+    unresolved:
+      - private_network
+      - normalized_usd_tco
+    evidence_notes:
+      - Current Cloud VPS page explicitly identifies the service as KVM with replicated Ceph NVMe, 1 Gbps networking, HA, daily backups and snapshots.
+      - Backup documentation states daily backups are stored on a separate remote server with seven-day retention.
+      - No public official documentation discovered in this follow-up establishes a customer-configurable private network for the Cloud VPS product.
+    sources:
+      - https://www.vpsnet.com/en/services/vds
+      - https://www.vpsnet.com/en/advantages/control-panel
+      - https://www.vpsnet.com/en/information/sla
+
+  - canonical_name: VSYS_Host
+    source_batch: results/verified/batch-002.yaml
+    target_profile: database-node
+    resolved:
+      singapore_vps_kvm: true
+      singapore_vps_uplink_gbps: 1
+      singapore_vps_guaranteed_bandwidth_mbps: 200
+      snapshots_included: true
+      backups_included: true
+      ipv4_included: true
+      uptime_guarantee_percent: 99.97
+    unresolved:
+      - customer_configurable_private_network_for_standard_vps
+    evidence_notes:
+      - Singapore VPS product and launch announcement explicitly state KVM, IPv4, snapshots/backups and 1 Gbps premium uplink.
+      - VSYS documents private networks for its private-cloud solution and free VLAN for Singapore dedicated servers, but that does not prove customer-configurable private networking on the standard Singapore VPS product.
+    sources:
+      - https://vsys.host/vps-singapore
+      - https://vsys.host/news/vsys-host-expands-presence-with-new-vps-location-in-singapore
+      - https://vsys.host/private-cloud
+      - https://vsys.host/dedicated-servers-singapore
