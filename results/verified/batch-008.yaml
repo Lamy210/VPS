@@ -1,0 +1,473 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch adds new providers only; deeper checks of already-counted providers are stored separately as follow-up records.
+  - Native-currency prices remain native unless the provider publishes USD directly.
+  - Dynamic price widgets that fail to expose a stable numeric value remain unknown.
+  - Promotional pricing and actual monthly pricing are not silently conflated.
+
+providers:
+  - canonical_name: IPXON
+    confidence: B
+    resource_classes: [regional_cloud, latin_america_cloud]
+    verified_regions: [multiple_latin_america_locations, Miami]
+    offers:
+      - plan: Current_Plan_L_resource_shape
+        vcpu: 8
+        memory_gb: 8
+        local_storage_gb: 75
+        storage_type: ssd
+        monthly_transfer_tb: 5
+        port_mbps: 10000
+        current_numeric_price: unknown_dynamic_widget
+      - plan: Legacy_or_alternate_Cloud_Server_M2
+        currency: USD
+        monthly_base: 123
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 50
+        storage_type: ssd
+        monthly_transfer_tb: 6
+        port_mbps: 100
+    platform:
+      virtualization: kvm
+    network:
+      private_network: true
+      private_network_bandwidth: unlimited_claimed
+      private_vlan: true
+      public_and_private_port_gbps_claimed: 1
+      ipv4_ipv6: true
+    operations:
+      management_api_homepage: available_claim
+      management_api_country_pages: coming_soon
+      api_status_inconsistent: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current Plan L reaches the CPU/RAM/storage/transfer/port floors but its stable current price is not exposed by the dynamic page.
+          - API availability is inconsistent across current official pages and must be checked before automation use.
+      database-node:
+        status: fail
+        notes:
+          - The captured 16 GB alternate plan is far above the 30 USD budget and exposes only a 100 Mbps public port.
+    sources:
+      - https://www.ipxon.com/en/mx/services/vps-servers
+      - https://www.ipxon.com/en/ar/services/cloud-servers
+      - https://www.ipxon.com/
+      - https://cdn.ipxon.com/en-us/vps-servers
+
+  - canonical_name: VPSMalaysia
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Malaysia, Singapore]
+    offers:
+      - plan: Malaysia_KVM_ELITE
+        currency: MYR
+        displayed_monthly: 128.9
+        tax_excluded_percent: 8
+        vcpu: 8
+        memory_gb: 8
+        local_storage_gb: 200
+        storage_type: nvme
+        monthly_transfer_tb: 8
+        port_mbps: 100
+        ipv4_included: true
+      - plan: Singapore_KVM_ELITE
+        currency: SGD
+        displayed_monthly: 43.30
+        tax_excluded_percent: 8
+        vcpu: 8
+        memory_gb: 8
+        local_storage_gb: 200
+        storage_type: nvme
+        monthly_transfer_tb: 8
+        port_mbps: 100
+    platform:
+      virtualization: kvm
+      isolated_resources_claimed: true
+      live_migration_claimed: true
+    availability:
+      sla_percent: 99.9
+    contract:
+      page_claims_no_contract: true
+      page_also_displays_term_discount_controls: true
+      pricing_term_requires_checkout_confirmation: true
+    operations:
+      free_backup: false
+      paid_offserver_backup_available: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified KVM Elite tiers expose only a 100 Mbps shared port, below the 1 Gbps hard requirement.
+      database-node:
+        status: fail
+        notes:
+          - The same 100 Mbps shared network fails the database profile before custom memory expansion is considered.
+    sources:
+      - https://www.vpsmalaysia.com.my/kvm-hosting/
+      - https://www.vpsmalaysia.com.my/singapore-vps-hosting/
+
+  - canonical_name: Randhost
+    confidence: A
+    resource_classes: [api_driven_cloud, regional_cloud]
+    verified_regions: [Lisbon, Johannesburg]
+    offers:
+      - plan: VM4
+        currency: EUR
+        regular_monthly_ex_vat: 133
+        displayed_discounted_monthly_ex_vat: 93.10
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme
+        monthly_transfer_tb: 2
+      - plan: VM5
+        currency: EUR
+        regular_monthly_ex_vat: 229
+        displayed_discounted_monthly_ex_vat: 160.30
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 3
+    platform:
+      virtualization: kvm
+    network:
+      platform_network_gbps_claimed: 10
+      ddos_protection: included
+    operations:
+      rest_api: true
+      hourly_billing: true
+      monthly_cap: true
+      deploy_under_seconds_claimed: 60
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB tier is far above the 15 USD-equivalent bargain-compute ceiling even before VAT normalization.
+      kubernetes-worker:
+        status: unknown
+        notes:
+          - KVM, REST API, hourly billing, and fast provisioning are useful primitives, but private networking, Terraform/OpenTofu, and cloud-init remain unverified.
+    sources:
+      - https://randhost.com/compute
+      - https://randhost.com/order
+
+  - canonical_name: AkileCloud
+    confidence: B
+    resource_classes: [network_focused_cloud, regional_vps]
+    verified_regions: [Japan, Singapore, Hong_Kong, Taiwan, South_Korea, Macao, United_States, Europe, Vietnam]
+    offers:
+      - plan: HKLite_Pre_Starter
+        price_symbol: CNY_style_yen_symbol
+        displayed_monthly: 69.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 40
+        bandwidth_mbps: 5000
+        monthly_transfer_tb: 5
+        ipv4_included: true
+        ipv6_included: true
+        stock_at_verification: sold_out
+      - plan: JPIIJ_500M_Dedicated
+        price_symbol: CNY_style_yen_symbol
+        displayed_monthly: 2699.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 50
+        bandwidth_mbps: 500
+        transfer: unlimited
+        ipv4_included: true
+        ipv6_included: true
+        stock_at_verification: available
+    network:
+      traffic_limit_post_cap_mbps_on_metered_lines: 10
+      high_bandwidth_focus: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The observed 8 GB metered plan has only 40 GB local storage.
+          - The observed dedicated-bandwidth 8 GB Japan plan has only 50 GB local storage and a 500 Mbps port.
+    sources:
+      - https://akile.io/shop/server
+
+  - canonical_name: SpeedyPage
+    confidence: A
+    resource_classes: [performance_vps]
+    verified_regions: [London, Los_Angeles, Ashburn, Singapore, Tokyo, Sydney, Amsterdam, Stockholm]
+    offers:
+      - plan: DDR5_8GB_current_lowest_observed
+        currency: USD
+        monthly_base: 17.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 120
+        storage_type: nvme
+        monthly_transfer_tb: 12
+        port_mbps: 10000
+      - plan: DDR5_16GB_current_lowest_observed
+        currency: USD
+        monthly_base: 39.49
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 220
+        storage_type: nvme
+        monthly_transfer_tb: 18
+        port_mbps: 10000
+    platform:
+      virtualization: kvm
+      control_panel: VirtFusion
+    network:
+      ipv4_included: unknown
+      ddos_protection_gbps_claimed_min: 100
+    contract:
+      monthly: true
+      annual_one_month_free: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The lowest currently observed 8 GB monthly tier exceeds the 15 USD hard budget despite excellent storage and network specifications.
+      database-node:
+        status: fail
+        notes:
+          - The observed 16 GB tier exceeds the 30 USD database budget ceiling.
+    sources:
+      - https://speedypage.com/vps
+
+  - canonical_name: Shock_Hosting
+    confidence: A
+    resource_classes: [bargain_vps]
+    verified_regions: [New_York, Los_Angeles, Chicago, Dallas, Jacksonville, Denver, Seattle, Coventry, Amsterdam, Frankfurt, Bucharest, Sydney, Tokyo, Singapore]
+    offers:
+      - plan: SSD_KVM_8GB
+        currency: USD
+        monthly_base: 19.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 120
+        storage_type: ssd
+        monthly_transfer_tb: 8
+        port_mbps: 1000
+    platform:
+      virtualization: kvm
+      storage_raid: raid10
+      ecc_memory: true
+    network:
+      ipv4: configurable
+      ddos_protection: true
+    availability:
+      uptime_guarantee_percent: 100
+    contract:
+      lower_effective_price_with_prepayment: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The normal monthly 8 GB price is 19.99 USD, above the 15 USD hard budget ceiling.
+    sources:
+      - https://shockhosting.com/vps
+      - https://shockhosting.com/portal/store/ssd-virtual-servers
+
+  - canonical_name: SmartHost
+    confidence: B
+    resource_classes: [configurable_vps, resource_pool]
+    offers:
+      - plan: Intel_KVM_NVMe_base
+        currency: USD
+        starting_monthly: 2.95
+        base_memory_gb: 1
+        base_storage_gb: 10
+        storage_type: nvme
+        base_transfer_tb: 1
+        port_mbps: 1000
+        resources_configurable: true
+      - plan: Ryzen_KVM_NVMe_base
+        currency: USD
+        starting_monthly: 3.95
+        base_memory_gb: 1
+        base_storage_gb: 10
+        storage_type: nvme
+        base_transfer_tb: 1
+        port_mbps: 1000
+        resources_configurable: true
+    platform:
+      virtualization: kvm
+      control_panel: SolusVM
+    operations:
+      resource_pool_api: true
+      fixed_vps_api: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The product is configurable, but an official fixed 8 GB / 60 GB / 2 TB configuration price was not captured.
+      kubernetes-worker:
+        status: unknown
+        notes:
+          - A resource-pool API exists, but private networking, cloud-init, and Terraform/OpenTofu are not verified.
+    sources:
+      - https://www.smarthost.net/vps-hosting.php
+      - https://www.smarthost.net/
+
+  - canonical_name: Virtono
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Tokyo]
+    offers:
+      - plan: KVM_8G_Tokyo
+        currency: EUR
+        monthly_base: 42.95
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: ssd
+        monthly_transfer_tb: 5
+        port_mbps: 1000
+        ipv4_included: true
+        ipv6_prefix: /64
+      - plan: KVM_16G_Tokyo
+        currency: EUR
+        monthly_base: 89.95
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: ssd
+        monthly_transfer_tb: 7
+        port_mbps: 1000
+        ipv4_included: true
+        ipv6_prefix: /64
+    platform:
+      virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The Tokyo 8 GB tier is far above the 15 USD-equivalent budget ceiling.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB tier is far above the 30 USD-equivalent database budget and storage is SSD rather than explicitly NVMe.
+    sources:
+      - https://mail.virtono.com/index.php?rp=/store/tokyo-jp-vps
+
+  - canonical_name: Evoxt
+    confidence: A
+    resource_classes: [developer_cloud, regional_vps]
+    verified_regions: [United_States, United_Kingdom, Canada, Germany, Poland, Netherlands, Tokyo, Malaysia, Australia, Hong_Kong, Osaka]
+    offers:
+      - plan: VM_4_Standard
+        currency: USD
+        monthly_base: 23.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 60
+        monthly_transfer_tb: 4
+        port_mbps: 1000
+        backup: weekly
+      - plan: VM_8_Standard
+        currency: USD
+        monthly_base: 47.99
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 80
+        monthly_transfer_tb: 6
+        port_mbps: 1000
+        backup: weekly
+    operations:
+      api: true
+      floating_ip_management: true
+      resource_upgrade_without_plan_change: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - VM-4 meets the resource and network floors but costs 23.99 USD/month, above the 15 USD budget.
+      database-node:
+        status: fail
+        notes:
+          - The verified 16 GB standard tier has only 80 GB storage and costs more than 30 USD.
+    sources:
+      - https://evoxt.com/pricing/
+
+  - canonical_name: LiteServer
+    confidence: A
+    resource_classes: [regional_vps]
+    offers:
+      - plan: NVME_8G
+        currency: EUR
+        monthly_base: 32
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 30
+        ipv4_included: true
+        ipv6_prefix: /64
+      - plan: NVME_16G
+        currency: EUR
+        monthly_base: 64
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: nvme
+        monthly_transfer_tb: 35
+        ipv4_included: true
+        ipv6_prefix: /64
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB tier is above the 15 USD-equivalent budget ceiling before any FX normalization could make it competitive.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB tier is above the 30 USD-equivalent budget ceiling.
+    sources:
+      - https://clients.liteserver.nl/index.php?rp=/store/nvme-ssd-vps
+
+  - canonical_name: Aluy
+    confidence: A
+    resource_classes: [configurable_vps]
+    verified_regions: [Finland, other_locations_vary_by_stock]
+    pricing_formula:
+      currency: EUR
+      vat_included_consumer_percent: 19
+      ram_eur_per_gb: 1.79
+      cpu_eur_per_core: 1.19
+      ssd_eur_per_10gb: 1.19
+    reference_configurations:
+      - name: standard_compute_minimum_shape
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 60
+        calculated_monthly_eur: 23.84
+      - name: database_capacity_minimum_shape
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 100
+        calculated_monthly_eur: 45.30
+    platform:
+      virtualization: kvm
+      root_access: true
+    network:
+      shared_port_gbps: 10
+      traffic: unmetered_fair_use
+      ipv4_included: true
+    operations:
+      api: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - A minimum 2-core/8-GB/60-GB configuration is 23.84 EUR/month, already well above the 15 USD target class.
+      database-node:
+        status: fail
+        notes:
+          - A minimum 4-core/16-GB/100-GB configuration is 45.30 EUR/month before database-specific backup/private-network checks.
+    sources:
+      - https://aluy.net/pricing
