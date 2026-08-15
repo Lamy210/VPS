@@ -1,0 +1,144 @@
+schema_version: 1
+profile: requirements/profiles/standard-compute.yaml
+derived_at: 2026-08-16
+source_policy: verified-batches-only
+rules:
+  - Every hard requirement must be explicitly verified before a resource is placed in clear_pass.
+  - Missing virtualization, network-port, IPv4, transfer, contract, or price facts produce unknown rather than pass.
+  - This derived file may be stricter than a preliminary profile_assessment stored in an earlier verification batch.
+  - Provider-advertised specifications are not performance benchmarks.
+
+clear_pass:
+  - provider: ServaRica
+    plan: KVM_Slim_Slice_2
+    source_batch: results/verified/batch-003.yaml
+    confidence: B
+    verified_match:
+      monthly_price_usd: 7
+      vcpu_or_cpu: 2_dedicated_cores
+      memory_gb: 8
+      local_storage_gb: 250
+      storage_type: nvme
+      monthly_transfer_tb: 8
+      port_mbps: 10000
+      ipv4_included: true
+      virtualization: kvm
+    benchmark_priority: high
+    notes:
+      - Clear advertised-specification match for the reusable standard-compute profile.
+      - Dedicated CPU and unusually low price make benchmark validation especially important.
+      - Final purchase suitability still depends on independent CPU, storage, and network measurements.
+
+blocked_by_unknown:
+  - provider: OrangeVPS
+    plan: BASIC_3_NVMe
+    source_batch: results/verified/batch-003.yaml
+    verified_strengths: [usd_12_monthly, 4_vcpu, 8gb_ram, 80gb_nvme, 5tb_transfer, 1gbps, ipv4]
+    unresolved_hard_requirements: [kvm_virtualization]
+    strict_status: unknown
+
+  - provider: HostEons
+    plan: Hybrid_Special_2
+    source_batch: results/verified/batch-003.yaml
+    verified_strengths: [usd_8_99_monthly, 2_dedicated_vcores, 8gb_ram, 100gb_nvme, 30tb_transfer, 10gbps, ipv4]
+    unresolved_hard_requirements: [kvm_virtualization_for_hybrid_product]
+    strict_status: unknown
+
+  - provider: BulutVDS
+    plan: EPYC_4
+    source_batch: results/verified/batch-005.yaml
+    verified_strengths: [usd_12_99_monthly, 4_vcpu, 8gb_ram, 100gb_nvme, unlimited_transfer, 10gbps, ipv4, hourly_billing, rest_api]
+    unresolved_hard_requirements: [kvm_virtualization]
+    strict_status: unknown
+
+  - provider: HostHatch
+    plan: Compute_16_GB
+    source_batch: results/verified/batch-001.yaml
+    verified_strengths: [usd_15_monthly, 4_vcpu, 16gb_ram, 75gb_nvme, 4tb_transfer]
+    unresolved_hard_requirements: [kvm_virtualization, public_port_at_least_1gbps]
+    strict_status: unknown
+
+  - provider: Contabo
+    plan: Cloud_VPS_10
+    source_batch: results/verified/batch-001.yaml
+    verified_strengths: [3_vcpu, 8gb_ram, 75gb_nvme, 10tb_outgoing]
+    unresolved_hard_requirements: [kvm_virtualization, public_port_at_least_1gbps, normalized_usd_tco]
+    strict_status: unknown
+
+  - provider: Hetzner
+    plan: CX33_Europe
+    source_batch: results/verified/batch-001.yaml
+    verified_strengths: [4_vcpu, 8gb_ram, 80gb_nvme, 20tb_transfer, api, terraform]
+    unresolved_hard_requirements: [kvm_virtualization_in_batch, public_port_at_least_1gbps, normalized_usd_tco_with_required_ipv4]
+    strict_status: unknown
+
+  - provider: IONOS
+    plan: Memory_Cube_S
+    source_batch: results/verified/batch-004.yaml
+    verified_strengths: [usd_13_68_30_day_cap, 2_vcpu, 8gb_ram, 120gb_storage, api, per_minute_billing]
+    unresolved_hard_requirements: [monthly_transfer_at_least_2tb, public_port_at_least_1gbps, kvm_virtualization]
+    strict_status: unknown
+
+  - provider: SferaHost
+    plan: VPS_POWER
+    source_batch: results/verified/batch-006.yaml
+    verified_strengths: [6_vcpu, 20gb_ram, 200gb_nvme, unlimited_fair_use_transfer, 1gbps, ipv4, kvm]
+    unresolved_hard_requirements: [normalized_usd_tco]
+    strict_status: unknown
+
+  - provider: Netlen
+    plan: EPYC_VDS_4
+    source_batch: results/verified/batch-005.yaml
+    verified_strengths: [4_cpu, 8gb_ram, 100gb_all_flash_storage, unlimited_transfer, 10gbps, ipv4, cpu_isolation, api, hourly]
+    unresolved_hard_requirements: [kvm_virtualization, normalized_usd_tco]
+    strict_status: unknown
+
+  - provider: ITMCloud
+    plan: Pro
+    source_batch: results/verified/batch-005.yaml
+    verified_strengths: [4_vcpu, 8gb_ram, 100gb_nvme, unmetered_transfer, ipv4, kvm, private_vlan]
+    unresolved_hard_requirements: [public_port_at_least_1gbps, normalized_usd_tco]
+    strict_status: unknown
+
+clear_fail_examples:
+  - provider: CloudBlast
+    source_batch: results/verified/batch-002.yaml
+    reason: verified_8gb_tier_has_less_than_60gb_local_storage
+
+  - provider: ExtraVM
+    source_batch: results/verified/batch-002.yaml
+    reason: verified_8gb_tier_exceeds_15_usd_budget
+
+  - provider: DediRock
+    source_batch: results/verified/batch-003.yaml
+    reason: verified_8gb_tier_exceeds_15_usd_budget
+
+  - provider: DigitalOcean
+    source_batch: results/verified/batch-004.yaml
+    reason: verified_8gb_tier_exceeds_15_usd_budget
+
+  - provider: DedicatServer.ro
+    source_batch: results/verified/batch-006.yaml
+    reason: verified_8gb_tier_has_only_100mbps_public_port
+
+  - provider: GamCo
+    source_batch: results/verified/batch-006.yaml
+    reason: verified_8gb_tier_has_50gb_storage_and_200mbps_port
+
+  - provider: Shinjiru
+    source_batch: results/verified/batch-006.yaml
+    reason: verified_8gb_tier_has_only_100mbps_public_port
+
+  - provider: Server_Galactic
+    source_batch: results/verified/batch-006.yaml
+    reason: verified_8gb_manila_tier_costs_60_usd_month
+
+next_verification_actions:
+  - Verify virtualization technology for OrangeVPS BASIC NVMe.
+  - Verify virtualization technology for HostEons Hybrid Dedicated products.
+  - Verify virtualization technology for BulutVDS EPYC products.
+  - Verify HostHatch public port speed and KVM implementation.
+  - Verify Contabo public port speed and virtualization type, then apply the repository FX/TCO policy.
+  - Verify Hetzner effective TCO including required IPv4 and the profile network/virtualization facts.
+  - Verify IONOS Cloud Cubes transfer allowance and public network speed.
+  - Define a reproducible exchange-rate policy before resolving local-currency candidates.
