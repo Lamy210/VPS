@@ -30,6 +30,25 @@ clear_pass:
       - Final purchase suitability still depends on independent CPU, storage, and network measurements.
 
 blocked_by_unknown:
+  - provider: Advin_Servers
+    plan: KVM_Standard_XS_Miami
+    source_batch: results/verified/batch-009.yaml
+    verified_strengths: [usd_6_current_promotional, usd_8_regular_reference, 4_shared_burstable_vcpu, 8gb_ram, 80gb_nvme, 5tb_transfer, 10gbps, kvm]
+    unresolved_hard_requirements: [ipv4_included, promotional_price_persistence]
+    strict_status: unknown
+    benchmark_priority_after_clearance: high
+    notes:
+      - Advertised resources clear all technical hard requirements except explicit IPv4 inclusion.
+      - Shared/burstable CPU makes sustained CPU and steal-time measurements especially important after clearance.
+
+  - provider: HostBrr
+    plan: EPYC_8GBrr
+    source_batch: results/verified/batch-009.yaml
+    verified_strengths: [4_vcpu, amd_epyc_9004, 8gb_ddr5_ecc, 80gb_nvme, 5tb_transfer, 10gbps, ipv4, ipv6, backup_slot]
+    unresolved_hard_requirements: [current_numeric_price, exact_kvm_virtualization_for_product_group]
+    strict_status: unknown
+    benchmark_priority_after_clearance: high
+
   - provider: OrangeVPS
     plan: BASIC_3_NVMe
     source_batch: results/verified/batch-003.yaml
@@ -100,6 +119,20 @@ blocked_by_unknown:
     unresolved_hard_requirements: [public_port_at_least_1gbps, normalized_usd_tco]
     strict_status: unknown
 
+  - provider: SmartHost
+    plan: Configurable_KVM_NVMe
+    source_batch: results/verified/batch-008.yaml
+    verified_strengths: [kvm, nvme, 1gbps, configurable_cpu_ram_storage, low_base_price]
+    unresolved_hard_requirements: [exact_8gb_2vcpu_60gb_2tb_price, ipv4_inclusion_for_exact_configuration]
+    strict_status: unknown
+
+  - provider: IPXON
+    plan: Plan_L_resource_shape
+    source_batch: results/verified/batch-008.yaml
+    verified_strengths: [8_vcpu, 8gb_ram, 75gb_ssd, 5tb_transfer, 10gbps, kvm]
+    unresolved_hard_requirements: [current_numeric_price, ipv4_inclusion_for_selected_plan]
+    strict_status: unknown
+
 clear_fail_examples:
   - provider: CloudBlast
     source_batch: results/verified/batch-002.yaml
@@ -133,7 +166,37 @@ clear_fail_examples:
     source_batch: results/verified/batch-006.yaml
     reason: verified_8gb_manila_tier_costs_60_usd_month
 
+  - provider: VPSMalaysia
+    source_batch: results/verified/batch-008.yaml
+    reason: verified_8gb_kvm_tier_has_only_100mbps_public_port
+
+  - provider: SpeedyPage
+    source_batch: results/verified/batch-008.yaml
+    reason: lowest_currently_observed_8gb_monthly_tier_costs_17_99_usd
+
+  - provider: Shock_Hosting
+    source_batch: results/verified/batch-008.yaml
+    reason: verified_8gb_monthly_tier_costs_19_99_usd
+
+  - provider: Evoxt
+    source_batch: results/verified/batch-008.yaml
+    reason: verified_8gb_monthly_tier_costs_23_99_usd
+
+  - provider: Aluy
+    source_batch: results/verified/batch-008.yaml
+    reason: calculated_minimum_2core_8gb_60gb_configuration_costs_23_84_eur
+
+  - provider: HostSlick
+    source_batch: results/verified/batch-009.yaml
+    reason: verified_8gb_kvm_tier_costs_26_99_eur_and_was_out_of_stock
+
+  - provider: UltaHost
+    source_batch: results/verified/batch-009.yaml
+    reason: no_observed_linux_fixed_tier_provides_8gb_at_or_below_15_usd
+
 next_verification_actions:
+  - Verify IPv4 inclusion and promotional-price persistence for Advin Servers Miami Standard XS.
+  - Capture stable current HostBrr pricing and exact KVM status for the selected memory-optimized product.
   - Verify virtualization technology for OrangeVPS BASIC NVMe.
   - Verify virtualization technology for HostEons Hybrid Dedicated products.
   - Verify virtualization technology for BulutVDS EPYC products.
