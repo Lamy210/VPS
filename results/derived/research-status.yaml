@@ -3,8 +3,8 @@ updated_at: 2026-08-16
 scope: public_requirement_driven_infrastructure_resource_research
 
 counts:
-  verification_batches: 16
-  unique_verified_providers: 146
+  verification_batches: 17
+  unique_verified_providers: 156
   targeted_followup_files: 4
   strict_clear_passes:
     standard_compute: 4
@@ -35,27 +35,27 @@ strict_clear_passes:
       validation_ready: true
 
 high_priority_unknown_reduction:
-  standard_compute: [ServerCheap, quicksrv, Alpenhost, Onie_Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, OrangeVPS, BulutVDS, CloudXact, Kencang]
-  database_node: [Server_Optima, VPSnet, ServaRica, VSYS_Host, Onidel, Alpenhost]
+  standard_compute: [ServerCheap, quicksrv, Alpenhost, Hivelocity, HostUp, Webyne, Onie_Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, OrangeVPS, BulutVDS, CloudXact, Kencang]
+  database_node: [Server_Optima, VPSnet, ServaRica, VSYS_Host, Onidel, Alpenhost, HostUp, Webyne]
   managed_kubernetes: [Scaleway, Exoscale, DigitalOcean, Vultr, Google_Cloud, Microsoft_Azure, NAVER_Cloud_Platform]
 
 latest_batches:
-  - batch: 15
-    focus: low_cost_kvm_and_configurable_cloud
-    providers: [InterServer, BuyVM, Clouding_io, mivoCloud, EthernetServers, HostNamaste, HostSailor, V_PS, Togglebox, Bacloud]
   - batch: 16
     focus: low_cost_and_database_oriented_vps
     providers: [ServerCheap, Server_Optima, MonoVM, Rad_Web_Hosting, Alpenhost, RackGenius, VoyraCloud, quicksrv, InMotion_Hosting, HostArmada]
+  - batch: 17
+    focus: regional_vps_and_emerging_cloud_platforms
+    providers: [Hivelocity, Fasthosts, HostUp, Hostman, Webyne, Serverwala, ScalaHosting, Arct_Cloud, Raff, OneGbits]
 
 next_work:
   - Capture Server Optima independent Full Backup price and calculate effective database-node TCO.
-  - Find explicit ServerCheap VPS public port speed.
-  - Find a numeric quicksrv fair-use transfer allowance.
-  - Reduce database-node unknowns for VPSnet, ServaRica, VSYS Host, and Onidel.
+  - Find explicit ServerCheap VPS public port speed and quicksrv numeric fair-use transfer allowance.
+  - Resolve Hivelocity IPv4/virtualization/sale persistence, HostUp networking/IP/hypervisor, and Webyne transfer/hypervisor/IP hard fields.
+  - Reduce database-node unknowns for VPSnet, ServaRica, VSYS Host, Onidel, and Server Optima.
   - Apply timestamped FX snapshots only after technical hard requirements are cleared.
   - Operationally validate UpCloud Managed Kubernetes only after spend is explicitly chosen.
   - Benchmark strict standard-compute passes only after spend is explicitly chosen.
-  - Continue Batch 017 while keeping provider identity normalization strict.
+  - Continue Batch 018 while keeping provider identity normalization strict.
 
 quality_invariants:
   - unknown_hard_fields_never_pass
@@ -65,8 +65,8 @@ quality_invariants:
   - ddos_capacity_is_not_public_port_speed
   - physical_threads_are_not_silently_counted_as_vcpu
   - shared_port_speed_is_not_guaranteed_sustained_throughput
+  - up_to_bandwidth_is_not_guaranteed_sustained_throughput
   - native_currency_is_preserved
   - marketing_region_does_not_prove_datacenter_region
   - snapshots_do_not_automatically_equal_independent_backups
-  - up_to_bandwidth_does_not_automatically_equal_guaranteed_bandwidth
   - provider_count_excludes_targeted_followup_duplicates
