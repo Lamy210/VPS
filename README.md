@@ -52,7 +52,7 @@ docs/
 results/
   template.yaml
   verified/
-    batch-001.yaml ... batch-009.yaml
+    batch-001.yaml ... batch-010.yaml
     followup-001.yaml
   derived/
     standard-compute-strict.yaml
@@ -66,8 +66,8 @@ results/
 
 As of 2026-08-16:
 
-- 9 official-source verification batches
-- 81 unique provider records in those batches
+- 10 official-source verification batches
+- 92 unique provider records in those batches
 - 1 targeted follow-up file for existing-provider unknowns
 - strict derived shortlists for standard compute, database nodes, and managed Kubernetes
 - 1 benchmark-ready resource in the current strict queue
