@@ -40,6 +40,13 @@ ready:
         - repeated_test_runs_across_time_windows
 
 blocked:
+  - provider: Onie_Cloud
+    plan: VM_4_8
+    target_profile: standard-compute
+    priority_after_clearance: high
+    blockers: [kvm_virtualization, normalized_usd_tco, promotional_price_persistence]
+    post_clearance_focus: [sustained_cpu, steal_time, nvme_latency, 10gbps_realistic_throughput, vietnam_to_asia_rtt]
+
   - provider: Advin_Servers
     plan: KVM_Standard_XS_Miami
     target_profile: standard-compute
@@ -52,7 +59,7 @@ blocked:
     target_profile: standard-compute
     priority_after_clearance: high
     blockers: [current_numeric_price, exact_kvm_virtualization_for_product_group]
-    post_clearance_focus: [steal_time, epcy_9004_sustained_cpu, nvme_latency, network_consistency]
+    post_clearance_focus: [steal_time, epyc_9004_sustained_cpu, nvme_latency, network_consistency]
 
   - provider: VSYS_Host
     plan: VS-NVME4-16
