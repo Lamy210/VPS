@@ -14,65 +14,69 @@ ready:
     target_profile: standard-compute
     source: results/derived/standard-compute-strict.yaml
     priority: high
-    reason:
-      - Clear hard-filter pass for the reusable standard-compute profile.
-      - Very low price and dedicated CPU justify validating oversubscription, storage latency, and network consistency before recommendation.
     required_tests:
-      cpu:
-        - sustained_all_core_load
-        - single_thread_baseline
-        - steal_time_idle_and_load
-        - frequency_and_throttling_observation
-      storage:
-        - fio_random_4k_qd1
-        - fio_random_4k_qd32
-        - fio_sequential_read_write
-        - fsync_latency
-      database:
-        - postgres_pgbench_short
-        - postgres_fsync_sensitive_transaction_test
-      network:
-        - rtt_to_relevant_reference_regions
-        - packet_loss
-        - sustained_single_stream_throughput
-        - sustained_multi_stream_throughput
-      stability:
-        - repeated_test_runs_across_time_windows
+      cpu: [sustained_all_core_load, single_thread_baseline, steal_time_idle_and_load, frequency_and_throttling_observation]
+      storage: [fio_random_4k_qd1, fio_random_4k_qd32, fio_sequential_read_write, fsync_latency]
+      database: [postgres_pgbench_short, postgres_fsync_sensitive_transaction_test]
+      network: [rtt_to_relevant_reference_regions, packet_loss, sustained_single_stream_throughput, sustained_multi_stream_throughput]
+      stability: [repeated_test_runs_across_time_windows]
 
   - provider: HostEons
     plan: Hybrid_Special_2
     target_profile: standard-compute
-    source: results/verified/followup-002.yaml
+    source: results/derived/standard-compute-strict.yaml
     priority: high
-    reason:
-      - Follow-up verification resolves the remaining KVM hard requirement for the exact Hybrid/VDS product family.
-      - Current official sources verify 2 dedicated Ryzen 3950X vCores, 8 GB RAM, 100 GB NVMe, 30 TB transfer, 10 Gbps, one IPv4, /64 IPv6, and 8.99 USD/month.
-      - Dedicated CPU at a sub-10-USD price warrants independent consistency and saturation testing.
     required_tests:
-      cpu:
-        - sustained_all_core_load
-        - single_thread_baseline
-        - steal_time_idle_and_load
-        - frequency_and_throttling_observation
-      storage:
-        - fio_random_4k_qd1
-        - fio_random_4k_qd32
-        - fio_sequential_read_write
-        - fsync_latency
+      cpu: [sustained_all_core_load, single_thread_baseline, steal_time_idle_and_load, frequency_and_throttling_observation]
+      storage: [fio_random_4k_qd1, fio_random_4k_qd32, fio_sequential_read_write, fsync_latency]
+      network: [rtt_to_relevant_reference_regions, packet_loss, sustained_single_stream_throughput, sustained_multi_stream_throughput]
+      stability: [repeated_test_runs_across_time_windows]
+
+  - provider: UpCloud
+    service: Managed_Kubernetes
+    worker_plan: PREMIUM-2xCPU-4GB
+    target_profile: managed-kubernetes
+    source: results/derived/managed-kubernetes-strict.yaml
+    priority: high
+    validation_type: operational_and_scaling
+    required_tests:
+      provisioning:
+        - cluster_control_plane_provision_time
+        - worker_node_group_provision_time
+        - managed_load_balancer_provision_time
+      autoscaling:
+        - node_pool_scale_up_reaction_time
+        - node_ready_latency_after_scale_up
+        - node_pool_scale_down_latency
+        - scale_to_zero_and_recovery_where_supported
       network:
-        - rtt_to_relevant_reference_regions
-        - packet_loss
-        - sustained_single_stream_throughput
-        - sustained_multi_stream_throughput
-      stability:
-        - repeated_test_runs_across_time_windows
+        - private_network_node_to_node_rtt
+        - public_worker_throughput
+        - load_balancer_health_check_recovery
+      reliability:
+        - unhealthy_node_replacement_behavior
+        - worker_rejoin_after_disruption
+      automation:
+        - terraform_apply_destroy_reproducibility
+        - api_rate_limit_observation
+      observability:
+        - prometheus_metrics_collection
+        - opentelemetry_signal_export
+        - alerting_pipeline_smoke_test
+      tco:
+        - control_plane_cost
+        - two_worker_cost
+        - load_balancer_cost
+        - required_ipv4_cost
+        - storage_cost
+        - nat_cost_if_private_workers_selected
 
 blocked:
   - provider: Onie_Cloud
     plan: VM_4_8
     target_profile: standard-compute
     priority_after_clearance: high
-    blockers: [kvm_virtualization, normalized_usd_tco, promotional_price_persistence]
+    blockers: [exact_public_cloud_hypervisor, normalized_usd_tco, promotional_price_persistence]
     post_clearance_focus: [sustained_cpu, steal_time, nvme_latency, 10gbps_realistic_throughput, vietnam_to_asia_rtt]
 
   - provider: Advin_Servers
@@ -93,14 +97,14 @@ blocked:
     plan: VS-NVME4-16
     target_profile: database-node
     priority_after_clearance: high
-    blockers: [private_network]
+    blockers: [customer_configurable_private_network_for_standard_vps]
     post_clearance_focus: [fsync_latency, pgbench, guaranteed_200mbps_vs_1gbps_uplink_behavior]
 
   - provider: VPSnet
     plan: KVM_3
     target_profile: database-node
-    priority_after_clearance: high
-    blockers: [private_network, normalized_usd_tco, explicit_kvm_field]
+    priority_after_clearance: very_high
+    blockers: [private_network, normalized_usd_tco]
     post_clearance_focus: [ceph_nvme_latency, fsync_latency, replicated_storage_tail_latency, pgbench]
 
   - provider: Onidel
@@ -112,21 +116,15 @@ blocked:
   - provider: ServaRica
     plan: Unified_Slim_4
     target_profile: database-node
-    priority_after_clearance: high
-    blockers: [private_network, snapshots, independent_backups, sla_99_9_or_higher, kvm_explicit_in_database_source]
+    priority_after_clearance: very_high
+    blockers: [private_network, snapshots, independent_backups]
     post_clearance_focus: [fsync_latency, pgbench, dedicated_cpu_consistency, nvme_tail_latency]
-
-  - provider: UpCloud
-    target_profile: managed-kubernetes
-    priority_after_clearance: high
-    blockers: [monitoring_integration, exact_qualifying_worker_shape, ipv4_for_selected_worker_architecture]
-    post_clearance_focus: [node_pool_scale_up_latency, node_pool_scale_down_latency, api_rate_limits, load_balancer_provision_time]
 
   - provider: Scaleway
     service: Kapsule
     target_profile: managed-kubernetes
     priority_after_clearance: high
-    blockers: [load_balancer_required, monitoring_integration, exact_qualifying_worker_shape, ipv4_for_selected_worker_architecture]
+    blockers: [qualifying_worker_shape_with_at_least_40gb_storage_and_1gbps, ipv4_for_selected_worker_architecture]
     post_clearance_focus: [autoscaler_reaction_time, node_ready_latency, autohealing, load_balancer_provision_time]
 
   - provider: Exoscale
