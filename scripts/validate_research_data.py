@@ -65,7 +65,7 @@ def require(condition: bool, message: str, errors: list[str]) -> None:
 def validate_batch(path: Path, errors: list[str]) -> list[str]:
     try:
         data = load_yaml(path)
-    except Exception as exc:  # noqa: BLE001 - report parser context cleanly
+    except Exception as exc:  # noqa: BLE001
         errors.append(f"{path.relative_to(ROOT)}: YAML parse error: {exc}")
         return []
 
@@ -246,6 +246,10 @@ def validate_status(provider_count: int, batch_count: int, followup_count: int, 
     require(counts.get("targeted_followup_files") == followup_count, f"research-status targeted_followup_files must equal {followup_count}", errors)
 
 
+def annotation_escape(value: str) -> str:
+    return value.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
+
 def main() -> int:
     errors: list[str] = []
     providers, batch_paths = collect_batch_providers(errors)
@@ -259,6 +263,7 @@ def main() -> int:
         print(f"Research data validation failed with {len(errors)} error(s):", file=sys.stderr)
         for error in errors:
             print(f"- {error}", file=sys.stderr)
+            print(f"::error title=Research data validation::{annotation_escape(error)}")
         return 1
 
     print(
