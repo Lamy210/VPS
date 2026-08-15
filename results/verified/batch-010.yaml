@@ -5,7 +5,7 @@ notes:
   - This batch focuses on local and regional providers in Taiwan, Vietnam, Indonesia, the Philippines, and Malaysia.
   - Native-currency prices remain native until an explicit FX/TCO policy is applied.
   - Marketing location and actual datacenter location remain separate when the official page is ambiguous.
-  - `Up to` bandwidth is not silently treated as a guaranteed port floor.
+  - "`Up to` bandwidth is not silently treated as a guaranteed port floor."
 
 providers:
   - canonical_name: FormoHost
