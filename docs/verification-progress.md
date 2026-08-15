@@ -4,8 +4,8 @@ This file tracks provider verification and strict requirement matching. It is no
 
 ## Counts
 
-- Official-source verification batches completed: 11
-- Total unique provider records in verification batches: 100
+- Official-source verification batches completed: 13
+- Total unique provider records in verification batches: 116
 - Targeted follow-up files: 3
 - Strict profile clear passes:
   - standard compute: 2
@@ -13,6 +13,8 @@ This file tracks provider verification and strict requirement matching. It is no
   - managed Kubernetes: 1
 - Benchmark / operational-validation ready resources: 3
 - Benchmark-measured resources: 0
+
+Machine-readable status: `results/derived/research-status.yaml`.
 
 ## Verification batches
 
@@ -27,8 +29,10 @@ This file tracks provider verification and strict requirement matching. It is no
 - Batch 009: 4 — Advin Servers, HostBrr, HostSlick, UltaHost.
 - Batch 010: 11 — FormoHost, FussionHost, ServerUtama, Herza Cloud, GOFIBER, Kencang, CloudXact, Rumahweb, H2Cloud, Onie Cloud, ModernOne / Nocser.
 - Batch 011: 8 — AFRICLOUD, NoAck Hosting, OrionVM, D4 Networks, FyfeWeb, Free Range Cloud, Netbela, EstNOC.
+- Batch 012: 9 — NAVER Cloud Platform, NHN Cloud, KT Cloud, LayerStack, E2E Cloud, Cyfuture Cloud, Chief Telecom, CtrlS, Yotta.
+- Batch 013: 7 — Brightbox, Krystal Cloud / Katapult, TransIP, Aruba Cloud, Leaseweb, Cleura, Open Telekom Cloud.
 
-Source files are `results/verified/batch-001.yaml` through `results/verified/batch-011.yaml`.
+Source files are `results/verified/batch-001.yaml` through `results/verified/batch-013.yaml`.
 
 ## Targeted follow-ups
 
@@ -45,10 +49,10 @@ Deepened Onidel, KVMVPS.co.za, Cherry Servers and IONOS without incrementing the
 
 ### Follow-up 003
 
-- UpCloud Managed Kubernetes: a concrete qualifying worker architecture is now pinned using `PREMIUM-2xCPU-4GB`. Official documentation covers 2 CPU, 4 GB RAM, 50 GB MaxIOPS storage, IPv4/IPv6, 1 Gbps public networking, private networking, managed load balancing, API, Terraform, native Cluster Autoscaler and monitoring integrations. This clears the reusable managed-Kubernetes hard requirements.
-- ServaRica database node: KVM, 99.9%+ SLA, IPv4 and selected 16 GB plan capacity/network are resolved. Remaining hard fields are private networking, snapshots and independent backups.
-- VPSnet database node: KVM, 16 GB/4-vCPU/100-GB replicated Ceph NVMe, 30 TB, 1 Gbps, snapshots, 99.95% SLA and daily backups on a separate remote server are resolved. Remaining hard fields are private networking and normalized TCO.
-- VSYS Host database node: Singapore KVM, IPv4, snapshots/backups, 1 Gbps uplink and 99.97% uptime are resolved. Customer-configurable private networking on the ordinary VPS product remains unresolved.
+- UpCloud Managed Kubernetes: concrete `PREMIUM-2xCPU-4GB` worker now covers the reusable hard requirements together with private networking, managed LB, API, Terraform, native Cluster Autoscaler and monitoring integration.
+- ServaRica database node: KVM, 99.9%+ SLA, IPv4 and selected 16 GB capacity/network are resolved; private networking, snapshots and independent backups remain.
+- VPSnet database node: KVM, 16 GB/4-vCPU/100-GB replicated Ceph NVMe, 30 TB, 1 Gbps, snapshots, 99.95% SLA and remote daily backups are resolved; private networking and normalized TCO remain.
+- VSYS Host database node: Singapore KVM, IPv4, snapshots/backups, 1 Gbps uplink and 99.97% uptime are resolved; customer-configurable private networking on the ordinary VPS product remains unresolved.
 
 ## Strict results
 
@@ -59,24 +63,19 @@ Clear advertised-specification passes:
 1. ServaRica — KVM Slim Slice 2.
 2. HostEons — Hybrid Special 2.
 
-High-priority blocked candidates:
-
-- Onie Cloud — blocked by public-cloud hypervisor, normalized TCO and promotion persistence.
-- Advin Servers — blocked by explicit IPv4 inclusion and promotion persistence.
-- HostBrr — KVM/IPv4/IPv6/resource facts resolved; blocked by current numeric price.
-- CloudXact, Kencang, ServerUtama, Rumahweb, OrangeVPS, BulutVDS, HostHatch, Contabo, Hetzner, IONOS, SferaHost, Netlen, ITMCloud, SmartHost, IPXON, FyfeWeb and Netbela remain blocked by explicit hard-field unknowns.
+High-priority blocked candidates include Onie Cloud, Advin Servers, HostBrr, CloudXact, Kencang, ServerUtama, Rumahweb, OrangeVPS, BulutVDS, Aruba Cloud and LayerStack. They remain `unknown` until their exact hard-field gaps are resolved; they are not silently promoted by attractive headline pricing.
 
 ### Database node
 
 `clear_pass` remains empty.
 
-Shortest-path candidates now include:
+Shortest-path candidates:
 
 - VPSnet — private network + normalized TCO remain.
 - ServaRica — private network + snapshot + independent backup remain.
 - VSYS Host — customer-configurable private network remains.
 - Onidel — exact current 16 GB plan/price + KVM remain.
-- HostBrr, Advin, BulutVDS, netcup, BDIX Web Host, BengalCloud, Hostinger and ITMCloud require additional hard-field closure.
+- HostBrr, Advin, BulutVDS, netcup, BDIX Web Host, BengalCloud, Hostinger and ITMCloud still require additional hard-field closure.
 
 ### Managed Kubernetes
 
@@ -84,16 +83,18 @@ Clear pass:
 
 1. UpCloud Managed Kubernetes with a qualifying Premium worker architecture.
 
-Blocked high-priority candidates:
+Blocked high-priority candidates include Scaleway Kapsule, Exoscale SKS, DigitalOcean DOKS, Vultr VKE, GKE, AKS and NAVER Cloud Platform. Each needs a concrete worker/network/automation architecture with all reusable hard fields pinned together.
 
-- Scaleway Kapsule — pin a >=1-Gbps worker shape with >=40 GB storage and explicit public IPv4 behavior.
-- Exoscale SKS — resolve LB, monitoring, local-storage and worker IPv4 facts.
-- DigitalOcean DOKS — resolve monitoring, qualifying worker shape and selected worker private-network semantics.
-- Vultr VKE, GKE and AKS remain valuable follow-up candidates.
+## Recent market findings
+
+- NAVER Cloud Platform has current Korea 8 GB server pricing plus VPC, REST APIs, snapshots, public IP, load balancing, managed Kubernetes, PostgreSQL and cache services; it is retained as a regional public-cloud candidate rather than compared only on bargain-VPS price.
+- LayerStack adds Hong Kong, Singapore and Tokyo coverage with public API and paid 1-Gbps same-region private Layer-2 networking; its low-price ARM offers require exact selected-plan hard-field capture before strict qualification.
+- E2E Cloud's CPU-compute pricing changed effective August 1, 2026; current transfer/SLA/API facts are recorded while numeric CPU-node pricing is left calculator/API-dependent.
+- Aruba Cloud's OpenStack 8 GB promotional tier is recorded separately from its list price, promotion end date and required paid IPv4.
+- Leaseweb adds a Japan Public Cloud/VPS class with hourly/monthly billing, API automation and 99.99% instance SLA, but exact Japan 8 GB TCO still needs capture.
+- Brightbox, TransIP and Cleura demonstrate that regional-cloud automation and sovereignty benefits often sit in a different price class from bargain VPS products.
 
 ## Validation readiness
-
-`results/benchmark/queue.yaml` separates source verification from measured validation.
 
 Ready:
 
@@ -135,14 +136,21 @@ No benchmark has been executed or claimed yet.
 - Onie Cloud public hypervisor and ordinary TCO.
 - OrangeVPS BASIC NVMe virtualization.
 - BulutVDS EPYC virtualization.
+- Aruba OpenStack port/hypervisor/TCO details.
+- LayerStack concrete 8 GB ARM/x86 plan details.
 
 ### Managed-Kubernetes follow-up
 
 - Scaleway concrete >=1-Gbps worker + IPv4.
 - Exoscale LB/monitoring/worker storage/IP.
 - DigitalOcean monitoring + concrete qualifying worker.
+- NAVER Cloud Platform concrete worker + autoscaler/Terraform/monitoring architecture.
 - GKE / AKS concrete single-region architecture verification.
 
-### Batch 012 — expand beyond 100 providers
+### Batch 014 — expand beyond 116 providers
 
-Continue official verification of additional Root Server, VDS, regional Cloud, API/hourly and local-provider candidates, especially South Korea, Hong Kong, Taiwan, India/Pakistan and additional European regional providers.
+Continue official verification of regional Root Server/VDS, local Asian cloud, sovereign European cloud, API/hourly compute and additional Kubernetes-capable providers while preserving provider identity normalization.
+
+### Repository quality
+
+Add schema validation and derived-status consistency checks before the research branch is considered merge-ready.
