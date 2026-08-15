@@ -1,0 +1,77 @@
+name: managed-kubernetes
+status: reusable-profile
+
+budget:
+  currency: USD
+  monthly_max: null
+  annual_max: null
+
+regions:
+  preferred: []
+  acceptable: []
+  excluded: []
+  max_latency_ms: null
+
+compute:
+  min_vcpu: 2
+  min_memory_gb: 4
+  cpu_allocation:
+    accepted: [shared, dedicated]
+    preferred: null
+  architecture: [x86_64, arm64]
+
+storage:
+  min_local_gb: 40
+  accepted_types: [nvme, ssd]
+  min_block_storage_gb: 0
+
+network:
+  min_monthly_transfer_tb: null
+  min_port_mbps: 1000
+  ipv4_required: true
+  ipv6_required: false
+  private_network_required: true
+  private_traffic_unmetered_preferred: true
+  floating_ip_required: false
+  load_balancer_required: true
+
+platform:
+  resource_types: [managed_kubernetes]
+  kubernetes_required: true
+  managed_kubernetes_required: true
+  autoscaling_required: true
+
+operations:
+  api_required: true
+  terraform_or_opentofu_required: true
+  cloud_init_required: false
+  hourly_billing_preferred: true
+  snapshots_required: false
+  backups_required: false
+  monitoring_integration_required: true
+
+availability:
+  min_sla_percent: null
+  multi_az_required: false
+  live_migration_preferred: false
+  replicated_storage_preferred: true
+
+scaling:
+  initial_instance_count: 2
+  expected_instance_count_12m: null
+  vertical_scaling_required: false
+  horizontal_scaling_required: true
+
+priorities:
+  monthly_cost: 7
+  performance: 7
+  network: 9
+  reliability: 9
+  automation: 10
+  scalability: 10
+  support: 6
+
+notes:
+  - Record control-plane fees separately from worker-node costs.
+  - Verify whether node-pool autoscaling is native, upstream Cluster Autoscaler based, or requires custom automation.
+  - Include load balancer, NAT, public IPv4, block storage, backup, and egress charges in total cost of ownership.
