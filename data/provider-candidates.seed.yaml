@@ -1,0 +1,159 @@
+schema_version: 1
+observed_at: 2026-08-16
+purpose: discovery-only provider seed list
+
+rules:
+  - Entries in this file are discovery leads, not recommendations.
+  - A name may be a brand, provider, cloud platform, or regional infrastructure vendor.
+  - Current products, pricing, regions, and ownership must be verified before use.
+  - Duplicates and parent-company relationships are intentionally resolved in a later normalization step.
+
+providers:
+  - {name: HostHatch, source_group: vps}
+  - {name: Contabo, source_group: vps}
+  - {name: Hetzner, source_group: cloud}
+  - {name: netcup, source_group: vps}
+  - {name: OVHcloud, source_group: cloud}
+  - {name: UpCloud, source_group: cloud}
+  - {name: Vultr, source_group: cloud}
+  - {name: Gcore, source_group: cloud}
+  - {name: Civo, source_group: managed-kubernetes}
+  - {name: Onidel, source_group: regional-cloud}
+  - {name: GreenCloud, source_group: vps}
+  - {name: OrangeVPS, source_group: vps}
+  - {name: VSYS Host, source_group: vps}
+  - {name: CloudBlast, source_group: vps}
+  - {name: Hostinger, source_group: vps}
+  - {name: DigitalOcean, source_group: cloud}
+  - {name: Akamai Cloud, source_group: cloud}
+  - {name: AWS Lightsail, source_group: cloud}
+  - {name: Kamatera, source_group: cloud}
+  - {name: Alibaba Cloud, source_group: cloud}
+  - {name: Tencent Cloud, source_group: cloud}
+  - {name: Scaleway, source_group: cloud}
+  - {name: IONOS, source_group: cloud}
+  - {name: Serverspace, source_group: cloud}
+  - {name: Melbicom, source_group: vps}
+  - {name: LightNode, source_group: cloud}
+  - {name: ExtraVM, source_group: vps}
+  - {name: WebHorizon, source_group: vps}
+  - {name: Kuroit, source_group: vps}
+  - {name: Cloudzy, source_group: vps}
+  - {name: ClawCloud, source_group: cloud}
+  - {name: RareCloud, source_group: vps}
+  - {name: FlowVPS, source_group: regional-vps}
+  - {name: HostEons, source_group: vps}
+  - {name: ServaRica, source_group: vps}
+  - {name: RackNerd, source_group: vps}
+  - {name: DediRock, source_group: vps}
+  - {name: Fiberstate, source_group: vps}
+  - {name: Fourplex, source_group: vps}
+  - {name: Cloudnium, source_group: vps}
+  - {name: InterServer, source_group: vps}
+  - {name: Hivelocity, source_group: cloud}
+  - {name: Leaseweb, source_group: cloud}
+  - {name: Atlantic.Net, source_group: cloud}
+  - {name: CloudSigma, source_group: cloud}
+  - {name: CloudCone, source_group: vps}
+  - {name: LunaNode, source_group: cloud}
+  - {name: Webdock, source_group: cloud}
+  - {name: Time4VPS, source_group: vps}
+  - {name: TransIP, source_group: cloud}
+  - {name: Alwyzon, source_group: vps}
+  - {name: Genesis Public Cloud, source_group: cloud}
+  - {name: Genesis Hosting Solutions, source_group: cloud}
+  - {name: Server Optima, source_group: vps}
+  - {name: Arct Cloud, source_group: vps}
+  - {name: 0ping.eu, source_group: vps}
+  - {name: Cherry Servers, source_group: cloud}
+  - {name: Exoscale, source_group: cloud}
+  - {name: Cleura, source_group: openstack}
+  - {name: Infomaniak, source_group: openstack}
+  - {name: NETWAYS Cloud, source_group: openstack}
+  - {name: Cloud&Heat, source_group: openstack}
+  - {name: sqCloud, source_group: openstack}
+  - {name: VEXXHOST, source_group: openstack}
+  - {name: Open Telekom Cloud, source_group: openstack}
+  - {name: China Unicom Cloud, source_group: openstack}
+  - {name: DS Public, source_group: openstack}
+  - {name: Nordic Public Cloud Platform, source_group: openstack}
+  - {name: Rackspace, source_group: openstack}
+  - {name: Stackscale, source_group: opennebula}
+  - {name: Arsys, source_group: opennebula}
+  - {name: i3D.net, source_group: opennebula}
+  - {name: GreenCloudVPS, source_group: alias-review}
+  - {name: Netbela, source_group: peeringdb}
+  - {name: AFRICLOUD, source_group: peeringdb}
+  - {name: NoAck Hosting, source_group: peeringdb}
+  - {name: VisperHost, source_group: peeringdb}
+  - {name: OrionVM, source_group: peeringdb}
+  - {name: MYIP Networks, source_group: peeringdb}
+  - {name: D4 Networks, source_group: peeringdb}
+  - {name: FyfeWeb, source_group: peeringdb}
+  - {name: Free Range Cloud, source_group: peeringdb}
+  - {name: Web4Africa, source_group: peeringdb}
+  - {name: EstNOC, source_group: peeringdb}
+  - {name: SummerHosting, source_group: peeringdb}
+  - {name: HYEHOST, source_group: peeringdb}
+  - {name: xTom, source_group: peeringdb}
+  - {name: V.PS, source_group: alias-review}
+  - {name: NetOz, source_group: peeringdb}
+  - {name: GCIS Cloud, source_group: peeringdb}
+  - {name: Abantu Cloud Africa, source_group: peeringdb}
+  - {name: Hybula Cloud, source_group: peeringdb}
+  - {name: cloudKleyer, source_group: peeringdb}
+  - {name: GHOSTnet, source_group: peeringdb}
+  - {name: VPSnet, source_group: regional-cloud}
+  - {name: Virtuaal.com, source_group: regional-vps}
+  - {name: SferaHost, source_group: regional-vps}
+  - {name: DedicatServer.ro, source_group: regional-vps}
+  - {name: Cloudify.ro, source_group: regional-cloud}
+  - {name: NAV.RO, source_group: regional-vps}
+  - {name: KabyNode, source_group: regional-vps}
+  - {name: MatHost, source_group: regional-vps}
+  - {name: ServerAstra, source_group: regional-cloud}
+  - {name: REDS CLOUD, source_group: regional-vps}
+  - {name: myip.gr, source_group: regional-cloud}
+  - {name: VirtualServers.gr, source_group: regional-cloud}
+  - {name: Randhost, source_group: regional-cloud}
+  - {name: Astra Telekom, source_group: regional-vps}
+  - {name: BeoHosting, source_group: regional-vps}
+  - {name: Cloudteh, source_group: regional-vps}
+  - {name: Collectio, source_group: regional-cloud}
+  - {name: VPSBG.eu, source_group: regional-vps}
+  - {name: BulutVDS, source_group: regional-cloud}
+  - {name: Netlen, source_group: regional-cloud}
+  - {name: vHost, source_group: regional-cloud}
+  - {name: H2Cloud, source_group: regional-vps}
+  - {name: Nevacloud, source_group: regional-cloud}
+  - {name: OneAsiaHost, source_group: regional-vps}
+  - {name: VPSMalaysia, source_group: regional-vps}
+  - {name: BDIX Web Host, source_group: regional-vps}
+  - {name: BengalCloud, source_group: regional-vps}
+  - {name: ITMCloud, source_group: regional-cloud}
+  - {name: GamCo, source_group: regional-vps}
+  - {name: KVMVPS.co.za, source_group: regional-vps}
+  - {name: Elitehost, source_group: regional-vps}
+  - {name: NovaCloud Africa, source_group: regional-cloud}
+  - {name: Hostino, source_group: regional-cloud}
+  - {name: CloudIT.ma, source_group: regional-cloud}
+  - {name: OxaHost, source_group: regional-cloud}
+  - {name: Navégalo, source_group: regional-cloud}
+  - {name: PanamaServer, source_group: regional-vps}
+  - {name: CCIHosting, source_group: regional-vps}
+  - {name: IPXON, source_group: regional-cloud}
+  - {name: Global System Solutions, source_group: regional-cloud}
+  - {name: Nuv3m, source_group: regional-vps}
+  - {name: Server Galactic, source_group: regional-vps}
+  - {name: Shinjiru, source_group: regional-vps}
+  - {name: Rumahweb, source_group: regional-vps}
+  - {name: ServerUtama, source_group: regional-vps}
+  - {name: ArenHost, source_group: regional-vps}
+  - {name: MeroVPS, source_group: regional-vps}
+  - {name: Himalaya Cloud, source_group: regional-cloud}
+  - {name: Yoho.Cloud, source_group: regional-cloud}
+  - {name: UzCloud, source_group: regional-cloud}
+  - {name: Timeweb Cloud, source_group: regional-cloud}
+  - {name: Epro.io, source_group: regional-cloud}
+  - {name: RackCorp, source_group: regional-cloud}
+  - {name: Datacom Mongolia, source_group: regional-cloud}
