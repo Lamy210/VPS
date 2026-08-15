@@ -1,0 +1,500 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch focuses on low-cost regional VPS/VDS candidates in Europe, Africa, South Asia, and Southeast Asia.
+  - Marketing geography and actual datacenter location are recorded separately when they differ.
+  - Local-currency and prepaid pricing are preserved without silently converting them into a normal month-to-month USD price.
+
+providers:
+  - canonical_name: SferaHost
+    confidence: B
+    resource_classes: [bargain_vps]
+    verified_regions: [Poland]
+    offers:
+      - plan: VPS_PRO
+        currency: PLN
+        monthly_base_net: 59
+        vcpu: 4
+        cpu_allocation: shared
+        memory_gb: 12
+        local_storage_gb: 120
+        storage_type: nvme
+        transfer: unlimited_fair_use
+        port_mbps: 500
+        ipv4_included: true
+        ipv6_available: true
+      - plan: VPS_POWER
+        currency: PLN
+        monthly_base_net: 79
+        vcpu: 6
+        cpu_allocation: shared
+        memory_gb: 20
+        local_storage_gb: 200
+        storage_type: nvme
+        transfer: unlimited_fair_use
+        port_mbps: 1000
+        ipv4_included: true
+        ipv6_available: true
+    platform:
+      virtualization: kvm
+    contract:
+      monthly_billing: true
+      long_term_contract_required: false
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - VPS PRO fails the 1 Gbps hard network floor at 500 Mbps.
+          - VPS POWER meets CPU/RAM/storage/network resource floors but native-currency TCO must be normalized before the 15 USD budget filter can be resolved.
+      database-node:
+        status: unknown
+        notes:
+          - VPS POWER exceeds the capacity floor but dedicated CPU, private networking, snapshots/backups, SLA, and normalized TCO still need verification.
+    sources:
+      - https://sferahost.pl/store/litosfera-vps-nvme
+
+  - canonical_name: DedicatServer.ro
+    confidence: B
+    resource_classes: [bargain_vps, regional_vps]
+    verified_regions: [Romania]
+    offers:
+      - plan: s.c6.m8.n60
+        currency: EUR
+        monthly_base: 11.50
+        vcpu: 6
+        memory_gb: 8
+        local_storage_gb: 60
+        storage_type: nvme
+        monthly_transfer_tb: 10
+        port_mbps: 100
+        ipv4_included: true
+      - plan: e.c8.m16.n200
+        currency: EUR
+        monthly_base: 48.60
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 200
+        storage_type: nvme
+        monthly_transfer_tb: 20
+        port_mbps: 100
+        ipv4_included: true
+    platform:
+      virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB plan meets headline RAM, CPU, storage, transfer, and price floors but its 100 Mbps internet port fails the required 1 Gbps network floor.
+      database-node:
+        status: fail
+        notes:
+          - The verified 16 GB Enterprise plan also exposes only a 100 Mbps internet port and exceeds the current 30 USD database budget ceiling.
+    sources:
+      - https://portal-clienti.dedicatserver.ro/store/cloud
+      - https://portal-clienti.dedicatserver.ro/store/cloud-enterprise
+
+  - canonical_name: Astra_Telekom
+    confidence: B
+    resource_classes: [regional_vps]
+    verified_regions: [Serbia]
+    offers:
+      - plan: NVME_SSD_CLOUD_4
+        currency: RSD
+        monthly_base_vat_included: 5200
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 20
+        ipv4_included: true
+        backup_included: true
+      - plan: NVME_SSD_CLOUD_8
+        currency: RSD
+        monthly_base_vat_included: 8000
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 240
+        storage_type: nvme
+        monthly_transfer_tb: 20
+        ipv4_included: true
+        backup_included: true
+    platform:
+      virtualization: kvm
+    contract:
+      billing_terms: [quarterly, semiannual, annual]
+      vat_percent: 20
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Resource capacity is strong, but port speed is not stated on the verified product page and native-currency TCO must be normalized.
+      database-node:
+        status: unknown
+        notes:
+          - The 16 GB tier has substantial NVMe capacity and included backup, but private networking, snapshot semantics, CPU allocation class, SLA, port speed, and normalized TCO remain unresolved.
+    sources:
+      - https://astratelekom.com/cloud-vps-hosting-srbija/
+
+  - canonical_name: KVMVPS.co.za
+    confidence: B
+    resource_classes: [performance_vds, regional_vps]
+    verified_regions: [Cape_Town, Johannesburg]
+    offers:
+      - plan: Professional
+        currency: ZAR
+        monthly_base: 399
+        dedicated_vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 120
+        storage_type: nvme
+        transfer: unlimited
+        ipv4_available: true
+        ipv6_available: true
+        snapshots_included: true
+        backups_included: true
+    platform:
+      virtualization: kvm
+      custom_max_vcpu: 32
+      custom_max_memory_gb: 128
+    availability:
+      datacenter_tier_claimed: III
+      redundancy: N_plus_1
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Dedicated CPU, RAM, NVMe, and unlimited transfer are strong, but port speed and normalized USD TCO remain unresolved.
+      database-node:
+        status: unknown
+        notes:
+          - The visible fixed plan is only 8 GB; custom plans can reach the database capacity floor, but exact 16 GB price, private networking, port speed, and SLA still need verification.
+    sources:
+      - https://kvmvps.co.za/
+
+  - canonical_name: GamCo
+    confidence: B
+    resource_classes: [bargain_vps]
+    verified_regions: [South_Africa]
+    offers:
+      - plan: Cloud_VPS_S
+        currency: ZAR
+        monthly_base: 175
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 50
+        storage_type: nvme
+        snapshots_included: 1
+        port_mbps: 200
+        transfer: unlimited_with_fair_use
+      - plan: Cloud_VPS_M
+        currency: ZAR
+        monthly_base: 275
+        vcpu: 6
+        memory_gb: 12
+        local_storage_gb: 100
+        storage_type: nvme
+        snapshots_included: 2
+        port_mbps: 300
+        transfer: unlimited_with_fair_use
+      - plan: Cloud_VPS_L
+        currency: ZAR
+        monthly_base: 510
+        vcpu: 8
+        memory_gb: 24
+        local_storage_gb: 200
+        storage_type: nvme
+        snapshots_included: 3
+        port_mbps: 600
+        transfer: unlimited_with_fair_use
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB tier has only 50 GB local storage and a 200 Mbps port, failing both the 60 GB and 1 Gbps hard floors.
+      database-node:
+        status: fail
+        notes:
+          - Even the 24 GB tier exposes a 600 Mbps port, below the reusable database profile's 1 Gbps hard requirement.
+    sources:
+      - https://www.gam.co.za/
+
+  - canonical_name: Mocky
+    confidence: B
+    resource_classes: [bargain_vps]
+    marketed_region: Kenya
+    verified_datacenter_region: Europe
+    offers:
+      - plan: VPS_Starter
+        currency: KES
+        annual_total: 14000
+        annualized_monthly: 1167
+        billing_term_months: 12
+        alternative_billing_term_months: 6
+        vcpu: 4
+        cpu_family: AMD_EPYC
+        memory_gb: 8
+        local_storage_gb: 75
+        storage_type: nvme
+        monthly_transfer_tb: 32
+        ipv4_included: true
+      - plan: VPS_Standard
+        currency: KES
+        annual_total: 20300
+        annualized_monthly: 1692
+        billing_term_months: 12
+        vcpu: 6
+        cpu_family: AMD_EPYC
+        memory_gb: 12
+        local_storage_gb: 100
+        storage_type: nvme
+        monthly_transfer_tb: 32
+        ipv4_included: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The 8 GB tier meets CPU/RAM/storage/transfer floors and is marketed in Kenya, but the official page explicitly places the server in an EU datacenter.
+          - Port speed, native-currency TCO, and acceptance of annual/semiannual prepayment remain unresolved.
+      database-node:
+        status: fail
+        notes:
+          - The verified Standard tier is 12 GB RAM, below the reusable 16 GB database floor.
+    sources:
+      - https://mocky.co.ke/services/vps-hosting
+
+  - canonical_name: BDIX_Web_Host
+    confidence: A
+    resource_classes: [regional_vps, performance_vds]
+    verified_regions: [Dhaka, Khulna, Jashore]
+    network_identity:
+      asn: AS152698
+    offers:
+      - plan: BDIX_VPS_3
+        currency: BDT
+        monthly_base: 1299
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 50
+        storage_type: nvme
+        monthly_transfer_tb: 5
+        port_mbps: 1000
+        ipv4_included: true
+        ipv6_included: true
+      - plan: BDIX_VPS_5
+        currency: BDT
+        monthly_base: 3999
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 150
+        storage_type: nvme
+        monthly_transfer_tb: 15
+        port_mbps: 1000
+        stock_at_verification: out_of_stock
+      - plan: BDIX_Compute_VPS_4
+        currency: BDT
+        monthly_base: 7999
+        cpu_cores: 8
+        cpu_class: compute_optimized
+        memory_gb: 16
+        local_storage_gb: 150
+        storage_type: nvme
+        monthly_transfer_tb: 20
+        port_mbps: 1000
+        ipv4_included: true
+        ipv6_included: true
+    platform:
+      virtualization: kvm
+      dedicated_cpu_options: true
+      storage_architecture: enterprise_nvme_raid10
+    network:
+      private_network: true
+      bgp: true
+      ddos_protection: true
+      local_backbone_gbps: 10
+    availability:
+      uptime_commitment_percent: 99.9
+    contract:
+      monthly_billing: true
+      setup_fee: 0
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB regular tier has only 50 GB local storage, below the 60 GB hard floor.
+      database-node:
+        status: unknown
+        notes:
+          - A 16 GB compute tier with private networking, 1 Gbps, and dedicated compute options exists, but backup/snapshot semantics and normalized TCO still need verification.
+    sources:
+      - https://www.bdixwebhost.com/bdix-vps.html
+
+  - canonical_name: BengalCloud
+    confidence: B
+    resource_classes: [regional_vps, performance_vds]
+    verified_regions: [Bangladesh]
+    offers:
+      - plan: BDIX_VPS_3
+        currency: BDT
+        monthly_base: 1299
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 50
+        storage_type: nvme
+        monthly_transfer_tb: 5
+        port_mbps: 1000
+        ipv4_included: true
+        ipv6_included: true
+      - plan: BDIX_VPS_5
+        currency: BDT
+        monthly_base: 3999
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 150
+        storage_type: nvme
+        monthly_transfer_tb: 15
+        port_mbps: 1000
+      - plan: CPU_Optimized_16GB
+        currency: BDT
+        monthly_base: 7999
+        dedicated_cpu_cores: 8
+        memory_gb: 16
+        local_storage_gb: 150
+        storage_type: nvme
+        monthly_transfer_tb: 20
+        port_mbps: 1000
+    platform:
+      virtualization: kvm
+      dedicated_cpu_claimed: true
+      guaranteed_ram_claimed: true
+    availability:
+      uptime_commitment_percent: 99.9
+    network:
+      private_network: unknown
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB regular plan has only 50 GB local storage, below the 60 GB hard floor.
+      database-node:
+        status: unknown
+        notes:
+          - The 16 GB CPU-optimized tier satisfies CPU/RAM/storage/traffic/port floors with dedicated compute, but private networking, backups/snapshots, and normalized TCO remain unverified.
+    sources:
+      - https://bengalcloud.com/bdix-vps/
+
+  - canonical_name: Shinjiru
+    confidence: B
+    resource_classes: [regional_vps]
+    verified_regions: [Malaysia]
+    offers:
+      - plan: VPS_Ultimate
+        currency: MYR
+        promotional_monthly_36_month_term: 122.90
+        displayed_regular_monthly: 182.90
+        vcpu: 8
+        memory_gb: 8
+        local_storage_gb: 200
+        storage_type: nvme
+        port_mbps: 100
+        transfer: unlimited
+        ipv4_included: true
+      - plan: Advance_VPS_Ultimate
+        currency: MYR
+        promotional_monthly_36_month_term: 302.90
+        displayed_regular_monthly: 472.90
+        vcpu: 16
+        memory_gb: 16
+        local_storage_gb: 350
+        storage_type: nvme
+        port_mbps: 100
+        transfer: unlimited
+        ipv4_included: true
+    platform:
+      virtualization: kvm
+      management_panel: solusvm
+    availability:
+      uptime_guarantee_percent: 99.99
+    operations:
+      weekly_backup: optional_paid
+      automated_provisioning: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB tier has a 100 Mbps network speed, below the generic 1 Gbps hard requirement regardless of promotional price.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB tier also has a 100 Mbps network speed, below the database profile's 1 Gbps hard requirement; the advertised promotional price additionally requires a 36-month term.
+    sources:
+      - https://www.shinjiru.com.my/enterprise/ssd-virtual-private-server-linux-kvm/
+
+  - canonical_name: Server_Galactic
+    confidence: B
+    resource_classes: [regional_public_cloud, performance_vds]
+    verified_regions: [Manila, Bangkok, Budapest]
+    offers:
+      - plan: VPS_MNL3
+        currency: USD
+        monthly_base: 60
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        backup_storage_gb: 80
+        port_mbps: 1000
+        transfer: shared_unmetered_fair_use
+        ipv4_included: true
+        ipv6_prefix: /64
+        snapshots_included: 3
+      - plan: VPS_MNL4
+        currency: USD
+        monthly_base: 100
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 100
+        storage_type: nvme
+        backup_storage_gb: 100
+        port_mbps: 1000
+        transfer: shared_unmetered_fair_use
+        ipv4_included: true
+        ipv6_prefix: /64
+        snapshots_included: 3
+      - plan: VDS_MNL3
+        currency: USD
+        monthly_base: 120
+        dedicated_cpu: 4
+        memory_gb: 12
+        local_storage_gb: 180
+        storage_type: nvme
+        backup_storage_gb: 180
+        port_mbps: 1000
+        transfer: shared_unmetered_fair_use
+        ipv4_included: true
+        ipv6_prefix: /64
+        snapshots_included: 3
+    platform:
+      virtualization: kvm
+      orchestration: proxmox_cluster
+      ha_option: true
+    network:
+      private_lan: optional
+      additional_bandwidth: optional
+      speed_guarantee_on_shared_unmetered: false
+    contract:
+      annual_prepay_discount: true
+    availability:
+      stated_uptime_percent: 99.9
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - Manila 8 GB pricing is 60 USD/month, far above the 15 USD standard-compute ceiling.
+      database-node:
+        status: fail
+        notes:
+          - Manila 16 GB VPS pricing is 100 USD/month and the dedicated VDS line is even more expensive, exceeding the 30 USD database ceiling despite strong backup/snapshot/private-LAN options.
+    sources:
+      - https://www.servergalactic.ph/vps-server.html
+      - https://www.servergalactic.ph/cloud-vds.html
