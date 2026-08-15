@@ -1,0 +1,135 @@
+schema_version: 1
+updated_at: 2026-08-16
+purpose: benchmark_readiness_queue
+rules:
+  - A provider is `ready` only after all hard requirements for the target profile are verified.
+  - `blocked` means benchmark spend should wait until the listed verification blockers are resolved.
+  - No benchmark result is implied by appearing in this queue.
+  - Provider-advertised benchmark claims are not stored as measured evidence.
+  - Benchmark records must pin exact region, plan, OS image, kernel, tool version, and full command parameters.
+
+ready:
+  - provider: ServaRica
+    plan: KVM_Slim_Slice_2
+    target_profile: standard-compute
+    source: results/derived/standard-compute-strict.yaml
+    priority: high
+    reason:
+      - Only current clear hard-filter pass for the reusable standard-compute profile.
+      - Very low price and dedicated CPU justify validating oversubscription, storage latency, and network consistency before recommendation.
+    required_tests:
+      cpu:
+        - sustained_all_core_load
+        - single_thread_baseline
+        - steal_time_idle_and_load
+        - frequency_and_throttling_observation
+      storage:
+        - fio_random_4k_qd1
+        - fio_random_4k_qd32
+        - fio_sequential_read_write
+        - fsync_latency
+      database:
+        - postgres_pgbench_short
+        - postgres_fsync_sensitive_transaction_test
+      network:
+        - rtt_to_relevant_reference_regions
+        - packet_loss
+        - sustained_single_stream_throughput
+        - sustained_multi_stream_throughput
+      stability:
+        - repeated_test_runs_across_time_windows
+
+blocked:
+  - provider: Advin_Servers
+    plan: KVM_Standard_XS_Miami
+    target_profile: standard-compute
+    priority_after_clearance: high
+    blockers: [ipv4_included, promotional_price_persistence]
+    post_clearance_focus: [steal_time, sustained_cpu, nvme_latency, 10gbps_realistic_throughput]
+
+  - provider: HostBrr
+    plan: EPYC_8GBrr
+    target_profile: standard-compute
+    priority_after_clearance: high
+    blockers: [current_numeric_price, exact_kvm_virtualization_for_product_group]
+    post_clearance_focus: [steal_time, epcy_9004_sustained_cpu, nvme_latency, network_consistency]
+
+  - provider: VSYS_Host
+    plan: VS-NVME4-16
+    target_profile: database-node
+    priority_after_clearance: high
+    blockers: [private_network]
+    post_clearance_focus: [fsync_latency, pgbench, guaranteed_200mbps_vs_1gbps_uplink_behavior]
+
+  - provider: VPSnet
+    plan: KVM_3
+    target_profile: database-node
+    priority_after_clearance: high
+    blockers: [private_network, normalized_usd_tco, explicit_kvm_field]
+    post_clearance_focus: [ceph_nvme_latency, fsync_latency, replicated_storage_tail_latency, pgbench]
+
+  - provider: Onidel
+    target_profile: database-node
+    priority_after_clearance: high
+    blockers: [current_16gb_plan_specification, current_16gb_price, kvm_virtualization]
+    post_clearance_focus: [replicated_nvme_tail_latency, failover_behavior, fsync_latency, private_network_rtt]
+
+  - provider: ServaRica
+    plan: Unified_Slim_4
+    target_profile: database-node
+    priority_after_clearance: high
+    blockers: [private_network, snapshots, independent_backups, sla_99_9_or_higher, kvm_explicit_in_database_source]
+    post_clearance_focus: [fsync_latency, pgbench, dedicated_cpu_consistency, nvme_tail_latency]
+
+  - provider: UpCloud
+    target_profile: managed-kubernetes
+    priority_after_clearance: high
+    blockers: [monitoring_integration, exact_qualifying_worker_shape, ipv4_for_selected_worker_architecture]
+    post_clearance_focus: [node_pool_scale_up_latency, node_pool_scale_down_latency, api_rate_limits, load_balancer_provision_time]
+
+  - provider: Scaleway
+    service: Kapsule
+    target_profile: managed-kubernetes
+    priority_after_clearance: high
+    blockers: [load_balancer_required, monitoring_integration, exact_qualifying_worker_shape, ipv4_for_selected_worker_architecture]
+    post_clearance_focus: [autoscaler_reaction_time, node_ready_latency, autohealing, load_balancer_provision_time]
+
+  - provider: Exoscale
+    service: SKS
+    target_profile: managed-kubernetes
+    priority_after_clearance: high
+    blockers: [load_balancer_required, monitoring_integration, qualifying_worker_local_storage, ipv4_for_selected_worker_architecture]
+    post_clearance_focus: [cluster_autoscaler_latency, private_network_node_join_time, api_rate_limits]
+
+benchmark_record_template:
+  identity:
+    provider: null
+    region: null
+    datacenter: null
+    exact_plan: null
+    resource_id_hash: null
+  environment:
+    observed_at: null
+    os_image: null
+    kernel: null
+    architecture: null
+    cpu_model_observed: null
+    tool_versions: {}
+  commands:
+    cpu: []
+    storage: []
+    database: []
+    network: []
+  results:
+    cpu: {}
+    storage: {}
+    database: {}
+    network: {}
+  reproducibility:
+    repetitions: null
+    test_windows: []
+    raw_output_location: null
+  interpretation:
+    anomalies: []
+    limitations: []
+    conclusion: null
