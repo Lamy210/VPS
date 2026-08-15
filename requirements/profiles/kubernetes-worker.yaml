@@ -1,0 +1,74 @@
+name: kubernetes-worker
+status: reusable-profile
+
+budget:
+  currency: USD
+  monthly_max: 20
+  setup_fee_max: 5
+
+regions:
+  preferred: []
+  acceptable: []
+  excluded: []
+  max_latency_ms: null
+
+compute:
+  min_vcpu: 2
+  min_memory_gb: 8
+  cpu_allocation:
+    accepted: [shared, dedicated]
+    preferred: null
+  architecture: [x86_64]
+
+storage:
+  min_local_gb: 60
+  accepted_types: [nvme, ssd]
+
+network:
+  min_monthly_transfer_tb: 2
+  min_port_mbps: 1000
+  ipv4_required: true
+  ipv6_required: false
+  private_network_required: true
+  private_traffic_unmetered_preferred: true
+  floating_ip_required: false
+  load_balancer_required: false
+
+platform:
+  resource_types: [vps, vds, cloud_vm]
+  virtualization: [kvm]
+  kubernetes_required: false
+  managed_kubernetes_required: false
+  autoscaling_required: false
+
+operations:
+  api_required: true
+  terraform_or_opentofu_required: false
+  cloud_init_required: true
+  hourly_billing_preferred: true
+  snapshots_required: false
+  backups_required: false
+
+availability:
+  min_sla_percent: null
+  multi_az_required: false
+
+scaling:
+  initial_instance_count: 1
+  expected_instance_count_12m: null
+  vertical_scaling_required: true
+  horizontal_scaling_required: true
+
+priorities:
+  monthly_cost: 8
+  performance: 7
+  network: 9
+  reliability: 8
+  automation: 10
+  scalability: 10
+  support: 4
+
+notes:
+  - The provider API must support creating and deleting instances if node autoscaling is a future requirement.
+  - Native private networking is preferred over an overlay because it simplifies cluster and storage traffic.
+  - Record provisioning time, quota limits, API rate limits, and image/cloud-init behavior during verification.
