@@ -1,0 +1,116 @@
+schema_version: 1
+profile: requirements/profiles/database-node.yaml
+derived_at: 2026-08-16
+source_policy: verified-batches-only
+rules:
+  - Every hard requirement must be explicitly verified before a resource is placed in clear_pass.
+  - Missing private networking, KVM, NVMe, transfer, port speed, snapshot, backup, SLA, or budget normalization produces unknown rather than pass.
+  - Dedicated or guaranteed CPU is preferred by the profile but is not by itself a hard requirement when shared CPU is explicitly accepted.
+  - Provider-advertised storage replication or HA is not a substitute for an independent backup unless the backup requirement is separately verified.
+
+clear_pass: []
+
+blocked_by_unknown:
+  - provider: ServaRica
+    plan: Unified_Slim_4
+    source_batch: results/verified/batch-003.yaml
+    verified_strengths: [usd_12_monthly, 4_dedicated_cpu, 16gb_ram, 500gb_nvme, 16tb_transfer, 10gbps]
+    unresolved_hard_requirements: [private_network, snapshots, backups, sla_99_9_or_higher, kvm_explicit_in_source_batch]
+    strict_status: unknown
+    benchmark_priority_after_clearance: high
+
+  - provider: VSYS_Host
+    plan: VS-NVME4-16
+    source_batch: results/verified/batch-002.yaml
+    verified_strengths: [usd_21_monthly, 4_vcpu, 16gb_ram, 200gb_nvme, 4tb_transfer, 1gbps_uplink, kvm, snapshots, backups, sla_99_97]
+    unresolved_hard_requirements: [private_network]
+    strict_status: unknown
+    notes:
+      - Guaranteed bandwidth is listed as 200 Mbps while the uplink is 1 Gbps; benchmark sustained throughput before final selection.
+
+  - provider: VPSnet
+    plan: KVM_3
+    source_batch: results/verified/batch-005.yaml
+    verified_strengths: [4_vcpu, 16gb_ram, 100gb_replicated_ceph_nvme, 30tb_transfer, 1gbps, daily_backups, snapshots, sla_99_95, ha]
+    unresolved_hard_requirements: [private_network, normalized_usd_tco, kvm_explicit_field]
+    strict_status: unknown
+    notes:
+      - Promotional price and regular price must remain separate when normalizing TCO.
+
+  - provider: BulutVDS
+    plan: EPYC_Pro_1
+    source_batch: results/verified/batch-005.yaml
+    verified_strengths: [usd_23_99_monthly, 6_vcpu, 16gb_ram, 150gb_nvme, unlimited_transfer, 10gbps, snapshots]
+    unresolved_hard_requirements: [private_network, backups, sla_99_9_or_higher, kvm_virtualization]
+    strict_status: unknown
+
+  - provider: Hostinger
+    plan: KVM_4
+    source_batch: results/verified/batch-002.yaml
+    verified_strengths: [4_vcpu, 16gb_ram, 200gb_nvme, 16tb_transfer, 1gbps, kvm, weekly_backup]
+    unresolved_hard_requirements: [private_network, snapshots, sla_99_9_or_higher, normalized_usd_tco, contract_term_policy]
+    strict_status: unknown
+
+  - provider: netcup
+    plan: RS_2000_G12
+    source_batch: results/verified/batch-001.yaml
+    verified_strengths: [8_dedicated_epyc_cores, 16gb_ecc_ram, 512gb_nvme, up_to_2_5gbps, snapshots, sla_99_9]
+    unresolved_hard_requirements: [private_network_exact_properties, backups, included_transfer_at_least_1tb, normalized_usd_tco]
+    strict_status: unknown
+
+  - provider: Onidel
+    source_batch: results/verified/batch-002.yaml
+    verified_strengths: [triple_replicated_nvme, private_network, unmetered_private_traffic, 1gbps_singapore, snapshots, automated_backups, sla_99_9, automatic_failover]
+    unresolved_hard_requirements: [current_16gb_plan_specification, current_16gb_price, kvm_virtualization]
+    strict_status: unknown
+    benchmark_priority_after_clearance: high
+
+  - provider: BDIX_Web_Host
+    plan: BDIX_Compute_VPS_4
+    source_batch: results/verified/batch-006.yaml
+    verified_strengths: [8_cpu_cores, 16gb_ram, 150gb_nvme, 20tb_transfer, 1gbps, private_network, kvm, sla_99_9]
+    unresolved_hard_requirements: [snapshots, backups, normalized_usd_tco, dedicated_cpu_for_selected_plan]
+    strict_status: unknown
+
+  - provider: BengalCloud
+    plan: CPU_Optimized_16GB
+    source_batch: results/verified/batch-006.yaml
+    verified_strengths: [8_dedicated_cpu_cores, 16gb_ram, 150gb_nvme, 20tb_transfer, 1gbps, kvm, sla_99_9]
+    unresolved_hard_requirements: [private_network, snapshots, backups, normalized_usd_tco]
+    strict_status: unknown
+
+  - provider: ITMCloud
+    plan: Business
+    source_batch: results/verified/batch-005.yaml
+    verified_strengths: [8_vcpu, 16gb_ram, 250gb_nvme, unmetered_transfer, private_vlan, 30_day_backups, kvm]
+    unresolved_hard_requirements: [public_port_at_least_1gbps, snapshots, sla_99_9_or_higher, normalized_usd_tco]
+    strict_status: unknown
+
+clear_fail_examples:
+  - provider: GreenCloud
+    source_batch: results/verified/batch-002.yaml
+    reason: verified_16gb_plan_has_only_2_dedicated_cores_and_32gb_4core_tier_exceeds_30_usd_budget
+  - provider: ExtraVM
+    source_batch: results/verified/batch-002.yaml
+    reason: verified_16gb_plan_exceeds_30_usd_budget
+  - provider: DediRock
+    source_batch: results/verified/batch-003.yaml
+    reason: verified_16gb_plan_exceeds_30_usd_budget_and_storage_not_explicitly_nvme
+  - provider: DedicatServer_ro
+    source_batch: results/verified/batch-006.yaml
+    reason: verified_16gb_plan_exceeds_30_usd_budget_and_has_only_100mbps_public_port
+  - provider: GamCo
+    source_batch: results/verified/batch-006.yaml
+    reason: even_verified_24gb_tier_has_only_600mbps_public_port
+  - provider: Shinjiru
+    source_batch: results/verified/batch-006.yaml
+    reason: verified_16gb_tier_has_only_100mbps_public_port
+  - provider: OneAsiaHost
+    source_batch: results/verified/batch-005.yaml
+    reason: provider_sla_99_5_below_required_99_9
+
+next_verification_actions:
+  - Verify private-network availability for VSYS Host and VPSnet first; both already satisfy most other database hard constraints.
+  - Capture current Onidel 16 GB plan price/specification because its storage, networking, backup, and SLA properties are already strong.
+  - Verify ServaRica private networking, independent backup, snapshot, and SLA semantics before benchmarking it as a database node.
+  - Recheck local-currency candidates with an explicit FX/TCO policy only after technical hard requirements are cleared.
