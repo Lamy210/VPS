@@ -2,6 +2,7 @@ schema_version: 1
 profile: requirements/profiles/standard-compute.yaml
 derived_at: 2026-08-16
 source_policy: verified-batches-plus-followups
+fx_snapshot: results/derived/fx-snapshot-2026-08-16.yaml
 rules:
   - Every hard requirement must be explicitly verified before a resource is placed in clear_pass.
   - Missing virtualization, network-port, IPv4, transfer, contract, or price facts produce unknown rather than pass.
@@ -11,6 +12,7 @@ rules:
   - Physical CPU threads are not silently substituted for an explicit vCPU/core-count requirement.
   - Official-page price conflicts remain unresolved until a stable effective price is pinned.
   - Out-of-stock plans do not become recommendation candidates merely because their advertised resources qualify.
+  - FX-derived budget results use the timestamped snapshot referenced above and expire under the repository FX policy.
   - Provider-advertised specifications are not performance benchmarks.
 
 clear_pass:
@@ -52,21 +54,11 @@ blocked_by_unknown:
     verification_priority: very_high
     benchmark_priority_after_clearance: high
 
-  - provider: GS_Webservices
-    plan: ng_Cloud_L
-    source_batch: results/verified/batch-018.yaml
-    verified_strengths: [eur_13_03_vat_included_monthly, 4_vcpu, 8gb_ram, 160gb_nvme, 25tb_fair_use, guaranteed_1gbps, ipv4, ipv6, kvm, one_month_term, no_setup_fee, api]
-    unresolved_hard_requirements: [timestamped_usd_tco_at_or_below_15]
-    strict_status: unknown
-    verification_priority: very_high
-    notes:
-      - This is a near-exact technical match whose remaining decision is currency-normalized budget at the chosen FX snapshot.
-
   - provider: dogado
     plan: Cloud_Server_M_4_0
     source_batch: results/verified/batch-018.yaml
-    verified_strengths: [eur_10_99_regular_monthly, 4_vcpu, 8gb_ram, 200gb_nvme, traffic_flat, 1gbps, ipv4, ipv6, one_month_minimum_term, sla_99_9]
-    unresolved_hard_requirements: [kvm_virtualization_for_selected_cloud_server, timestamped_usd_tco]
+    verified_strengths: [eur_10_99_regular_monthly, usd_12_7143_at_snapshot, 4_vcpu, 8gb_ram, 200gb_nvme, traffic_flat, 1gbps, ipv4, ipv6, one_month_minimum_term, sla_99_9]
+    unresolved_hard_requirements: [kvm_virtualization_for_selected_cloud_server]
     strict_status: unknown
     verification_priority: very_high
 
@@ -81,8 +73,8 @@ blocked_by_unknown:
   - provider: Hexabyte
     plan: e3_large
     source_batch: results/verified/batch-018.yaml
-    verified_strengths: [eur_7_69_monthly_cap, hourly_billing, 4_vcpu, 8gb_ram, 80gb_triple_replicated_nvme, 20tb_transfer, ipv4, ipv6, openstack]
-    unresolved_hard_requirements: [kvm_acceleration_for_selected_instance_family, public_port_at_least_1gbps, normalized_usd_tco, current_stock]
+    verified_strengths: [eur_7_69_monthly_cap, usd_8_89656_at_snapshot, hourly_billing, 4_vcpu, 8gb_ram, 80gb_triple_replicated_nvme, 20tb_transfer, ipv4, ipv6, openstack]
+    unresolved_hard_requirements: [kvm_acceleration_for_selected_instance_family, public_port_at_least_1gbps, current_stock]
     strict_status: unknown
     verification_priority: high
     notes:
@@ -99,17 +91,10 @@ blocked_by_unknown:
   - provider: quicksrv
     plan: AMS_Standard_8
     source_batch: results/verified/batch-016.yaml
-    verified_strengths: [eur_7_99_vat_included_monthly, 3_vcpu, 8gb_ram, 180gb_nvme, 40gbps_shared, ipv4, kvm, daily_offsite_backup, no_contract]
-    unresolved_hard_requirements: [numeric_monthly_transfer_at_least_2tb, normalized_usd_tco]
+    verified_strengths: [eur_7_99_vat_included_monthly, usd_9_24363_at_snapshot, 3_vcpu, 8gb_ram, 180gb_nvme, 40gbps_shared, ipv4, kvm, daily_offsite_backup, no_contract]
+    unresolved_hard_requirements: [numeric_monthly_transfer_at_least_2tb]
     strict_status: unknown
-    verification_priority: high
-
-  - provider: Alpenhost
-    plan: Silber_vServer
-    source_batch: results/verified/batch-016.yaml
-    verified_strengths: [eur_14_79_monthly, 4_vcpu, 8gb_ram, 150gb_nvme_ceph, unlimited_fair_use_transfer, 10gbps, ipv4, ipv6, kvm, backup, snapshots, availability_99_99]
-    unresolved_hard_requirements: [normalized_usd_tco]
-    strict_status: unknown
+    verification_priority: very_high
 
   - provider: Hivelocity
     plan: pro_md_amd
@@ -186,6 +171,16 @@ blocked_by_unknown:
     strict_status: unknown
 
 clear_fail_examples:
+  - provider: GS_Webservices
+    source_batch: results/verified/batch-018.yaml
+    fx_snapshot: results/derived/fx-snapshot-2026-08-16.yaml
+    reason: eur_13_03_vat_included_converts_to_usd_15_0744_at_snapshot_above_15_usd_hard_budget
+    notes:
+      - The miss is small and FX-sensitive, but a hard budget is evaluated against the current timestamped snapshot rather than rounded down.
+  - provider: Alpenhost
+    source_batch: results/verified/batch-016.yaml
+    fx_snapshot: results/derived/fx-snapshot-2026-08-16.yaml
+    reason: eur_14_79_converts_to_usd_17_1106_at_snapshot_above_15_usd_hard_budget
   - provider: BlastVPS
     source_batch: results/verified/batch-018.yaml
     reason: verified_8gb_kvm_tier_costs_29_99_usd_month
@@ -207,23 +202,17 @@ clear_fail_examples:
   - provider: Raff
     source_batch: results/verified/batch-017.yaml
     reason: ordinary_8gb_general_purpose_tiers_start_at_19_99_usd_month
-  - provider: MonoVM
-    source_batch: results/verified/batch-016.yaml
-    reason: verified_8gb_nvme_product_costs_65_50_usd_month
-  - provider: Togglebox
-    source_batch: results/verified/batch-015.yaml
-    reason: minimum_2vcpu_8gb_60gb_nvme_ipv4_shape_calculates_to_33_46_usd_month
   - provider: DigitalOcean
     source_batch: results/verified/batch-004.yaml
     reason: verified_8gb_tier_exceeds_15_usd_budget
 
 next_verification_actions:
   - Verify SprintCDN selected-plan IPv4 inclusion; this is the only remaining strict hard field for VPS 4.
-  - Apply the timestamped FX/TCO policy to GS Webservices ng-Cloud L; it has no remaining technical hard-field gaps.
-  - Verify dogado selected Cloud Server hypervisor as KVM/QEMU-KVM rather than generic full virtualization.
+  - Verify dogado selected Cloud Server hypervisor as KVM/QEMU-KVM rather than generic full virtualization; its current FX budget passes.
   - Resolve OnetSolutions current HP-8 price discrepancy and VAT/TCO semantics.
-  - Verify Hexabyte KVM acceleration, selected-instance public-port speed, and future stock restoration.
-  - Find an explicit ServerCheap public-port speed and quicksrv numeric fair-use allowance.
+  - Verify Hexabyte KVM acceleration, selected-instance public-port speed, and future stock restoration; its current FX budget passes.
+  - Find an explicit ServerCheap public-port speed.
+  - Find a numeric quicksrv fair-use allowance; its current FX budget passes.
   - Capture HostBrr current numeric pricing.
   - Clarify Crunchbits Xeon VDS core semantics and exact hypervisor.
   - Capture VPSServer exact 8 GB configuration price and public port speed.
