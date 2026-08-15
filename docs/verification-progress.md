@@ -5,8 +5,10 @@ This file tracks the provider-verification queue. It is not a recommendation lis
 ## Counts
 
 - Discovery seed entries: maintained in `data/provider-candidates.seed.yaml`
-- Official-source verification batches completed: 1
+- Official-source verification batches completed: 2
 - Providers in verified batch 001: 9
+- Providers in verified batch 002: 7
+- Total provider records with an official-source verification batch: 16
 - Benchmark-validated providers: 0
 
 ## Batch 001
@@ -25,38 +27,55 @@ Official-source checks completed for:
 
 See `results/verified/batch-001.yaml`.
 
+## Batch 002
+
+Official-source checks completed for:
+
+- Onidel
+- GreenCloud
+- Hostinger
+- Melbicom
+- ExtraVM
+- VSYS Host
+- CloudBlast
+
+See `results/verified/batch-002.yaml`.
+
 ## Important incomplete fields
 
-The first batch intentionally exposes unknowns rather than filling them from assumptions. Examples include:
+Verification intentionally exposes unknowns rather than filling them from assumptions. Examples include:
 
 - exact regional public port limits for some bargain VPS products;
 - virtualization technology where the current official product page did not explicitly state it;
 - exact private-network fees when documentation describes the feature but not a price;
 - public IPv4 add-on cost where it is billed separately;
 - whether a snapshot feature satisfies a profile's separate backup requirement;
-- current regional worker price when a managed-Kubernetes documentation page verifies features but not pricing;
-- Terraform/OpenTofu support when API support alone was verified.
+- current regional worker price when managed-Kubernetes documentation verifies features but not pricing;
+- Terraform/OpenTofu support when API support alone was verified;
+- provider pages whose dynamic pricing table could not be captured;
+- region pages with inconsistent availability labels;
+- promotional or annualized prices whose contract term differs from a reusable profile's default assumptions.
 
 ## Next official-verification queue
 
 Priority is based on broad resource coverage or potentially strong price/performance, not recommendation status.
 
-### Batch 002 — low-cost and regional compute
+### Batch 003 — remaining low-cost and regional compute
 
-- Onidel
-- GreenCloud / GreenCloudVPS identity review
 - OrangeVPS
-- VSYS Host
-- CloudBlast
-- Hostinger
-- Melbicom
-- ExtraVM
 - WebHorizon
 - FlowVPS
 - ServaRica
 - HostEons
+- RackNerd
+- DediRock
+- Fiberstate
+- Alwyzon
+- Time4VPS
+- Webdock
+- LunaNode
 
-### Batch 003 — API-driven and managed cloud
+### Batch 004 — API-driven and managed cloud
 
 - DigitalOcean
 - Akamai Cloud / Linode
@@ -71,7 +90,7 @@ Priority is based on broad resource coverage or potentially strong price/perform
 - Tencent Cloud
 - Huawei Cloud
 
-### Batch 004 — regional cloud candidates
+### Batch 005 — regional cloud candidates
 
 - Nevacloud
 - vHost
