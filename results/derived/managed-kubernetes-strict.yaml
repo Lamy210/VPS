@@ -1,0 +1,116 @@
+schema_version: 1
+profile: requirements/profiles/managed-kubernetes.yaml
+derived_at: 2026-08-16
+source_policy: verified-batches-only
+rules:
+  - Every hard requirement must be explicitly verified before a provider is placed in clear_pass.
+  - A managed Kubernetes product alone is insufficient: private networking, load balancing, API, Terraform/OpenTofu, native autoscaling, worker capacity, and monitoring integration must all be checked.
+  - Control-plane fees and worker-node costs remain separate TCO components.
+  - Unknown worker-plan storage or network capacity produces unknown rather than pass.
+
+clear_pass: []
+
+blocked_by_unknown:
+  - provider: UpCloud
+    service: Managed_Kubernetes
+    source_batch: results/verified/batch-001.yaml
+    verified_strengths: [managed_control_plane, private_worker_pools, free_private_network, integrated_cluster_autoscaler, node_group_min_max, scale_node_group_to_zero, api, terraform, complimentary_managed_load_balancer]
+    unresolved_hard_requirements: [monitoring_integration, qualifying_worker_shape_with_2vcpu_4gb_40gb_and_1gbps, ipv4_for_selected_worker_architecture]
+    strict_status: unknown
+    verification_priority: very_high
+
+  - provider: Scaleway
+    service: Kapsule
+    source_batch: results/verified/batch-004.yaml
+    verified_strengths: [managed_kubernetes, free_shared_control_plane, vpc_integration, node_pool_autoscaling, autohealing, api, terraform]
+    unresolved_hard_requirements: [load_balancer_required, monitoring_integration, qualifying_worker_shape_with_40gb_storage_and_1gbps, ipv4_for_selected_worker_architecture]
+    strict_status: unknown
+    verification_priority: very_high
+
+  - provider: Exoscale
+    service: SKS
+    source_batch: results/verified/batch-004.yaml
+    verified_strengths: [managed_control_plane, private_network_nodepools, cluster_autoscaler, rest_api, terraform, cloud_init]
+    unresolved_hard_requirements: [load_balancer_required, monitoring_integration, qualifying_worker_local_storage_at_least_40gb, ipv4_for_selected_worker_architecture]
+    strict_status: unknown
+    verification_priority: very_high
+
+  - provider: DigitalOcean
+    service: DOKS
+    source_batch: results/verified/batch-004.yaml
+    verified_strengths: [free_standard_control_plane, native_node_pool_autoscaling, vpc, managed_load_balancer, api, per_second_worker_billing]
+    unresolved_hard_requirements: [terraform_or_opentofu, monitoring_integration, qualifying_worker_shape, private_network_semantics_for_selected_worker_pool]
+    strict_status: unknown
+    verification_priority: high
+
+  - provider: Vultr
+    service: VKE
+    source_batch: results/verified/batch-001.yaml
+    verified_strengths: [managed_kubernetes, vpc, automatic_node_pool_scaling, min_max_nodes, api, terraform, block_storage_csi]
+    unresolved_hard_requirements: [load_balancer_required, monitoring_integration, qualifying_worker_shape_with_40gb_storage_and_1gbps, ipv4_for_selected_worker_architecture]
+    strict_status: unknown
+    verification_priority: high
+
+  - provider: Gcore
+    service: Managed_Kubernetes
+    source_batch: results/verified/batch-001.yaml
+    verified_strengths: [free_control_plane, control_plane_sla_99_9, node_pool_autoscaling, autohealing, public_ipv4_option, zero_worker_egress_fee]
+    unresolved_hard_requirements: [private_network_required, load_balancer_required, terraform_or_opentofu, monitoring_integration, qualifying_worker_shape]
+    strict_status: unknown
+
+  - provider: Google_Cloud
+    service: GKE
+    source_batch: results/verified/batch-007.yaml
+    verified_strengths: [managed_kubernetes, cluster_autoscaling, autopilot_automatic_node_provisioning, automated_cluster_lifecycle, financially_backed_sla_options]
+    unresolved_hard_requirements: [private_network_required_in_source_batch, load_balancer_required_in_source_batch, terraform_or_opentofu, monitoring_integration, qualifying_worker_shape]
+    strict_status: unknown
+    verification_priority: high
+
+  - provider: Microsoft_Azure
+    service: AKS
+    source_batch: results/verified/batch-007.yaml
+    verified_strengths: [managed_kubernetes, free_tier, standard_sla_tier, automatic_node_provisioning_scaling_and_networking, up_to_5000_nodes]
+    unresolved_hard_requirements: [private_network_required, load_balancer_required, api_explicit_in_source_batch, terraform_or_opentofu, monitoring_integration, qualifying_worker_shape]
+    strict_status: unknown
+    verification_priority: high
+
+  - provider: Alibaba_Cloud
+    service: ACK
+    source_batch: results/verified/batch-007.yaml
+    verified_strengths: [managed_kubernetes, ecs_node_autoscaling, ess_backend, pay_as_you_go_scaled_nodes, vpc]
+    unresolved_hard_requirements: [load_balancer_required, terraform_or_opentofu, monitoring_integration, qualifying_worker_shape, ipv4_for_selected_worker_architecture]
+    strict_status: unknown
+
+  - provider: Tencent_Cloud
+    service: TKE
+    source_batch: results/verified/batch-007.yaml
+    verified_strengths: [managed_kubernetes, cluster_autoscaling, automatic_cvm_node_create_release, tke_service_fee_zero]
+    unresolved_hard_requirements: [private_network_required_in_source_batch, load_balancer_required, api_explicit_in_source_batch, terraform_or_opentofu, monitoring_integration, qualifying_worker_shape]
+    strict_status: unknown
+
+  - provider: IBM_Cloud
+    service: IBM_Cloud_Kubernetes_Service
+    source_batch: results/verified/batch-007.yaml
+    verified_strengths: [managed_kubernetes, cluster_autoscaler_addon, kubernetes_cluster_autoscaler_based, vpc_worker_pool_autoscaling, api, terraform]
+    unresolved_hard_requirements: [load_balancer_required, monitoring_integration, qualifying_worker_shape, explicit_private_network_requirement_for_selected_cluster]
+    strict_status: unknown
+
+  - provider: Oracle_Cloud_Infrastructure
+    service: OKE
+    source_batch: results/verified/batch-007.yaml
+    verified_strengths: [managed_kubernetes, free_basic_cluster_management_tier, flexible_compute, vcn]
+    unresolved_hard_requirements: [native_node_autoscaling, load_balancer_required, api_explicit_in_source_batch, terraform_or_opentofu, monitoring_integration, qualifying_worker_shape]
+    strict_status: unknown
+
+  - provider: vHost
+    service: Kubernetes
+    source_batch: results/verified/batch-005.yaml
+    verified_strengths: [managed_kubernetes_product, private_network, cloud_api, terraform, floating_ip]
+    unresolved_hard_requirements: [native_node_autoscaling, load_balancer_required, monitoring_integration, control_plane_pricing, qualifying_worker_shape]
+    strict_status: unknown
+
+next_verification_actions:
+  - Complete UpCloud first because it already has private workers, Terraform, API, native autoscaling, and a managed load balancer in the verified data.
+  - Complete Scaleway and Exoscale next; both already verify private networking, Terraform, API, and native autoscaling.
+  - Verify DigitalOcean Terraform support and monitoring integration, then pin an exact qualifying worker size and full TCO.
+  - For GKE and AKS, capture a concrete worker shape, VPC/private networking, load balancer, Terraform, and monitoring in one region rather than relying on platform-wide feature assumptions.
