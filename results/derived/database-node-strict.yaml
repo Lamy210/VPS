@@ -1,7 +1,7 @@
 schema_version: 1
 profile: requirements/profiles/database-node.yaml
 derived_at: 2026-08-16
-source_policy: verified-batches-only
+source_policy: verified-batches-plus-followups
 rules:
   - Every hard requirement must be explicitly verified before a resource is placed in clear_pass.
   - Missing private networking, KVM, NVMe, transfer, port speed, snapshot, backup, SLA, or budget normalization produces unknown rather than pass.
@@ -20,40 +20,49 @@ blocked_by_unknown:
     benchmark_priority_after_clearance: high
     notes:
       - Provider backup documentation describes the current backup system as experimental and best-effort, so it does not satisfy the strict backup hard requirement.
-      - Shared/burstable CPU should be benchmarked for sustained database latency if the technical hard requirements are cleared.
 
   - provider: HostBrr
     plan: EPYC_16GBrr
     source_batch: results/verified/batch-009.yaml
-    verified_strengths: [8_vcpu, amd_epyc_9004, 16gb_ddr5_ecc, 160gb_nvme, 20tb_transfer, 10gbps, ipv4, ipv6, backup_slot]
-    unresolved_hard_requirements: [current_numeric_price, exact_kvm_virtualization_for_product_group, private_network, snapshots, independent_backup_semantics]
+    followup: results/verified/followup-002.yaml
+    verified_strengths: [8_vcpu, amd_epyc_9004, 16gb_ddr5_ecc, 160gb_nvme, 20tb_transfer, 10gbps, ipv4, ipv6, backup_slot, kvm]
+    unresolved_hard_requirements: [current_numeric_price, private_network, snapshots, independent_backup_semantics, sla_99_9_or_higher_for_selected_service]
     strict_status: unknown
 
   - provider: ServaRica
     plan: Unified_Slim_4
     source_batch: results/verified/batch-003.yaml
-    verified_strengths: [usd_12_monthly, 4_dedicated_cpu, 16gb_ram, 500gb_nvme, 16tb_transfer, 10gbps]
-    unresolved_hard_requirements: [private_network, snapshots, backups, sla_99_9_or_higher, kvm_explicit_in_source_batch]
+    followup: results/verified/followup-003.yaml
+    verified_strengths: [usd_12_monthly, 4_dedicated_cpu, 16gb_ram, 500gb_nvme, 16tb_transfer, 10gbps, ipv4, kvm, sla_99_9_or_higher]
+    unresolved_hard_requirements: [private_network, snapshots, independent_backups]
     strict_status: unknown
-    benchmark_priority_after_clearance: high
+    benchmark_priority_after_clearance: very_high
+    notes:
+      - Technical capacity, virtualization, IPv4, and SLA are now resolved.
+      - Current evidence mentions backup add-ons in general but does not establish both snapshot and independent-backup semantics for the selected KVM plan.
 
   - provider: VSYS_Host
     plan: VS-NVME4-16
     source_batch: results/verified/batch-002.yaml
-    verified_strengths: [usd_21_monthly, 4_vcpu, 16gb_ram, 200gb_nvme, 4tb_transfer, 1gbps_uplink, kvm, snapshots, backups, sla_99_97]
-    unresolved_hard_requirements: [private_network]
+    followup: results/verified/followup-003.yaml
+    verified_strengths: [usd_21_monthly, 4_vcpu, 16gb_ram, 200gb_nvme, 4tb_transfer, 1gbps_uplink, kvm, snapshots, backups, ipv4, sla_99_97]
+    unresolved_hard_requirements: [customer_configurable_private_network_for_standard_vps]
     strict_status: unknown
+    verification_priority: very_high
     notes:
-      - Guaranteed bandwidth is listed as 200 Mbps while the uplink is 1 Gbps; benchmark sustained throughput before final selection.
+      - Guaranteed bandwidth is listed as 200 Mbps while the uplink is 1 Gbps; sustained-throughput benchmarking remains important after technical clearance.
 
   - provider: VPSnet
     plan: KVM_3
     source_batch: results/verified/batch-005.yaml
-    verified_strengths: [4_vcpu, 16gb_ram, 100gb_replicated_ceph_nvme, 30tb_transfer, 1gbps, daily_backups, snapshots, sla_99_95, ha]
-    unresolved_hard_requirements: [private_network, normalized_usd_tco, kvm_explicit_field]
+    followup: results/verified/followup-003.yaml
+    verified_strengths: [4_vcpu, 16gb_ram, 100gb_replicated_ceph_nvme, 30tb_transfer, 1gbps, kvm, daily_backups, remote_separate_backup_storage, seven_day_backup_retention, snapshots, sla_99_95, ha, rest_api]
+    unresolved_hard_requirements: [private_network, normalized_usd_tco]
     strict_status: unknown
+    verification_priority: very_high
     notes:
-      - Promotional price and regular price must remain separate when normalizing TCO.
+      - This is now one of the shortest-path database candidates: only customer private networking and TCO normalization remain unresolved.
+      - Promotional and regular prices must remain separate.
 
   - provider: BulutVDS
     plan: EPYC_Pro_1
@@ -136,9 +145,8 @@ clear_fail_examples:
     reason: calculated_minimum_4core_16gb_100gb_configuration_costs_45_30_eur_before_database_addons
 
 next_verification_actions:
-  - Verify IPv4, private networking, snapshot semantics, and a non-experimental independent backup path for Advin before any database benchmark.
-  - Capture HostBrr current price and exact KVM/private-network/snapshot/backup facts for the EPYC 16 GB tier.
-  - Verify private-network availability for VSYS Host and VPSnet first; both already satisfy most other database hard constraints.
+  - Search for standard-VPS private networking on VSYS and Cloud VPS private networking on VPSnet; these are now the shortest-path candidates.
+  - Verify ServaRica customer private networking plus separate snapshot and independent-backup semantics; KVM/SLA/capacity are already resolved.
+  - Capture HostBrr current price and private-network/snapshot/backup/SLA facts for the EPYC 16 GB tier.
   - Capture current Onidel 16 GB plan price/specification because its storage, networking, backup, and SLA properties are already strong.
-  - Verify ServaRica private networking, independent backup, snapshot, and SLA semantics before benchmarking it as a database node.
-  - Recheck local-currency candidates with an explicit FX/TCO policy only after technical hard requirements are cleared.
+  - Recheck local-currency candidates with the documented FX/TCO policy only after technical hard requirements are cleared.
