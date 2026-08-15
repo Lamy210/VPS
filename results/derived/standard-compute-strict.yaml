@@ -50,6 +50,27 @@ clear_pass:
       - Follow-up verification resolves the exact VDS/Hybrid KVM requirement using HostEons official product and knowledgebase evidence.
       - Dedicated CPU at a sub-10-USD price makes independent sustained-load and network validation high priority.
 
+  - provider: Advin_Servers
+    plan: KVM_Premium_S_Miami
+    source_batch: results/verified/batch-009.yaml
+    followup: results/verified/followup-004.yaml
+    confidence: A
+    verified_match:
+      monthly_price_usd: 10
+      vcpu_or_cpu: 4_shared_vcpu
+      memory_gb: 8
+      local_storage_gb: 128
+      storage_type: nvme
+      monthly_transfer_tb: 5
+      port_mbps: 10000
+      ipv4_included: true
+      virtualization: kvm
+      contract: monthly_no_contract
+    benchmark_priority: high
+    notes:
+      - Uses the ordinary Premium S 10 USD/month tier rather than relying on the separate promotional Standard XS price.
+      - Shared vCPU makes sustained CPU and steal-time measurements important before recommendation.
+
 blocked_by_unknown:
   - provider: Onie_Cloud
     plan: VM_4_8
@@ -59,17 +80,6 @@ blocked_by_unknown:
     unresolved_hard_requirements: [exact_public_cloud_hypervisor, normalized_usd_tco, promotional_price_persistence]
     strict_status: unknown
     benchmark_priority_after_clearance: high
-
-  - provider: Advin_Servers
-    plan: KVM_Standard_XS_Miami
-    source_batch: results/verified/batch-009.yaml
-    verified_strengths: [usd_6_current_promotional, usd_8_regular_reference, 4_shared_burstable_vcpu, 8gb_ram, 80gb_nvme, 5tb_transfer, 10gbps, kvm]
-    unresolved_hard_requirements: [ipv4_included, promotional_price_persistence]
-    strict_status: unknown
-    benchmark_priority_after_clearance: high
-    notes:
-      - Advertised resources clear all technical hard requirements except explicit IPv4 inclusion.
-      - Shared/burstable CPU makes sustained CPU and steal-time measurements especially important after clearance.
 
   - provider: HostBrr
     plan: EPYC_8GBrr
@@ -306,7 +316,6 @@ clear_fail_examples:
 
 next_verification_actions:
   - Verify Onie Cloud public VM hypervisor, ordinary monthly TCO, and promotion persistence.
-  - Verify Advin Servers IPv4 inclusion and promotion persistence.
   - Capture stable current HostBrr numeric pricing; KVM/IPv4/IPv6/backup/network resource facts are now resolved.
   - Resolve CloudXact exact public port speed and setup-fee-inclusive TCO.
   - Verify Kencang IPv4 inclusion and whether the advertised up-to-1-Gbps link satisfies the hard port requirement.
