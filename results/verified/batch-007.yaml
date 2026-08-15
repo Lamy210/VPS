@@ -1,0 +1,359 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch focuses on global API-driven cloud and managed Kubernetes providers.
+  - Dynamic or region-specific prices remain unknown unless an official numeric value was captured.
+  - Compute-only prices are not treated as full TCO when boot disks, public IPs, bandwidth, or management fees are separate.
+  - Managed Kubernetes capabilities are assessed separately from bargain VPS economics.
+
+providers:
+  - canonical_name: CloudSigma
+    confidence: A
+    resource_classes: [api_driven_cloud, sovereign_cloud]
+    pricing:
+      model: free_form_resource_pricing
+      metering: per_second_in_five_minute_segments
+      fixed_8gb_plan_price: unknown
+    platform:
+      virtualization: kvm
+      free_form_sizing: true
+      regions_count_claim: 40_plus_in_country_regions
+    network:
+      private_vlan: true
+      multiple_public_ips: true
+    operations:
+      rest_api: true
+      terraform: true
+      cloud_init: true
+      snapshots: true
+      clones: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - No stable official fixed 8 GB bundle price was captured, so the 15 USD hard budget filter cannot be applied.
+      kubernetes-worker:
+        status: candidate
+        notes:
+          - KVM, API, Terraform, cloud-init, private networking, and free-form sizing are strong automation primitives.
+    sources:
+      - https://www.cloudsigma.com/pages/pricing
+      - https://www.cloudsigma.com/pages/cloud-servers
+      - https://www.cloudsigma.com/pages/cloud-servers-vps-hosting
+      - https://www.cloudsigma.com/pages/cloud-servers-linux-cloud-hosting
+
+  - canonical_name: Serverspace
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes]
+    offers:
+      - plan: Fixed_8GB
+        currency: EUR
+        monthly_base: 37.74
+        hourly_base: 0.052
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: ssd
+        public_port_mbps: 50
+        transfer: unlimited
+      - plan: Fixed_16GB
+        currency: EUR
+        monthly_base: 70.99
+        hourly_base: 0.099
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 240
+        storage_type: ssd
+        public_port_mbps: 50
+        transfer: unlimited
+    network:
+      private_network: true
+      private_network_mbps: 1000
+      private_network_fee: 0
+    operations:
+      rest_api: true
+      terraform: true
+      cli: true
+      pay_as_you_go: true
+      billing_interval_minutes: 10
+    managed_kubernetes:
+      available: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB tier exceeds the 15 USD budget and its verified public port is only 50 Mbps versus the 1 Gbps requirement.
+      kubernetes-worker:
+        status: unknown
+        notes:
+          - API, Terraform, private networking, and pay-as-you-go are useful; exact managed-Kubernetes autoscaling details still require verification.
+    sources:
+      - https://serverspace.io/pricing/
+      - https://serverspace.io/services/api/
+      - https://serverspace.io/services/
+      - https://serverspace.io/conditions/faq/
+
+  - canonical_name: Alibaba_Cloud
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes]
+    compute:
+      service: ECS
+      billing_modes: [subscription, pay_as_you_go, preemptible]
+      numeric_8gb_price: unknown_dynamic_region_dependent
+    network:
+      vpc: true
+      public_bandwidth_separate_charge: true
+    operations:
+      api: true
+      autoscaling_service: ESS
+      autoscaling_service_fee: 0
+    managed_kubernetes:
+      service: ACK
+      ecs_node_autoscaling: true
+      autoscaling_backend: ESS
+      node_scaling_default_new_nodes_billing: pay_as_you_go
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current exact 8 GB regional ECS TCO was not captured; compute, disk, and public bandwidth must be combined.
+      managed-kubernetes:
+        status: candidate
+        notes:
+          - Managed Kubernetes node autoscaling through ESS is officially supported.
+    sources:
+      - https://www.alibabacloud.com/help/ja/ecs/billing-overview
+      - https://www.alibabacloud.com/help/ja/ecs/getting-started/quick-start
+      - https://www.alibabacloud.com/help/en/ack/ack-managed-and-ack-dedicated/product-overview/billing-of-cloud-services
+      - https://www.alibabacloud.com/help/ja/ack/ack-managed-and-ack-dedicated/user-guide/scale-a-node-pool
+
+  - canonical_name: Tencent_Cloud
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes]
+    compute:
+      service: CVM
+      numeric_8gb_price: unknown_dynamic_region_dependent
+      pricing_components_separate: [cpu_memory, disk, bandwidth]
+    operations:
+      autoscaling_service: true
+    managed_kubernetes:
+      service: TKE
+      service_fee: 0_for_tke_itself
+      cluster_autoscaling: true
+      autoscaling_creates_and_releases_cvm_nodes: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Official pricing is dynamic by region and excludes disk and bandwidth from the compute price table.
+      managed-kubernetes:
+        status: candidate
+        notes:
+          - TKE supports cluster autoscaling and the TKE service itself is currently free while underlying resources are billed.
+    sources:
+      - https://buy.tencentcloud.com/pricing/cvm?lang=en
+      - https://www.tencentcloud.com/jp/product/as
+      - https://www.tencentcloud.com/jp/document/product/457/6770
+      - https://www.tencentcloud.com/jp/document/product/457/32336
+
+  - canonical_name: Huawei_Cloud
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes]
+    compute:
+      service: ECS
+      billing_modes: [yearly_monthly, pay_per_use, spot]
+      pay_per_use_metering: per_second_billed_hourly
+      numeric_8gb_price: unknown_dynamic_region_dependent
+      separate_billing_items: [compute, evs_disk, eip, bandwidth]
+    network:
+      vpc: true
+      vpc_fee: 0
+      subnet_fee: 0
+      route_table_fee: 0
+      vpc_peering_fee: 0
+      eip_and_bandwidth_fee: separate
+    operations:
+      autoscaling_service: AS
+      autoscaling_service_fee: 0
+      auto_created_instances_billing: pay_per_use
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Exact region-specific compute, disk, EIP, and bandwidth TCO still needs calculator capture.
+      managed-kubernetes:
+        status: unknown
+        notes:
+          - ECS autoscaling primitives are verified; managed Kubernetes cluster-specific autoscaling and pricing should be captured in a later batch.
+    sources:
+      - https://support.huaweicloud.com/intl/en-us/price-ecs/ecs_billing_0000.html
+      - https://support.huaweicloud.com/intl/en-us/price-ecs/ecs_billing_2003.html
+      - https://support.huaweicloud.com/intl/en-us/productdesc-as/as_pro_0005.html
+      - https://support.huaweicloud.com/intl/en-us/vpc_faq/index.html
+
+  - canonical_name: Oracle_Cloud_Infrastructure
+    aliases: [OCI]
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes]
+    compute:
+      service: OCI_Compute
+      flexible_shapes: true
+      x86_ocpu_to_vcpu_ratio: 1_ocpu_equals_2_vcpu
+      example_shape: VM_Standard_E4_Flex
+      example_vcpu: 2
+      example_memory_gb: 8
+      example_compute_only_hourly_usd: 0.0484922
+      example_compute_only_monthly_730h_usd: 35.399306
+      boot_volume_separate: true
+    network:
+      vcn: true
+    managed_kubernetes:
+      service: OKE
+      basic_cluster_management_fee: 0
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The captured 2-vCPU/8-GB E4 Flex compute-only estimate already exceeds the 15 USD budget before boot volume and other TCO items.
+      managed-kubernetes:
+        status: candidate
+        notes:
+          - Flexible compute and a free basic OKE cluster management tier make OCI relevant for managed-Kubernetes comparison; worker and network TCO remains separate.
+    sources:
+      - https://www.oracle.com/cloud/pricing/
+      - https://www.oracle.com/cloud/price-list/
+      - https://www.oracle.com/cloud/iaas-paas/
+
+  - canonical_name: IBM_Cloud
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes]
+    compute:
+      service: Virtual_Servers_for_VPC
+      billing: hourly_pay_as_you_use
+      reservations: [one_year, three_year]
+      reservation_discount_claim_up_to_percent: 60
+      numeric_8gb_price: unknown_region_dependent
+    network:
+      vpc: true
+      private_network_control: true
+    operations:
+      api: true
+      terraform: true
+      resize_by_api: true
+      resize_by_terraform: true
+    managed_kubernetes:
+      service: IBM_Cloud_Kubernetes_Service
+      cluster_autoscaler_addon: true
+      autoscaler_basis: kubernetes_cluster_autoscaler
+      worker_pool_autoscaling: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current profile pricing varies by region and was not captured as a stable 8 GB numeric value.
+      managed-kubernetes:
+        status: candidate
+        notes:
+          - Official Cluster Autoscaler integration for VPC worker pools is available.
+    sources:
+      - https://www.ibm.com/products/virtual-servers
+      - https://cloud.ibm.com/docs/vpc?topic=vpc-about-reserved-virtual-servers-vpc
+      - https://cloud.ibm.com/docs/vpc?topic=vpc-managing-virtual-server-instances
+      - https://cloud.ibm.com/docs/containers?topic=containers-cluster-scaling-classic-vpc
+
+  - canonical_name: AWS_Lightsail
+    confidence: A
+    resource_classes: [bundled_vps]
+    offers:
+      - plan: General_Purpose_8GB_IPv4
+        currency: USD
+        monthly_base: 44
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: ssd
+        monthly_transfer_tb: 5
+        public_ipv4_included: true
+        baseline_cpu_percent_per_vcpu: 30
+      - plan: General_Purpose_16GB_IPv4
+        currency: USD
+        monthly_base: 84
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: ssd
+        monthly_transfer_tb: 6
+        public_ipv4_included: true
+        baseline_cpu_percent_per_vcpu: 40
+    regional_transfer_note:
+      reduced_to_half_in: [Mumbai, Sydney, Jakarta, Malaysia]
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB plan is 44 USD/month, well above the 15 USD hard budget ceiling.
+    sources:
+      - https://aws.amazon.com/lightsail/pricing/
+      - https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-bundles.html
+      - https://docs.aws.amazon.com/lightsail/latest/userguide/baseline-cpu-performance.html
+
+  - canonical_name: Google_Cloud
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes]
+    compute:
+      service: Compute_Engine
+      example_plan: e2_standard_2
+      vcpu: 2
+      memory_gib: 8
+      hourly_usd_example_region: 0.06701142
+      monthly_730h_usd_example_region: 48.9183366
+      disk_and_network_tco_separate: true
+    managed_kubernetes:
+      service: GKE
+      cluster_management_fee_usd_per_hour: 0.10
+      monthly_free_tier_credit_usd: 74.40
+      pod_and_cluster_autoscaling: true
+      standard_cluster_autoscaler: true
+      autopilot_node_provisioning_and_scaling: automatic
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The captured e2-standard-2 compute price alone is far above the 15 USD ceiling before disk/network costs.
+      managed-kubernetes:
+        status: candidate
+        notes:
+          - Native cluster autoscaling and Autopilot automatic node provisioning are strong managed-Kubernetes capabilities.
+    sources:
+      - https://cloud.google.com/compute/all-pricing
+      - https://cloud.google.com/kubernetes-engine/pricing
+      - https://docs.cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler
+
+  - canonical_name: Microsoft_Azure
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes]
+    compute:
+      service: Azure_Virtual_Machines
+      numeric_8gb_price: unknown_dynamic_region_dependent
+      managed_disks_separate: true
+      egress_separate: true
+      vm_autoscale_available: true
+    managed_kubernetes:
+      service: AKS
+      free_tier: available_no_sla
+      standard_tier: sla_available
+      automatic_tier: automated_node_provisioning_scaling_and_networking
+      max_nodes_claim: 5000
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current 8 GB region-specific VM price was not captured from the dynamic price table.
+      managed-kubernetes:
+        status: candidate
+        notes:
+          - AKS Automatic directly matches a requirement for managed node provisioning and scaling, while Standard provides managed node pools and SLA options.
+    sources:
+      - https://azure.microsoft.com/pricing/details/virtual-machines/linux/
+      - https://azure.microsoft.com/pricing/details/kubernetes-service/
