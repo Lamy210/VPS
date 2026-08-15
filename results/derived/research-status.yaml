@@ -5,7 +5,7 @@ scope: public_requirement_driven_infrastructure_resource_research
 counts:
   verification_batches: 18
   unique_verified_providers: 166
-  targeted_followup_files: 4
+  targeted_followup_files: 5
   strict_clear_passes:
     standard_compute: 4
     database_node: 0
@@ -57,6 +57,14 @@ latest_batches:
   - batch: 18
     focus: european_and_network_focused_vps_cloud
     providers: [BlastVPS, dogado, Genesis_Public_Cloud, Linkdata, OnetSolutions, SprintCDN, NoBull_Networks, TakeHost, Hexabyte, GS_Webservices]
+
+latest_followup:
+  file: results/verified/followup-005.yaml
+  providers: [SprintCDN, dogado, Server_Optima]
+  outcome:
+    SprintCDN: ipv4_inclusion_still_unresolved
+    dogado: api_and_private_network_confirmed_but_selected_unmanaged_kvm_still_unresolved
+    Server_Optima: full_backup_support_reconfirmed_but_selected_vps_backup_price_still_unresolved
 
 next_work:
   - Verify SprintCDN selected-plan IPv4 inclusion; it is one hard field away from a standard-compute pass.
