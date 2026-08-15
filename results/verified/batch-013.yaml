@@ -1,0 +1,301 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch expands European regional/public-cloud coverage.
+  - Promotional and list prices remain separate.
+  - Quote/dynamic pricing is kept unknown unless the official page exposes a stable value.
+
+providers:
+  - canonical_name: Brightbox
+    confidence: A
+    resource_classes: [regional_public_cloud, api_driven_cloud, managed_database, object_storage]
+    verified_regions: [United_Kingdom]
+    offers:
+      - plan: 8gb_ssd_ram_opt
+        currency: GBP
+        monthly_base: 30
+        hourly: 0.04110
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 60
+        storage_type: local_ssd
+      - plan: 8gb_ssd
+        currency: GBP
+        monthly_base: 55
+        hourly: 0.07534
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: local_ssd
+      - plan: 16gb_ssd
+        currency: GBP
+        monthly_base: 110
+        hourly: 0.15068
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 280
+        storage_type: local_ssd
+    network:
+      private_networking: true
+      private_traffic_free: true
+      cloud_ip_ipv4_ipv6_gbp_month: 2
+      outbound_internet_gbp_per_gb: 0.06
+    operations:
+      metered_per_minute: true
+      api_destroy_stops_billing: true
+      terraform_compatible_claimed: true
+    additional_services:
+      managed_postgresql_mysql: Cloud_SQL
+      block_storage: true
+      object_storage: Orbit
+      managed_load_balancer_gbp_month: 20
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The lowest 8 GB local-SSD tier is 30 GBP/month before Cloud IP and egress, above the reusable 15 USD budget even without FX normalization.
+      database-node:
+        status: fail
+        notes:
+          - Current 16 GB compute pricing is far above the reusable 30 USD database-node ceiling.
+    sources:
+      - https://www.brightbox.com/pricing/
+      - https://www.brightbox.com/cloud/servers/
+      - https://www.brightbox.com/
+
+  - canonical_name: Krystal_Cloud
+    aliases: [Katapult]
+    confidence: A
+    resource_classes: [regional_public_cloud, api_driven_cloud]
+    verified_regions: [London, Amsterdam, New_York, Phoenix]
+    compute:
+      vm_categories: [standard_vcpu, dedicated_vcpu, memory_optimized]
+      exact_8gb_numeric_price: unknown_api_or_console
+      monthly_and_hourly_prices_shown_in_console: true
+      resize_after_deployment: true
+    operations:
+      public_api: true
+      pricing_api: true
+      vm_package_api: true
+      custom_iso_supported: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current regions, VM categories and pricing/API machinery are verified, but a stable exact 8 GB package/price/storage/transfer/IP/network snapshot was not exposed on the public static page.
+    sources:
+      - https://cdn.katapult.io/
+      - https://docs.katapult.io/docs/product/compute/virtual-machines/how-to/create-a-virtual-machine
+      - https://docs.katapult.io/docs/api/public/get-pricing-prices
+      - https://docs.katapult.io/docs/category/public-api
+
+  - canonical_name: TransIP
+    confidence: A
+    resource_classes: [regional_vps, performance_vds]
+    verified_regions: [Netherlands]
+    offers:
+      - plan: VPS_8GB
+        currency: EUR
+        monthly_base: 50
+        vcpu: 4
+        cpu_allocation: shared_or_dedicated_option
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme
+        transfer: unlimited
+        snapshots_included: 1
+        ipv4_included: true
+        ipv6_included: true
+      - plan: VPS_16GB
+        currency: EUR
+        monthly_base: 100
+        vcpu: 8
+        cpu_allocation: shared_or_dedicated_option
+        memory_gb: 16
+        local_storage_gb: 100
+        storage_type: nvme
+        transfer: unlimited
+        snapshots_included: 1
+        ipv4_included: true
+        ipv6_included: true
+      - plan: PerformanceVPS_16GB
+        currency: EUR
+        monthly_base: 159.99
+        dedicated_vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 400
+        storage_type: nvme
+        automatic_backups: true
+        snapshots_included: 1
+        ipv4_included: true
+        ipv6_included: true
+    addons:
+      dedicated_vcpu_eur_month: 10
+      extra_bandwidth_up_to_2_5gbps_eur_month: 2
+      backup_eur_month: 5
+      offsite_backup_eur_month: 10
+    operations:
+      public_api: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The normal 8 GB tier costs 50 EUR/month before add-ons.
+      database-node:
+        status: fail
+        notes:
+          - Both 16 GB normal and dedicated-performance tiers exceed the reusable 30 USD database-node budget by a wide margin.
+    sources:
+      - https://www.transip.eu/vps/
+      - https://www.transip.eu/order-vps/choose-vps/
+      - https://www.transip.eu/order-vps/choose-performance-package/
+
+  - canonical_name: Aruba_Cloud
+    confidence: A
+    resource_classes: [regional_public_cloud, openstack_cloud, vmware_cloud, vps]
+    verified_regions: [Europe]
+    offers:
+      - plan: OpenStack_PRO_O2A8R
+        currency: EUR
+        promotional_monthly: 12.85
+        list_monthly: 25.70
+        promotion_end: 2026-09-30
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        transfer: unlimited
+        public_ipv4_included: false
+      - plan: Virtual_Data_Center_CS_O4A8
+        currency: EUR
+        monthly_base: 33.58
+        vcpu: 4
+        memory_gb: 8
+        block_storage_separate: true
+    network:
+      vpc: true
+      vpc_fee: 0
+      security_group_fee: 0
+      public_ipv4_eur_month: 3.65
+      peering_available: true
+    storage:
+      block_storage_standard_and_performance: true
+      snapshots: true
+      agentless_backup: true
+    operations:
+      hourly_monthly_yearly_models: true
+      api: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Promotional 8 GB OpenStack compute is below 15 EUR but IPv4 is an extra 3.65 EUR/month, and exact public port/KVM/profile USD TCO still need normalization; promotion expires 2026-09-30.
+      database-node:
+        status: unknown
+        notes:
+          - VPC, snapshots and backup services exist, but a concrete <=30 USD 16 GB NVMe configuration with all hard fields is not currently established.
+    sources:
+      - https://www.arubacloud.com/openstack-cloud-server/
+      - https://www.arubacloud.com/pricing/public-cloud/virtual-data-center
+      - https://www.arubacloud.com/pricing
+      - https://www.arubacloud.com/vmware-on-aruba-cloud/vmware-cloud-server/
+
+  - canonical_name: Leaseweb
+    confidence: A
+    resource_classes: [regional_public_cloud, regional_vps, api_driven_cloud]
+    verified_regions: [Japan, six_other_global_public_cloud_regions]
+    pricing:
+      hourly_billing: true
+      monthly_billing: true
+      no_long_term_commitment_required: true
+      exact_japan_8gb_numeric_price: unknown
+    availability:
+      instance_sla_percent: 99.99
+    operations:
+      public_cloud_api: true
+      advanced_api_automation: true
+    network:
+      public_cloud_network_types: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Japan Public Cloud/VPS, hourly/monthly billing, 99.99% SLA and API automation are verified; exact 8 GB Japanese price/storage/transfer/port/IP facts still require product-level capture.
+    sources:
+      - https://www.leaseweb.com/press/releases/leaseweb-launches-japan-public-cloud-vps-solutions
+      - https://kb.leaseweb.com/kb/public-cloud/public-cloud-overview/
+
+  - canonical_name: Cleura
+    confidence: A
+    resource_classes: [european_public_cloud, api_driven_cloud, openstack_cloud]
+    verified_regions: [Europe]
+    pricing:
+      generic_vcpu_eur_month: 7.26
+      high_intensity_vcpu_eur_month: 14.52
+      ram_eur_per_gb_month: 6.06
+      low_latency_disk_eur_per_gb_month: 0.35
+      metered_by_second_calculated_hourly_billed_monthly: true
+    example_calculated_8gb_floor:
+      vcpu: 2
+      memory_gb: 8
+      cpu_ram_monthly_eur_before_disk_network: 63.0
+    operations:
+      rest_api: true
+      server_create_api: true
+      flavor_cost_estimate_api: true
+      cloud_config_generation: true
+    platform:
+      openstack_api_semantics: true
+      qemu_hypervisor_observed_in_api_example: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - Two generic vCPUs plus 8 GB RAM already total about 63 EUR/month before disk/network using the current unit price list.
+      database-node:
+        status: fail
+        notes:
+          - Current resource-unit economics exceed the reusable low-cost database-node budget before required storage/network/backup additions.
+    sources:
+      - https://cleura.com/cloud-pricing/
+      - https://cleura.com/cloud-pricing/calculator-app/
+      - https://apidoc.cleura.cloud/
+
+  - canonical_name: Open_Telekom_Cloud
+    confidence: A
+    resource_classes: [european_public_cloud, openstack_cloud, managed_database]
+    verified_regions: [Germany, Netherlands]
+    compute:
+      service: Elastic_Cloud_Server
+      broad_flavor_catalog: true
+      m4_medium_memory_optimized_available: true
+      m4_medium_max_bandwidth_gbps: 2
+      current_exact_8gb_price: unknown_price_calculator
+    pricing:
+      pay_as_you_go: true
+      reserved_12_and_24_month: true
+    storage:
+      elastic_volume_service: true
+      snapshots: true
+      extreme_ssd_available: true
+      cloud_server_backup: true
+      cloud_backup_and_recovery: true
+    additional_services:
+      object_storage: true
+      managed_database: true
+      autoscaling: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - ECS, up-to-2-Gbps memory-optimized flavors and flexible billing are verified, but a current exact 8 GB flavor price/storage/IP/transfer snapshot is calculator/service-description dependent.
+      database-node:
+        status: unknown
+        notes:
+          - Snapshot, backup and high-performance SSD capabilities are strong, but a concrete <=30 USD 16 GB architecture and all network/private-network hard fields remain unpinned.
+    sources:
+      - https://www.open-telekom-cloud.com/en/business-navigator/prices
+      - https://www.open-telekom-cloud.com/de/support/release-notes/neue-ecs-einstiegsvariante-m4-medium-verfuegbar-1
+      - https://www.open-telekom-cloud.com/en/products-services/core-services/data-ingestion-service
+      - https://www.open-telekom-cloud.com/en/support/release-notes/extreme-ssd-disk-available
