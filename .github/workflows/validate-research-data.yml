@@ -7,6 +7,7 @@ on:
       - "requirements/**"
       - "results/**"
       - "scripts/validate_research_data.py"
+      - "scripts/check_derived_counts.py"
       - ".github/workflows/validate-research-data.yml"
   push:
     branches:
@@ -16,6 +17,7 @@ on:
       - "requirements/**"
       - "results/**"
       - "scripts/validate_research_data.py"
+      - "scripts/check_derived_counts.py"
       - ".github/workflows/validate-research-data.yml"
   workflow_dispatch:
 
@@ -40,3 +42,6 @@ jobs:
 
       - name: Validate research data
         run: python scripts/validate_research_data.py
+
+      - name: Validate derived counts
+        run: python scripts/check_derived_counts.py
