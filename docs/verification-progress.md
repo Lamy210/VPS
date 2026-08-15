@@ -5,7 +5,7 @@ This file tracks the provider-verification queue. It is not a recommendation lis
 ## Counts
 
 - Discovery seed entries: maintained in `data/provider-candidates.seed.yaml`
-- Official-source verification batches completed: 9
+- Official-source verification batches completed: 10
 - Providers in verified batch 001: 9
 - Providers in verified batch 002: 7
 - Providers in verified batch 003: 12
@@ -15,7 +15,8 @@ This file tracks the provider-verification queue. It is not a recommendation lis
 - Providers in verified batch 007: 10
 - Providers in verified batch 008: 11
 - Providers in verified batch 009: 4
-- Total unique provider records in official-source verification batches: 81
+- Providers in verified batch 010: 11
+- Total unique provider records in official-source verification batches: 92
 - Targeted follow-up files: 1
 - Benchmark-ready resources: 1
 - Benchmark-measured resources: 0
@@ -49,7 +50,10 @@ IPXON, VPSMalaysia, Randhost, AkileCloud, SpeedyPage, Shock Hosting, SmartHost, 
 ### Batch 009 — newly discovered strong-price/configurable providers
 Advin Servers, HostBrr, HostSlick, UltaHost.
 
-Verified source files are stored as `results/verified/batch-001.yaml` through `results/verified/batch-009.yaml`.
+### Batch 010 — Asia-focused local/regional providers
+FormoHost, FussionHost, ServerUtama, Herza Cloud, GOFIBER, Kencang, CloudXact, Rumahweb, H2Cloud, Onie Cloud, ModernOne / Nocser.
+
+Verified source files are stored as `results/verified/batch-001.yaml` through `results/verified/batch-010.yaml`.
 
 ## Targeted follow-ups
 
@@ -74,11 +78,12 @@ Current clear advertised-specification pass:
 
 - ServaRica KVM Slim Slice 2.
 
-High-priority blocked candidates now include:
+High-priority blocked candidates include:
 
+- Onie Cloud VM 4-8: 4 vCPU, 8 GB, 150 GB NVMe, 7 TB, 10 Gbps, IPv4/IPv6, VPC, API/CLI/Python SDK, hourly billing, autoscaling, load balancing, snapshots, and automated backup; blocked by KVM verification, normalized TCO, and promotional-price persistence.
 - Advin Servers Miami Standard XS: current advertised 6 USD promotion / 8 USD reference, 4 shared-burstable vCPU, 8 GB, 80 GB NVMe, 5 TB, 10 Gbps, KVM; blocked by explicit IPv4 verification and promotional-price persistence.
 - HostBrr EPYC 8 GB: strong EPYC 9004 / DDR5 ECC / NVMe / 10 Gbps resources; blocked by stable current price and exact product virtualization verification.
-- OrangeVPS, HostEons, BulutVDS, HostHatch, Contabo, Hetzner, IONOS, SferaHost, Netlen, ITMCloud, SmartHost, and IPXON remain blocked by one or more explicit unknown hard fields.
+- CloudXact, Kencang, ServerUtama, Rumahweb, OrangeVPS, HostEons, BulutVDS, HostHatch, Contabo, Hetzner, IONOS, SferaHost, Netlen, ITMCloud, SmartHost, and IPXON remain blocked by one or more explicit unknown hard fields.
 
 A provider-advertised hard-filter pass is not a final recommendation. It advances the resource to benchmark and operational verification.
 
@@ -102,21 +107,23 @@ Current benchmark-ready resource:
 
 - ServaRica KVM Slim Slice 2 for the standard-compute profile.
 
+High-priority blocked benchmark candidates now also include Onie Cloud, Advin Servers, and HostBrr for standard compute.
+
 No benchmark has been executed or claimed yet. The queue defines reproducible CPU, storage, database, network, and stability checks and requires exact region/plan/OS/kernel/tool metadata for future measurements.
 
 ## Notable classification findings
 
-- A bargain headline price is frequently invalidated by a hard network, storage, contract, virtualization, IPv4, or availability requirement.
-- ServaRica remains the strongest strict standard-compute advertised-specification match and is now explicitly benchmark-ready.
-- Advin Servers is a particularly strong new price/specification lead, but strict filtering correctly withholds pass status until IPv4 inclusion and price persistence are verified.
+- A bargain headline price is frequently invalidated by a hard network, storage, contract, virtualization, IPv4, transfer, or availability requirement.
+- ServaRica remains the strongest strict standard-compute advertised-specification match and is benchmark-ready.
+- Onie Cloud is one of the strongest newly verified Asia-local API-driven compute leads, but strict filtering correctly withholds pass status until virtualization and TCO/price persistence are resolved.
+- Advin Servers is a particularly strong global price/specification lead, but strict filtering correctly withholds pass status until IPv4 inclusion and price persistence are verified.
 - HostBrr exposes compelling EPYC 9004 memory-optimized shapes, but the current checkout did not expose stable numeric prices during verification.
-- VPSMalaysia demonstrates why transfer allowance alone is insufficient: the 8 GB KVM tier has ample NVMe and transfer but only a 100 Mbps shared port.
-- Randhost is a genuine KVM/API/hourly cloud, but its current 8 GB tier is not a bargain-VPS-priced resource.
-- AkileCloud is optimized around network paths and high-bandwidth regional products; observed 8 GB products miss reusable local-storage and/or port hard floors.
-- SpeedyPage, Shock Hosting, Virtono, Evoxt, LiteServer, HostSlick, and UltaHost offer credible products but their verified/current 8 GB economics do not satisfy the current 15 USD bargain-compute profile.
-- IPXON provides broad Latin American KVM coverage and advanced networking, but its current price widget is not reliably machine-readable and API status is inconsistent across official pages.
+- FormoHost Taiwan, FussionHost Manila, GOFIBER Vietnam, and ModernOne Malaysia demonstrate how local presence can still fail generic requirements due RAM, transfer, price, or port-speed hard limits.
+- Herza Cloud Manila provides KVM and a shared 10 Gbps port, but its 8 GB plan exceeds the current bargain-compute budget.
+- H2Cloud exposes inexpensive 10 Gbps/KVM/NVMe Vietnam plans, but the verified 8 GB high-speed tier includes only 1 TB/month and was out of stock.
+- ServerUtama, CloudXact, Kencang, and Rumahweb remain useful near-matches because only a small number of hard fields are unresolved.
 - Annualized, promotional, and renewal pricing remain separate data fields and are never silently treated as ordinary monthly prices.
-- Marketing geography is stored separately from actual datacenter geography when the provider exposes a mismatch.
+- Marketing geography is stored separately from actual datacenter geography when the provider exposes a mismatch or ambiguity.
 
 ## Important incomplete fields
 
@@ -139,16 +146,16 @@ Common unresolved fields include:
 
 ## Next official-verification queue
 
-### Batch 010 — Asia-focused discovery
+### Batch 011 — more Asia/local discovery
 
-- Taiwan local KVM/cloud providers
-- Vietnam additional KVM/cloud providers
-- Indonesia local public-cloud providers
-- Malaysia additional providers
-- Philippines local providers
-- India/Pakistan/Bangladesh additional providers not already counted
+- additional Taiwan local cloud/VPS providers
+- Vietnam providers with 8 GB and 1+ Gbps signals
+- Indonesia providers with KVM, IPv4, and explicit port speeds
+- Philippines local providers not already counted
+- India/Pakistan/Bangladesh providers not already counted
+- South Korea/Hong Kong regional providers outside the major cloud set
 
-### Batch 011 — Europe and global low-cost discovery
+### Batch 012 — Europe and global low-cost discovery
 
 - remaining VPS index candidates with 8 GB or configurable-memory signals
 - regional Root Server / VDS providers not yet normalized into the verified set
@@ -156,6 +163,11 @@ Common unresolved fields include:
 
 ### Follow-up 002 — hard-filter unknown reduction
 
+- Onie Cloud KVM virtualization, ordinary monthly price/TCO, and promotion persistence
+- CloudXact exact public port speed and setup-fee-inclusive TCO
+- Kencang IPv4 and port-floor semantics
+- ServerUtama public port and datacenter geography
+- Rumahweb public port and IPv4
 - Advin Servers IPv4 inclusion and non-promotional monthly price behavior
 - HostBrr stable 8/16 GB pricing and exact product virtualization
 - VSYS Host private-network verification
