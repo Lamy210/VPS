@@ -1,0 +1,68 @@
+name: database-node
+status: reusable-profile
+
+budget:
+  currency: USD
+  monthly_max: 30
+  setup_fee_max: 10
+
+regions:
+  preferred: []
+  acceptable: []
+  excluded: []
+  max_latency_ms: null
+
+compute:
+  min_vcpu: 4
+  min_memory_gb: 16
+  cpu_allocation:
+    accepted: [shared, dedicated]
+    preferred: dedicated
+  architecture: [x86_64]
+
+storage:
+  min_local_gb: 100
+  accepted_types: [nvme]
+  min_iops: null
+  min_block_storage_gb: 0
+
+network:
+  min_monthly_transfer_tb: 1
+  min_port_mbps: 1000
+  ipv4_required: false
+  ipv6_required: false
+  private_network_required: true
+  private_traffic_unmetered_preferred: true
+  floating_ip_required: false
+
+platform:
+  resource_types: [vps, vds, cloud_vm, bare_metal]
+  virtualization: [kvm]
+
+operations:
+  api_required: false
+  terraform_or_opentofu_required: false
+  cloud_init_required: false
+  hourly_billing_preferred: false
+  snapshots_required: true
+  backups_required: true
+
+availability:
+  min_sla_percent: 99.9
+  multi_az_required: false
+  live_migration_preferred: false
+  replicated_storage_preferred: false
+
+priorities:
+  monthly_cost: 8
+  performance: 10
+  network: 8
+  reliability: 10
+  automation: 4
+  scalability: 6
+  support: 5
+
+notes:
+  - Dedicated or guaranteed CPU is preferred because shared-vCPU contention can materially affect database latency.
+  - Record storage durability separately from storage performance; local NVMe and replicated network storage are different classes.
+  - Benchmark candidates with database-relevant latency and storage tests before final selection.
