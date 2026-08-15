@@ -35,32 +35,9 @@ strict_clear_passes:
       validation_ready: true
 
 high_priority_unknown_reduction:
-  standard_compute:
-    - Onie_Cloud
-    - HostBrr
-    - CloudCone
-    - Crunchbits
-    - VPSServer
-    - OrangeVPS
-    - BulutVDS
-    - CloudXact
-    - Kencang
-    - Aruba_Cloud
-    - LayerStack
-  database_node:
-    - VPSnet
-    - ServaRica
-    - VSYS_Host
-    - Onidel
-    - HostBrr
-  managed_kubernetes:
-    - Scaleway
-    - Exoscale
-    - DigitalOcean
-    - Vultr
-    - Google_Cloud
-    - Microsoft_Azure
-    - NAVER_Cloud_Platform
+  standard_compute: [Onie_Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, OrangeVPS, BulutVDS, CloudXact, Kencang, Aruba_Cloud, LayerStack]
+  database_node: [VPSnet, ServaRica, VSYS_Host, Onidel, HostBrr]
+  managed_kubernetes: [Scaleway, Exoscale, DigitalOcean, Vultr, Google_Cloud, Microsoft_Azure, NAVER_Cloud_Platform]
 
 latest_batches:
   - batch: 14
@@ -77,7 +54,6 @@ next_work:
   - Operationally validate UpCloud Managed Kubernetes autoscaling, provisioning, networking, observability, and TCO.
   - Benchmark ServaRica, HostEons, Advin Servers, and InterServer only on exact verified plans and regions.
   - Continue Batch 016 with additional unverified regional/API providers while keeping provider identity normalization strict.
-  - Extend automated validation to strict-pass and benchmark-ready count consistency.
 
 quality_invariants:
   - unknown_hard_fields_never_pass
