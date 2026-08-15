@@ -8,7 +8,7 @@ Machine-readable status: `results/derived/research-status.yaml`.
 
 - Official-source verification batches: **18**
 - Unique verified provider records: **166**
-- Targeted follow-up files: **4**
+- Targeted follow-up files: **5**
 - Strict standard-compute passes: **4**
 - Strict database-node passes: **0**
 - Strict managed-Kubernetes passes: **1**
@@ -22,6 +22,14 @@ Machine-readable status: `results/derived/research-status.yaml`.
 - Batch 018: BlastVPS, dogado, Genesis Public Cloud, Linkdata, OnetSolutions, SprintCDN, NoBull Networks, TakeHost, Hexabyte, GS Webservices.
 
 Full source history is stored as `results/verified/batch-001.yaml` through `results/verified/batch-018.yaml`.
+
+## Latest targeted follow-up
+
+`results/verified/followup-005.yaml` revisited SprintCDN, dogado and Server Optima without increasing the unique-provider count:
+
+- SprintCDN: provider-owned IP space and BYOIP are confirmed, but plan-level included IPv4 for VPS 4 is still not explicitly published.
+- dogado: Cloud Server 4.0 REST API, Private Network add-on and custom ISO support are confirmed, while the selected unmanaged Cloud Server still exposes only generic full-virtualization wording rather than explicit KVM/QEMU-KVM.
+- Server Optima: Full Backup support is reconfirmed, but the selected VPS plan's independent-backup price remains unpublished; dedicated-server backup selectors are not reused as VPS pricing.
 
 ## Strict results
 
