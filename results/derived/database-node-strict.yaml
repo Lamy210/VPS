@@ -11,6 +11,24 @@ rules:
 clear_pass: []
 
 blocked_by_unknown:
+  - provider: Advin_Servers
+    plan: KVM_Standard_S_Miami
+    source_batch: results/verified/batch-009.yaml
+    verified_strengths: [usd_12_current_promotional, usd_16_regular_reference, 8_shared_burstable_vcpu, 16gb_ddr4_ecc, 160gb_nvme, 15tb_transfer, 10gbps, kvm]
+    unresolved_hard_requirements: [private_network_activation_for_selected_plan, snapshots, reliable_independent_backups, exact_sla_interpretation, ipv4_included, promotional_price_persistence]
+    strict_status: unknown
+    benchmark_priority_after_clearance: high
+    notes:
+      - Provider backup documentation describes the current backup system as experimental and best-effort, so it does not satisfy the strict backup hard requirement.
+      - Shared/burstable CPU should be benchmarked for sustained database latency if the technical hard requirements are cleared.
+
+  - provider: HostBrr
+    plan: EPYC_16GBrr
+    source_batch: results/verified/batch-009.yaml
+    verified_strengths: [8_vcpu, amd_epyc_9004, 16gb_ddr5_ecc, 160gb_nvme, 20tb_transfer, 10gbps, ipv4, ipv6, backup_slot]
+    unresolved_hard_requirements: [current_numeric_price, exact_kvm_virtualization_for_product_group, private_network, snapshots, independent_backup_semantics]
+    strict_status: unknown
+
   - provider: ServaRica
     plan: Unified_Slim_4
     source_batch: results/verified/batch-003.yaml
@@ -60,7 +78,8 @@ blocked_by_unknown:
 
   - provider: Onidel
     source_batch: results/verified/batch-002.yaml
-    verified_strengths: [triple_replicated_nvme, private_network, unmetered_private_traffic, 1gbps_singapore, snapshots, automated_backups, sla_99_9, automatic_failover]
+    followup: results/verified/followup-001.yaml
+    verified_strengths: [triple_replicated_nvme, private_network, unmetered_private_traffic, 1gbps_singapore, snapshots, automated_backups, sla_99_9, automatic_failover, rest_api]
     unresolved_hard_requirements: [current_16gb_plan_specification, current_16gb_price, kvm_virtualization]
     strict_status: unknown
     benchmark_priority_after_clearance: high
@@ -108,8 +127,17 @@ clear_fail_examples:
   - provider: OneAsiaHost
     source_batch: results/verified/batch-005.yaml
     reason: provider_sla_99_5_below_required_99_9
+  - provider: Cherry_Servers
+    source_batch: results/verified/batch-004.yaml
+    followup: results/verified/followup-001.yaml
+    reason: verified_tokyo_16gb_dedicated_vds_costs_69_03_usd_month
+  - provider: Aluy
+    source_batch: results/verified/batch-008.yaml
+    reason: calculated_minimum_4core_16gb_100gb_configuration_costs_45_30_eur_before_database_addons
 
 next_verification_actions:
+  - Verify IPv4, private networking, snapshot semantics, and a non-experimental independent backup path for Advin before any database benchmark.
+  - Capture HostBrr current price and exact KVM/private-network/snapshot/backup facts for the EPYC 16 GB tier.
   - Verify private-network availability for VSYS Host and VPSnet first; both already satisfy most other database hard constraints.
   - Capture current Onidel 16 GB plan price/specification because its storage, networking, backup, and SLA properties are already strong.
   - Verify ServaRica private networking, independent backup, snapshot, and SLA semantics before benchmarking it as a database node.
