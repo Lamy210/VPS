@@ -6,6 +6,9 @@ rules:
   - Every hard requirement must be explicitly verified before a resource is placed in clear_pass.
   - Missing virtualization, network-port, IPv4, transfer, contract, or price facts produce unknown rather than pass.
   - Targeted follow-up files may resolve a blocker from an earlier source batch without changing the original observed record.
+  - Shared port speed is an interface/uplink characteristic, not a guaranteed sustained-throughput result.
+  - Annualized prepaid pricing is not treated as ordinary month-to-month pricing.
+  - Physical CPU threads are not silently substituted for an explicit vCPU/core-count hard requirement.
   - Provider-advertised specifications are not performance benchmarks.
 
 clear_pass:
@@ -24,10 +27,6 @@ clear_pass:
       ipv4_included: true
       virtualization: kvm
     benchmark_priority: high
-    notes:
-      - Clear advertised-specification match for the reusable standard-compute profile.
-      - Dedicated CPU and unusually low price make benchmark validation especially important.
-      - Final purchase suitability still depends on independent CPU, storage, and network measurements.
 
   - provider: HostEons
     plan: Hybrid_Special_2
@@ -46,9 +45,6 @@ clear_pass:
       ipv6_prefix: /64
       virtualization: kvm
     benchmark_priority: high
-    notes:
-      - Follow-up verification resolves the exact VDS/Hybrid KVM requirement using HostEons official product and knowledgebase evidence.
-      - Dedicated CPU at a sub-10-USD price makes independent sustained-load and network validation high priority.
 
   - provider: Advin_Servers
     plan: KVM_Premium_S_Miami
@@ -67,9 +63,27 @@ clear_pass:
       virtualization: kvm
       contract: monthly_no_contract
     benchmark_priority: high
+
+  - provider: InterServer
+    plan: Cloud_Compute_4_Slices
+    source_batch: results/verified/batch-015.yaml
+    confidence: A
+    verified_match:
+      monthly_price_usd: 12
+      vcpu_or_cpu: 2_cpu_cores
+      memory_gb: 8
+      local_storage_gb: 160
+      storage_type: ssd
+      monthly_transfer_tb: 8
+      port_mbps: 10000
+      port_allocation: shared
+      ipv4_included: true
+      virtualization: kvm
+      contract: month_to_month
+    benchmark_priority: high
     notes:
-      - Uses the ordinary Premium S 10 USD/month tier rather than relying on the separate promotional Standard XS price.
-      - Shared vCPU makes sustained CPU and steal-time measurements important before recommendation.
+      - The shared 10 Gbps uplink satisfies the profile's interface-speed field but does not imply guaranteed sustained throughput.
+      - InterServer explicitly notes that actual throughput varies with node contention; network benchmarking is mandatory before recommendation.
 
 blocked_by_unknown:
   - provider: Onie_Cloud
@@ -89,6 +103,29 @@ blocked_by_unknown:
     unresolved_hard_requirements: [current_numeric_price]
     strict_status: unknown
     benchmark_priority_after_clearance: high
+
+  - provider: CloudCone
+    plan: SSD_VPS_5
+    source_batch: results/verified/batch-014.yaml
+    verified_strengths: [8_vcpu, 8gb_ram, 111gb_ssd, 5tb_transfer, 1gbps, ipv4, ipv6, kvm, displayed_4_79_usd_month_equivalent]
+    unresolved_hard_requirements: [ordinary_month_to_month_price_or_explicit_annual_prepay_acceptance]
+    strict_status: unknown
+    notes:
+      - The verified 57.59 USD charge is annual prepayment; dividing it by twelve does not make it an ordinary monthly contract.
+
+  - provider: Crunchbits
+    plan: Xeon_6146_VDS_8GB
+    source_batch: results/verified/batch-014.yaml
+    verified_strengths: [usd_8_monthly, one_dedicated_physical_core, two_cpu_threads, 8gb_ram, 150gb_nvme, 20tb_transfer, 2_5gbps, ipv4, ipv6]
+    unresolved_hard_requirements: [explicit_two_vcpu_or_two_core_semantics, exact_vds_kvm_hypervisor]
+    strict_status: unknown
+    benchmark_priority_after_clearance: high
+
+  - provider: VPSServer
+    source_batch: results/verified/batch-014.yaml
+    verified_strengths: [kvm, nvme, public_ip, hourly_per_minute_billing, tokyo, singapore, configurable_resources]
+    unresolved_hard_requirements: [exact_8gb_2vcpu_60gb_2tb_price, exact_public_port_speed_for_selected_configuration]
+    strict_status: unknown
 
   - provider: CloudXact
     plan: KVM_2
@@ -154,13 +191,6 @@ blocked_by_unknown:
     unresolved_hard_requirements: [kvm_virtualization_in_batch, public_port_at_least_1gbps, normalized_usd_tco_with_required_ipv4]
     strict_status: unknown
 
-  - provider: IONOS
-    plan: Memory_Cube_S
-    source_batch: results/verified/batch-004.yaml
-    verified_strengths: [usd_13_68_30_day_cap, 2_vcpu, 8gb_ram, 120gb_storage, api, per_minute_billing]
-    unresolved_hard_requirements: [monthly_transfer_at_least_2tb, public_port_at_least_1gbps, kvm_virtualization]
-    strict_status: unknown
-
   - provider: SferaHost
     plan: VPS_POWER
     source_batch: results/verified/batch-006.yaml
@@ -182,148 +212,83 @@ blocked_by_unknown:
     unresolved_hard_requirements: [public_port_at_least_1gbps, normalized_usd_tco]
     strict_status: unknown
 
-  - provider: SmartHost
-    plan: Configurable_KVM_NVMe
-    source_batch: results/verified/batch-008.yaml
-    verified_strengths: [kvm, nvme, 1gbps, configurable_cpu_ram_storage, low_base_price]
-    unresolved_hard_requirements: [exact_8gb_2vcpu_60gb_2tb_price, ipv4_inclusion_for_exact_configuration]
+  - provider: Aruba_Cloud
+    plan: OpenStack_PRO_O2A8R
+    source_batch: results/verified/batch-013.yaml
+    verified_strengths: [2_vcpu, 8gb_ram, 80gb_nvme, unlimited_transfer, vpc, hourly_billing, api]
+    unresolved_hard_requirements: [normalized_usd_tco_with_ipv4, public_port_at_least_1gbps, kvm_profile_requirement, promotion_persistence]
     strict_status: unknown
 
-  - provider: IPXON
-    plan: Plan_L_resource_shape
-    source_batch: results/verified/batch-008.yaml
-    verified_strengths: [8_vcpu, 8gb_ram, 75gb_ssd, 5tb_transfer, 10gbps, kvm]
-    unresolved_hard_requirements: [current_numeric_price, ipv4_inclusion_for_selected_plan]
+  - provider: LayerStack
+    source_batch: results/verified/batch-012.yaml
+    verified_strengths: [asia_regions, cloud_servers, private_networking, api_automation]
+    unresolved_hard_requirements: [exact_qualifying_8gb_plan_price_storage_transfer_port_ipv4_kvm]
     strict_status: unknown
 
-  - provider: FyfeWeb
-    plan: VM_London_8GB
-    source_batch: results/verified/batch-011.yaml
-    verified_strengths: [4_vcpu, 8gb_ram, 72gb_ssd, 2gbps, ipv4, ipv6, daily_backups, sla_99_99]
-    unresolved_hard_requirements: [exact_kvm_virtualization_for_london_product, normalized_usd_tco]
-    strict_status: unknown
-
-  - provider: Netbela
-    source_batch: results/verified/batch-011.yaml
-    verified_strengths: [self_service_vps_available, vds_available, sla_99_9, configurable_resources]
-    unresolved_hard_requirements: [exact_8gb_plan_price, exact_8gb_cpu_ram_storage_transfer_port_ipv4_virtualization]
+  - provider: mivoCloud
+    plan: S4
+    source_batch: results/verified/batch-015.yaml
+    verified_strengths: [4_vcpu, 8gb_ram, 120gb_ssd, 4tb_transfer, 1gbps_shared, ipv4, kvm, eur_20_monthly]
+    unresolved_hard_requirements: [normalized_usd_tco]
     strict_status: unknown
 
 clear_fail_examples:
-  - provider: AFRICLOUD
-    source_batch: results/verified/batch-011.yaml
-    reason: verified_8gb_vm6_costs_90_usd_even_with_recurring_promotion
-
-  - provider: NoAck_Hosting
-    source_batch: results/verified/batch-011.yaml
-    reason: official_vps_service_is_advertised_up_to_100mbps_below_1gbps_floor
-
-  - provider: D4_Networks
-    source_batch: results/verified/batch-011.yaml
-    reason: verified_8gb_cloud_vps_costs_114_95_usd_month
-
-  - provider: Free_Range_Cloud
-    source_batch: results/verified/batch-011.yaml
-    reason: verified_8gb_ranch_tier_costs_21_99_usd_month
-
-  - provider: EstNOC
-    source_batch: results/verified/batch-011.yaml
-    reason: largest_currently_listed_japan_base_plan_has_only_5gb_ram
-
-  - provider: FormoHost
-    source_batch: results/verified/batch-010.yaml
-    reason: largest_verified_taiwan_plan_has_only_6gb_ram_1tb_transfer_and_100mbps_port
-
-  - provider: FussionHost
-    source_batch: results/verified/batch-010.yaml
-    reason: verified_8gb_manila_tier_costs_39_99_usd_and_has_50gb_storage_1tb_transfer_100mbps
-
-  - provider: Herza_Cloud
-    source_batch: results/verified/batch-010.yaml
-    reason: verified_8gb_manila_tier_costs_20_50_usd
-
-  - provider: GOFIBER
-    source_batch: results/verified/batch-010.yaml
-    reason: verified_8gb_vietnam_tier_has_only_200mbps_port
-
-  - provider: H2Cloud
-    source_batch: results/verified/batch-010.yaml
-    reason: verified_8gb_high_speed_tier_has_only_1tb_monthly_transfer_and_was_out_of_stock
-
-  - provider: ModernOne
-    source_batch: results/verified/batch-010.yaml
-    reason: verified_8gb_cloud_server_costs_75_usd_and_has_only_50mbps_port
-
-  - provider: CloudBlast
-    source_batch: results/verified/batch-002.yaml
-    reason: verified_8gb_tier_has_less_than_60gb_local_storage
-
+  - provider: Bacloud
+    source_batch: results/verified/batch-015.yaml
+    reason: verified_8gb_linux_kvm_tier_has_only_500mbps_port
+  - provider: HostSailor
+    source_batch: results/verified/batch-015.yaml
+    reason: verified_8gb_nvme_kvm_tier_costs_31_99_usd_month
+  - provider: Togglebox
+    source_batch: results/verified/batch-015.yaml
+    reason: exact_2vcpu_8gb_60gb_nvme_ipv4_shape_calculates_to_33_46_usd_month
+  - provider: EthernetServers
+    source_batch: results/verified/batch-015.yaml
+    reason: verified_8gb_tier_costs_24_usd_and_was_unavailable
+  - provider: BuyVM
+    source_batch: results/verified/batch-015.yaml
+    reason: verified_8gb_high_volume_tier_costs_30_usd_month
+  - provider: BandwagonHost
+    source_batch: results/verified/batch-014.yaml
+    reason: verified_8gb_monthly_tier_costs_39_99_usd
+  - provider: GigsGigsCloud
+    source_batch: results/verified/batch-014.yaml
+    reason: verified_8gb_singapore_and_japan_tiers_cost_98_80_usd_month
+  - provider: RamNode
+    source_batch: results/verified/batch-014.yaml
+    reason: lowest_verified_8gb_tier_costs_40_usd_month
+  - provider: Cloudzy
+    source_batch: results/verified/batch-014.yaml
+    reason: promotional_8gb_price_still_exceeds_15_usd
+  - provider: QuantVPS
+    source_batch: results/verified/batch-014.yaml
+    reason: verified_8gb_tier_costs_59_99_usd_month
   - provider: ExtraVM
     source_batch: results/verified/batch-002.yaml
     reason: verified_8gb_tier_exceeds_15_usd_budget
-
-  - provider: DediRock
-    source_batch: results/verified/batch-003.yaml
-    reason: verified_8gb_tier_exceeds_15_usd_budget
-
   - provider: DigitalOcean
     source_batch: results/verified/batch-004.yaml
     reason: verified_8gb_tier_exceeds_15_usd_budget
-
   - provider: DedicatServer.ro
     source_batch: results/verified/batch-006.yaml
     reason: verified_8gb_tier_has_only_100mbps_public_port
-
   - provider: GamCo
     source_batch: results/verified/batch-006.yaml
     reason: verified_8gb_tier_has_50gb_storage_and_200mbps_port
-
   - provider: Shinjiru
     source_batch: results/verified/batch-006.yaml
     reason: verified_8gb_tier_has_only_100mbps_public_port
-
   - provider: Server_Galactic
     source_batch: results/verified/batch-006.yaml
     reason: verified_8gb_manila_tier_costs_60_usd_month
 
-  - provider: VPSMalaysia
-    source_batch: results/verified/batch-008.yaml
-    reason: verified_8gb_kvm_tier_has_only_100mbps_public_port
-
-  - provider: SpeedyPage
-    source_batch: results/verified/batch-008.yaml
-    reason: lowest_currently_observed_8gb_monthly_tier_costs_17_99_usd
-
-  - provider: Shock_Hosting
-    source_batch: results/verified/batch-008.yaml
-    reason: verified_8gb_monthly_tier_costs_19_99_usd
-
-  - provider: Evoxt
-    source_batch: results/verified/batch-008.yaml
-    reason: verified_8gb_monthly_tier_costs_23_99_usd
-
-  - provider: Aluy
-    source_batch: results/verified/batch-008.yaml
-    reason: calculated_minimum_2core_8gb_60gb_configuration_costs_23_84_eur
-
-  - provider: HostSlick
-    source_batch: results/verified/batch-009.yaml
-    reason: verified_8gb_kvm_tier_costs_26_99_eur_and_was_out_of_stock
-
-  - provider: UltaHost
-    source_batch: results/verified/batch-009.yaml
-    reason: no_observed_linux_fixed_tier_provides_8gb_at_or_below_15_usd
-
 next_verification_actions:
+  - Verify CloudCone whether a qualifying ordinary month-to-month equivalent exists; do not reinterpret annual prepayment as monthly billing.
+  - Clarify Crunchbits Xeon VDS CPU/core semantics and exact hypervisor for the selected product.
+  - Capture VPSServer exact 8 GB configuration price and public port speed from the dynamic configurator/API.
   - Verify Onie Cloud public VM hypervisor, ordinary monthly TCO, and promotion persistence.
-  - Capture stable current HostBrr numeric pricing; KVM/IPv4/IPv6/backup/network resource facts are now resolved.
+  - Capture stable current HostBrr numeric pricing.
   - Resolve CloudXact exact public port speed and setup-fee-inclusive TCO.
-  - Verify Kencang IPv4 inclusion and whether the advertised up-to-1-Gbps link satisfies the hard port requirement.
-  - Verify ServerUtama and Rumahweb exact public port characteristics, datacenter details, IPv4 where unresolved, and normalized TCO.
-  - Verify OrangeVPS BASIC NVMe virtualization technology.
-  - Verify BulutVDS EPYC virtualization technology.
-  - Verify HostHatch public port speed and KVM implementation.
-  - Verify Contabo public port speed and virtualization type, then apply the repository FX/TCO policy.
-  - Verify Hetzner effective TCO including required IPv4 and the profile network/virtualization facts.
-  - Verify IONOS Cloud Cubes transfer allowance and public network speed.
-  - Apply the documented FX/TCO policy to local-currency candidates using a timestamped rate snapshot.
+  - Verify Kencang IPv4 inclusion and qualifying port semantics.
+  - Verify OrangeVPS BASIC NVMe and BulutVDS EPYC virtualization technologies.
+  - Apply the documented FX/TCO policy to mivoCloud, SferaHost, Netlen, ITMCloud, and other native-currency near matches using a timestamped rate snapshot.
