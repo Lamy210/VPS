@@ -3,9 +3,10 @@ updated_at: 2026-08-16
 purpose: benchmark_readiness_queue
 rules:
   - A provider is `ready` only after all hard requirements for the target profile are verified.
-  - "`blocked` means benchmark spend should wait until the listed verification blockers are resolved."
+  - `blocked` means benchmark spend should wait until the listed verification blockers are resolved.
   - No benchmark result is implied by appearing in this queue.
   - Provider-advertised benchmark claims are not stored as measured evidence.
+  - Shared uplink speed is not a guaranteed sustained-throughput result.
   - Benchmark records must pin exact region, plan, OS image, kernel, tool version, and full command parameters.
 
 ready:
@@ -44,7 +45,20 @@ ready:
       stability: [repeated_test_runs_across_time_windows]
     notes:
       - Shared vCPU architecture makes steal-time and sustained-load consistency high-priority measurements.
-      - Validate the exact Premium S product rather than the separate promotional Standard XS tier.
+
+  - provider: InterServer
+    plan: Cloud_Compute_4_Slices
+    target_profile: standard-compute
+    source: results/derived/standard-compute-strict.yaml
+    priority: high
+    required_tests:
+      cpu: [sustained_all_core_load, single_thread_baseline, steal_time_idle_and_load, frequency_and_throttling_observation]
+      storage: [fio_random_4k_qd1, fio_random_4k_qd32, fio_sequential_read_write, fsync_latency]
+      network: [rtt_to_relevant_reference_regions, packet_loss, sustained_single_stream_throughput, sustained_multi_stream_throughput, shared_port_contention_behavior]
+      stability: [repeated_test_runs_across_time_windows]
+    notes:
+      - Provider documentation explicitly warns that the 10 Gbps port is shared and sustained throughput can vary with node contention.
+      - Benchmark the exact region because node hardware and neighbor utilization may differ.
 
   - provider: UpCloud
     service: Managed_Kubernetes
@@ -54,36 +68,13 @@ ready:
     priority: high
     validation_type: operational_and_scaling
     required_tests:
-      provisioning:
-        - cluster_control_plane_provision_time
-        - worker_node_group_provision_time
-        - managed_load_balancer_provision_time
-      autoscaling:
-        - node_pool_scale_up_reaction_time
-        - node_ready_latency_after_scale_up
-        - node_pool_scale_down_latency
-        - scale_to_zero_and_recovery_where_supported
-      network:
-        - private_network_node_to_node_rtt
-        - public_worker_throughput
-        - load_balancer_health_check_recovery
-      reliability:
-        - unhealthy_node_replacement_behavior
-        - worker_rejoin_after_disruption
-      automation:
-        - terraform_apply_destroy_reproducibility
-        - api_rate_limit_observation
-      observability:
-        - prometheus_metrics_collection
-        - opentelemetry_signal_export
-        - alerting_pipeline_smoke_test
-      tco:
-        - control_plane_cost
-        - two_worker_cost
-        - load_balancer_cost
-        - required_ipv4_cost
-        - storage_cost
-        - nat_cost_if_private_workers_selected
+      provisioning: [cluster_control_plane_provision_time, worker_node_group_provision_time, managed_load_balancer_provision_time]
+      autoscaling: [node_pool_scale_up_reaction_time, node_ready_latency_after_scale_up, node_pool_scale_down_latency, scale_to_zero_and_recovery_where_supported]
+      network: [private_network_node_to_node_rtt, public_worker_throughput, load_balancer_health_check_recovery]
+      reliability: [unhealthy_node_replacement_behavior, worker_rejoin_after_disruption]
+      automation: [terraform_apply_destroy_reproducibility, api_rate_limit_observation]
+      observability: [prometheus_metrics_collection, opentelemetry_signal_export, alerting_pipeline_smoke_test]
+      tco: [control_plane_cost, two_worker_cost, load_balancer_cost, required_ipv4_cost, storage_cost, nat_cost_if_private_workers_selected]
 
 blocked:
   - provider: Onie_Cloud
@@ -100,11 +91,31 @@ blocked:
     blockers: [current_numeric_price]
     post_clearance_focus: [steal_time, epyc_9004_sustained_cpu, nvme_latency, network_consistency]
 
+  - provider: CloudCone
+    plan: SSD_VPS_5
+    target_profile: standard-compute
+    priority_after_clearance: medium
+    blockers: [ordinary_month_to_month_price_or_explicit_annual_prepay_acceptance]
+    post_clearance_focus: [shared_cpu_consistency, ssd_latency, network_throughput]
+
+  - provider: Crunchbits
+    plan: Xeon_6146_VDS_8GB
+    target_profile: standard-compute
+    priority_after_clearance: high
+    blockers: [explicit_two_vcpu_or_two_core_semantics, exact_vds_kvm_hypervisor]
+    post_clearance_focus: [dedicated_core_sustained_performance, nvme_latency, 2_5gbps_throughput]
+
+  - provider: VPSServer
+    target_profile: standard-compute
+    priority_after_clearance: medium
+    blockers: [exact_8gb_configuration_price, exact_public_port_speed]
+    post_clearance_focus: [regional_rtt, storage_latency, provisioning_latency]
+
   - provider: VSYS_Host
     plan: VS-NVME4-16
     target_profile: database-node
     priority_after_clearance: high
-    blockers: [customer_configurable_private_network_for_standard_vps]
+    blockers: [customer_configurable_private_network_for_selected_singapore_vps_and_effective_tco]
     post_clearance_focus: [fsync_latency, pgbench, guaranteed_200mbps_vs_1gbps_uplink_behavior]
 
   - provider: VPSnet
