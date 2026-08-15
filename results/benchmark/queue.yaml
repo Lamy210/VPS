@@ -3,7 +3,7 @@ updated_at: 2026-08-16
 purpose: benchmark_readiness_queue
 rules:
   - A provider is `ready` only after all hard requirements for the target profile are verified.
-  - `blocked` means benchmark spend should wait until the listed verification blockers are resolved.
+  - "`blocked` means benchmark spend should wait until the listed verification blockers are resolved."
   - No benchmark result is implied by appearing in this queue.
   - Provider-advertised benchmark claims are not stored as measured evidence.
   - Benchmark records must pin exact region, plan, OS image, kernel, tool version, and full command parameters.
