@@ -15,7 +15,7 @@ ready:
     source: results/derived/standard-compute-strict.yaml
     priority: high
     reason:
-      - Only current clear hard-filter pass for the reusable standard-compute profile.
+      - Clear hard-filter pass for the reusable standard-compute profile.
       - Very low price and dedicated CPU justify validating oversubscription, storage latency, and network consistency before recommendation.
     required_tests:
       cpu:
@@ -31,6 +31,34 @@ ready:
       database:
         - postgres_pgbench_short
         - postgres_fsync_sensitive_transaction_test
+      network:
+        - rtt_to_relevant_reference_regions
+        - packet_loss
+        - sustained_single_stream_throughput
+        - sustained_multi_stream_throughput
+      stability:
+        - repeated_test_runs_across_time_windows
+
+  - provider: HostEons
+    plan: Hybrid_Special_2
+    target_profile: standard-compute
+    source: results/verified/followup-002.yaml
+    priority: high
+    reason:
+      - Follow-up verification resolves the remaining KVM hard requirement for the exact Hybrid/VDS product family.
+      - Current official sources verify 2 dedicated Ryzen 3950X vCores, 8 GB RAM, 100 GB NVMe, 30 TB transfer, 10 Gbps, one IPv4, /64 IPv6, and 8.99 USD/month.
+      - Dedicated CPU at a sub-10-USD price warrants independent consistency and saturation testing.
+    required_tests:
+      cpu:
+        - sustained_all_core_load
+        - single_thread_baseline
+        - steal_time_idle_and_load
+        - frequency_and_throttling_observation
+      storage:
+        - fio_random_4k_qd1
+        - fio_random_4k_qd32
+        - fio_sequential_read_write
+        - fsync_latency
       network:
         - rtt_to_relevant_reference_regions
         - packet_loss
@@ -58,7 +86,7 @@ blocked:
     plan: EPYC_8GBrr
     target_profile: standard-compute
     priority_after_clearance: high
-    blockers: [current_numeric_price, exact_kvm_virtualization_for_product_group]
+    blockers: [current_numeric_price]
     post_clearance_focus: [steal_time, epyc_9004_sustained_cpu, nvme_latency, network_consistency]
 
   - provider: VSYS_Host
