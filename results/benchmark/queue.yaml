@@ -32,6 +32,20 @@ ready:
       network: [rtt_to_relevant_reference_regions, packet_loss, sustained_single_stream_throughput, sustained_multi_stream_throughput]
       stability: [repeated_test_runs_across_time_windows]
 
+  - provider: Advin_Servers
+    plan: KVM_Premium_S_Miami
+    target_profile: standard-compute
+    source: results/derived/standard-compute-strict.yaml
+    priority: high
+    required_tests:
+      cpu: [sustained_all_core_load, single_thread_baseline, steal_time_idle_and_load, frequency_and_throttling_observation]
+      storage: [fio_random_4k_qd1, fio_random_4k_qd32, fio_sequential_read_write, fsync_latency]
+      network: [rtt_to_relevant_reference_regions, packet_loss, sustained_single_stream_throughput, sustained_multi_stream_throughput]
+      stability: [repeated_test_runs_across_time_windows]
+    notes:
+      - Shared vCPU architecture makes steal-time and sustained-load consistency high-priority measurements.
+      - Validate the exact Premium S product rather than the separate promotional Standard XS tier.
+
   - provider: UpCloud
     service: Managed_Kubernetes
     worker_plan: PREMIUM-2xCPU-4GB
@@ -78,13 +92,6 @@ blocked:
     priority_after_clearance: high
     blockers: [exact_public_cloud_hypervisor, normalized_usd_tco, promotional_price_persistence]
     post_clearance_focus: [sustained_cpu, steal_time, nvme_latency, 10gbps_realistic_throughput, vietnam_to_asia_rtt]
-
-  - provider: Advin_Servers
-    plan: KVM_Standard_XS_Miami
-    target_profile: standard-compute
-    priority_after_clearance: high
-    blockers: [ipv4_included, promotional_price_persistence]
-    post_clearance_focus: [steal_time, sustained_cpu, nvme_latency, 10gbps_realistic_throughput]
 
   - provider: HostBrr
     plan: EPYC_8GBrr
