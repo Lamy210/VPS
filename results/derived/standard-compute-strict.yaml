@@ -9,6 +9,8 @@ rules:
   - DDoS-protection capacity is not a VPS port-speed field.
   - Annualized or long-term prepaid pricing is not ordinary month-to-month pricing.
   - Physical CPU threads are not silently substituted for an explicit vCPU/core-count requirement.
+  - Official-page price conflicts remain unresolved until a stable effective price is pinned.
+  - Out-of-stock plans do not become recommendation candidates merely because their advertised resources qualify.
   - Provider-advertised specifications are not performance benchmarks.
 
 clear_pass:
@@ -41,6 +43,51 @@ clear_pass:
       - Provider documentation says the 10 Gbps port is shared; sustained throughput must be measured.
 
 blocked_by_unknown:
+  - provider: SprintCDN
+    plan: VPS_4
+    source_batch: results/verified/batch-018.yaml
+    verified_strengths: [usd_13_monthly, 4_vcpu, 8gb_ram, 160gb_nvme, unmetered_transfer, 1gbps_shared, kvm, api, cli, hourly_or_monthly]
+    unresolved_hard_requirements: [ipv4_included_for_selected_plan]
+    strict_status: unknown
+    verification_priority: very_high
+    benchmark_priority_after_clearance: high
+
+  - provider: GS_Webservices
+    plan: ng_Cloud_L
+    source_batch: results/verified/batch-018.yaml
+    verified_strengths: [eur_13_03_vat_included_monthly, 4_vcpu, 8gb_ram, 160gb_nvme, 25tb_fair_use, guaranteed_1gbps, ipv4, ipv6, kvm, one_month_term, no_setup_fee, api]
+    unresolved_hard_requirements: [timestamped_usd_tco_at_or_below_15]
+    strict_status: unknown
+    verification_priority: very_high
+    notes:
+      - This is a near-exact technical match whose remaining decision is currency-normalized budget at the chosen FX snapshot.
+
+  - provider: dogado
+    plan: Cloud_Server_M_4_0
+    source_batch: results/verified/batch-018.yaml
+    verified_strengths: [eur_10_99_regular_monthly, 4_vcpu, 8gb_ram, 200gb_nvme, traffic_flat, 1gbps, ipv4, ipv6, one_month_minimum_term, sla_99_9]
+    unresolved_hard_requirements: [kvm_virtualization_for_selected_cloud_server, timestamped_usd_tco]
+    strict_status: unknown
+    verification_priority: very_high
+
+  - provider: OnetSolutions
+    plan: HP_8
+    source_batch: results/verified/batch-018.yaml
+    verified_strengths: [4_vcpu, amd_epyc_9554, 8gb_ddr5, 80gb_enterprise_nvme, 1gbps, ipv4, ipv6, kvm, vpc, daily_offsite_backups, snapshots, sla_99_9]
+    unresolved_hard_requirements: [stable_current_price_due_official_page_conflict, normalized_usd_tco_and_vat]
+    strict_status: unknown
+    verification_priority: high
+
+  - provider: Hexabyte
+    plan: e3_large
+    source_batch: results/verified/batch-018.yaml
+    verified_strengths: [eur_7_69_monthly_cap, hourly_billing, 4_vcpu, 8gb_ram, 80gb_triple_replicated_nvme, 20tb_transfer, ipv4, ipv6, openstack]
+    unresolved_hard_requirements: [kvm_acceleration_for_selected_instance_family, public_port_at_least_1gbps, normalized_usd_tco, current_stock]
+    strict_status: unknown
+    verification_priority: high
+    notes:
+      - The public page explicitly reported cloud instances out of stock at verification time.
+
   - provider: ServerCheap
     plan: NVMe_KVMb_10GB_New
     source_batch: results/verified/batch-016.yaml
@@ -48,8 +95,6 @@ blocked_by_unknown:
     unresolved_hard_requirements: [public_port_at_least_1gbps]
     strict_status: unknown
     verification_priority: very_high
-    notes:
-      - The published 10 Gbps value is DDoS-protection capacity and is intentionally not treated as network-port speed.
 
   - provider: quicksrv
     plan: AMS_Standard_8
@@ -66,23 +111,26 @@ blocked_by_unknown:
     unresolved_hard_requirements: [normalized_usd_tco]
     strict_status: unknown
 
-  - provider: HostArmada
-    plan: Fusion
-    source_batch: results/verified/batch-016.yaml
-    verified_strengths: [4_vcpu, 8gb_ram, 160gb_nvme, 5tb_transfer, kvm, backup, snapshot, annualized_promo_10_74_usd]
-    unresolved_hard_requirements: [ordinary_month_to_month_price_at_or_below_15_usd, public_port_at_least_1gbps, ipv4_included_for_selected_plan]
+  - provider: Hivelocity
+    plan: pro_md_amd
+    source_batch: results/verified/batch-017.yaml
+    verified_strengths: [usd_15_sale, usd_20_regular, 4_vcpu, 8gb_ram, 80gb_nvme, 10tb_transfer, 1gbps]
+    unresolved_hard_requirements: [ordinary_non_sale_price_at_or_below_15, kvm_virtualization, ipv4_included]
     strict_status: unknown
-    notes:
-      - The verified 10.74 USD value requires 12-month prepayment and regular reference price is 21.48 USD.
 
-  - provider: InMotion_Hosting
-    plan: VPS_4_vCPU
-    source_batch: results/verified/batch-016.yaml
-    verified_strengths: [4_vcpu, 8gb_ram, 160gb_nvme, 5tb_transfer, two_dedicated_ips, promo_9_99_usd]
-    unresolved_hard_requirements: [ordinary_month_to_month_price_at_or_below_15_usd, kvm_virtualization_for_selected_managed_product, public_port_at_least_1gbps]
+  - provider: HostUp
+    plan: VPS_SM
+    source_batch: results/verified/batch-017.yaml
+    verified_strengths: [sek_75_monthly, 2_vcpu, 8gb_ram, 100gb_nvme, 5tb_transfer]
+    unresolved_hard_requirements: [public_port_at_least_1gbps, ipv4_included, kvm_virtualization, normalized_usd_tco]
     strict_status: unknown
-    notes:
-      - The observed 9.99 USD value requires a 24-month term and renews at 16.99 USD.
+
+  - provider: Webyne
+    plan: Gold_VPS_Linux_2
+    source_batch: results/verified/batch-017.yaml
+    verified_strengths: [inr_499_monthly, 4_cpu, 8gb_ram, 100gb_nvme, up_to_1gbps]
+    unresolved_hard_requirements: [numeric_transfer_at_least_2tb, kvm_virtualization, ipv4_included_for_selected_plan, qualifying_port_semantics, normalized_usd_tco]
+    strict_status: unknown
 
   - provider: Onie_Cloud
     plan: VM_4_8
@@ -122,20 +170,6 @@ blocked_by_unknown:
     unresolved_hard_requirements: [exact_8gb_2vcpu_60gb_2tb_price, exact_public_port_speed]
     strict_status: unknown
 
-  - provider: CloudXact
-    plan: KVM_2
-    source_batch: results/verified/batch-010.yaml
-    verified_strengths: [2_vcpu, 8gb_ram, 100gb_nvme, 8tb_transfer, ipv4, ipv6, kvm, public_api]
-    unresolved_hard_requirements: [public_port_at_least_1gbps, normalized_usd_tco_with_setup_fee]
-    strict_status: unknown
-
-  - provider: Kencang
-    plan: K_4
-    source_batch: results/verified/batch-010.yaml
-    verified_strengths: [4_vcpu, 8gb_ram, 100gb_ssd, unlimited_transfer, kvm, up_to_1gbps]
-    unresolved_hard_requirements: [ipv4_included, qualifying_1gbps_port, normalized_usd_tco]
-    strict_status: unknown
-
   - provider: OrangeVPS
     plan: BASIC_3_NVMe
     source_batch: results/verified/batch-003.yaml
@@ -151,57 +185,45 @@ blocked_by_unknown:
     unresolved_hard_requirements: [kvm_virtualization]
     strict_status: unknown
 
-  - provider: SferaHost
-    plan: VPS_POWER
-    source_batch: results/verified/batch-006.yaml
-    verified_strengths: [6_vcpu, 20gb_ram, 200gb_nvme, unlimited_fair_use_transfer, 1gbps, ipv4, kvm]
-    unresolved_hard_requirements: [normalized_usd_tco]
-    strict_status: unknown
-
-  - provider: mivoCloud
-    plan: S4
-    source_batch: results/verified/batch-015.yaml
-    verified_strengths: [4_vcpu, 8gb_ram, 120gb_ssd, 4tb_transfer, 1gbps_shared, ipv4, kvm, eur_20_monthly]
-    unresolved_hard_requirements: [normalized_usd_tco]
-    strict_status: unknown
-
 clear_fail_examples:
+  - provider: BlastVPS
+    source_batch: results/verified/batch-018.yaml
+    reason: verified_8gb_kvm_tier_costs_29_99_usd_month
+  - provider: Genesis_Public_Cloud
+    source_batch: results/verified/batch-018.yaml
+    reason: low_cost_8gb_shapes_have_only_one_cpu_core_and_first_observed_2core_8gb_local_storage_shape_costs_50_usd
+  - provider: Linkdata
+    source_batch: results/verified/batch-018.yaml
+    reason: verified_2core_8gb_60gb_shape_costs_35_usd_month
+  - provider: NoBull_Networks
+    source_batch: results/verified/batch-018.yaml
+    reason: verified_8gb_elite_tier_costs_46_99_usd_month
+  - provider: Hostman
+    source_batch: results/verified/batch-017.yaml
+    reason: verified_8gb_tier_costs_17_usd_and_has_200mbps_channel
+  - provider: Arct_Cloud
+    source_batch: results/verified/batch-017.yaml
+    reason: verified_8gb_tier_costs_34_99_usd_month
+  - provider: Raff
+    source_batch: results/verified/batch-017.yaml
+    reason: ordinary_8gb_general_purpose_tiers_start_at_19_99_usd_month
   - provider: MonoVM
     source_batch: results/verified/batch-016.yaml
     reason: verified_8gb_nvme_product_costs_65_50_usd_month
-  - provider: Rad_Web_Hosting
-    source_batch: results/verified/batch-016.yaml
-    reason: even_36_month_promotional_8gb_price_is_39_50_usd_month
-  - provider: VoyraCloud
-    source_batch: results/verified/batch-016.yaml
-    reason: no_published_linux_8gb_plan_and_published_windows_8gb_tier_is_24_usd_with_200mbps_port
-  - provider: Bacloud
-    source_batch: results/verified/batch-015.yaml
-    reason: verified_8gb_linux_kvm_tier_has_only_500mbps_port
-  - provider: HostSailor
-    source_batch: results/verified/batch-015.yaml
-    reason: verified_8gb_nvme_kvm_tier_costs_31_99_usd_month
   - provider: Togglebox
     source_batch: results/verified/batch-015.yaml
     reason: minimum_2vcpu_8gb_60gb_nvme_ipv4_shape_calculates_to_33_46_usd_month
-  - provider: BuyVM
-    source_batch: results/verified/batch-015.yaml
-    reason: verified_8gb_tier_costs_30_usd_month
-  - provider: BandwagonHost
-    source_batch: results/verified/batch-014.yaml
-    reason: verified_8gb_monthly_tier_costs_39_99_usd
-  - provider: GigsGigsCloud
-    source_batch: results/verified/batch-014.yaml
-    reason: verified_8gb_singapore_and_japan_tiers_cost_98_80_usd_month
   - provider: DigitalOcean
     source_batch: results/verified/batch-004.yaml
     reason: verified_8gb_tier_exceeds_15_usd_budget
 
 next_verification_actions:
-  - Find an explicit ServerCheap VPS public-port speed; do not reuse its 10 Gbps DDoS-protection value.
-  - Find a numeric quicksrv fair-use transfer allowance for AMS Standard 8.
-  - Normalize Alpenhost EUR TCO with a timestamped FX snapshot.
-  - Verify HostArmada and InMotion ordinary month-to-month terms only if a long-prepay policy is later allowed or relevant.
+  - Verify SprintCDN selected-plan IPv4 inclusion; this is the only remaining strict hard field for VPS 4.
+  - Apply the timestamped FX/TCO policy to GS Webservices ng-Cloud L; it has no remaining technical hard-field gaps.
+  - Verify dogado selected Cloud Server hypervisor as KVM/QEMU-KVM rather than generic full virtualization.
+  - Resolve OnetSolutions current HP-8 price discrepancy and VAT/TCO semantics.
+  - Verify Hexabyte KVM acceleration, selected-instance public-port speed, and future stock restoration.
+  - Find an explicit ServerCheap public-port speed and quicksrv numeric fair-use allowance.
   - Capture HostBrr current numeric pricing.
   - Clarify Crunchbits Xeon VDS core semantics and exact hypervisor.
   - Capture VPSServer exact 8 GB configuration price and public port speed.
