@@ -6,8 +6,8 @@ Machine-readable status: `results/derived/research-status.yaml`.
 
 ## Current counts
 
-- Official-source verification batches: **15**
-- Unique verified provider records: **136**
+- Official-source verification batches: **16**
+- Unique verified provider records: **146**
 - Targeted follow-up files: **4**
 - Strict standard-compute passes: **4**
 - Strict database-node passes: **0**
@@ -15,65 +15,62 @@ Machine-readable status: `results/derived/research-status.yaml`.
 - Benchmark / operational-validation ready resources: **5**
 - Measured benchmark resources: **0**
 
-## Verification batches
+## Latest verification batches
 
-- Batch 001: HostHatch, Contabo, Hetzner, netcup, UpCloud, Vultr, OVHcloud, Gcore, Civo.
-- Batch 002: Onidel, GreenCloud, Hostinger, Melbicom, ExtraVM, VSYS Host, CloudBlast.
-- Batch 003: OrangeVPS, WebHorizon, FlowVPS, ServaRica, HostEons, RackNerd, DediRock, Alwyzon, Time4VPS, Webdock, LunaNode, FiberState.
-- Batch 004: DigitalOcean, Akamai Cloud / Linode, Kamatera, Scaleway, Exoscale, Cherry Servers, IONOS.
-- Batch 005: Nevacloud, vHost, OneAsiaHost, VPSnet, Virtuaal.com, BulutVDS, Netlen, ITMCloud, NovaCloud Africa, Cloudify.ro, NAV.RO.
-- Batch 006: SferaHost, DedicatServer.ro, Astra Telekom, KVMVPS.co.za, GamCo, Mocky, BDIX Web Host, BengalCloud, Shinjiru, Server Galactic.
-- Batch 007: CloudSigma, Serverspace, Alibaba Cloud, Tencent Cloud, Huawei Cloud, Oracle Cloud Infrastructure, IBM Cloud, AWS Lightsail, Google Cloud, Microsoft Azure.
-- Batch 008: IPXON, VPSMalaysia, Randhost, AkileCloud, SpeedyPage, Shock Hosting, SmartHost, Virtono, Evoxt, LiteServer, Aluy.
-- Batch 009: Advin Servers, HostBrr, HostSlick, UltaHost.
-- Batch 010: FormoHost, FussionHost, ServerUtama, Herza Cloud, GOFIBER, Kencang, CloudXact, Rumahweb, H2Cloud, Onie Cloud, ModernOne / Nocser.
-- Batch 011: AFRICLOUD, NoAck Hosting, OrionVM, D4 Networks, FyfeWeb, Free Range Cloud, Netbela, EstNOC.
-- Batch 012: NAVER Cloud Platform, NHN Cloud, KT Cloud, LayerStack, E2E Cloud, Cyfuture Cloud, Chief Telecom, CtrlS, Yotta.
-- Batch 013: Brightbox, Krystal Cloud / Katapult, TransIP, Aruba Cloud, Leaseweb, Cleura, Open Telekom Cloud.
 - Batch 014: CloudCone, BandwagonHost, GigsGigsCloud, Crunchbits, RamNode, OneProvider, Cloudzy, QuantVPS, VPSServer, Hostwinds.
 - Batch 015: InterServer, BuyVM, Clouding.io, mivoCloud, EthernetServers, HostNamaste, HostSailor, V.PS, Togglebox, Bacloud.
+- Batch 016: ServerCheap, Server Optima, MonoVM, Rad Web Hosting, Alpenhost, RackGenius, VoyraCloud, quicksrv, InMotion Hosting, HostArmada.
 
-Source files are `results/verified/batch-001.yaml` through `results/verified/batch-015.yaml`.
+Full source history is stored as `results/verified/batch-001.yaml` through `results/verified/batch-016.yaml`.
 
 ## Strict results
 
 ### Standard compute
 
-Clear advertised-specification passes:
+Clear advertised-specification passes remain:
 
 1. **ServaRica — KVM Slim Slice 2**
 2. **HostEons — Hybrid Special 2**
 3. **Advin Servers — KVM Premium S (Miami)**
 4. **InterServer — Cloud Compute 4 Slices**
 
-The InterServer shape is $12/month with 2 CPU cores, 8 GB RAM, 160 GB SSD, 8 TB transfer, one IPv4, KVM, month-to-month billing, and a 10 Gbps shared port. The shared port qualifies as the configured interface speed but is not interpreted as guaranteed sustained throughput; contention testing is explicitly required.
-
 These are advertised-specification passes only. They are not performance recommendations until measured validation is completed.
 
-High-priority blocked candidates include Onie Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, CloudXact, Kencang, ServerUtama, Rumahweb, OrangeVPS, BulutVDS, Aruba Cloud, and LayerStack.
+New high-priority Batch 016 unknowns:
 
-Notable recent classifications:
+- **ServerCheap NVMe-KVMb-10GB-New** — $6.80/month, 4 vCPU, 10 GB RAM, 80 GB NVMe, 6 TB, IPv4, KVM, snapshot and 99.9% uptime are verified. The provider's published 10 Gbps value is DDoS-protection capacity, not VPS port speed; no qualifying public-port speed is currently verified.
+- **quicksrv AMS-Standard 8** — €7.99/month VAT-inclusive, 3 vCPU, 8 GB DDR5, 180 GB NVMe, 40 Gbps shared network, IPv4, KVM, daily off-site backup, no contract. The public page does not publish a numeric fair-use transfer allowance, so the >=2 TB hard requirement remains unresolved.
+- **Alpenhost Silber vServer** — €14.79/month, 4 vCPU, 8 GB, 150 GB NVMe Ceph, 10 Gbps, IPv4/IPv6, KVM, backup/snapshots and 99.99% advertised availability. USD TCO remains unresolved under the repository FX policy.
 
-- **CloudCone SSD VPS 5** technically clears CPU/RAM/storage/transfer/port/IPv4/KVM but is billed $57.59 annually in advance; its displayed $4.79/month is not treated as an ordinary monthly contract.
-- **Crunchbits Xeon 6146 VDS 8 GB** is $8/month with one dedicated physical core / two threads, 150 GB NVMe, 20 TB and 2.5 Gbps. Thread count is not silently mapped to the profile's vCPU/core-count requirement.
-- **VPSServer** verifies KVM/NVMe/public-IP/hourly billing and global regions, but its exact qualifying 8 GB price and selected-port speed remain dynamic/unpinned.
-- **V.PS Cloud KVM** uses KVM with IPv4/IPv6 and a 1 Gbps port, but the standard Cloud family has 1 TB transfer. Storage KVM has more transfer but still needs an exact 8 GB shape/price capture.
-- **Togglebox** publishes enough unit rates to calculate 2 vCPU + 8 GB + 60 GB NVMe + IPv4 at $33.46/month, so it fails the current $15 budget despite strong HA/API/Terraform features.
+Long-prepay examples remain deliberately unknown rather than passes:
+
+- HostArmada Fusion advertises $10.74/month equivalent with 12-month prepayment while its regular reference is $21.48/month.
+- InMotion's 8 GB managed VPS promotion can be below $15/month on a 24-month term but renews above the profile ceiling and the selected product's port/KVM facts are not fully pinned.
 
 ### Database node
 
-`clear_pass` remains empty.
+`clear_pass` remains empty, but **Server Optima is now the shortest-path candidate**.
 
-Shortest-path candidates:
+Server Optima `AMD EPYC 7763 Plan 1` verifies:
 
-- **VPSnet** — private network + normalized TCO remain.
-- **ServaRica** — private network + snapshots + independent backup remain.
-- **VSYS Host** — selected Singapore VPS private-network applicability/effective TCO remains to be pinned.
-- **Onidel** — exact current 16 GB plan/price + KVM remain.
+- $19.20/month base VM;
+- 4 vCPU;
+- 16 GB RAM;
+- 200 GB NVMe SSD RAID10;
+- 1 Gbps unmetered network;
+- KVM;
+- customer private networking/VLAN support;
+- snapshot support;
+- Full Backup feature availability;
+- 99.9% service/network availability commitment.
+
+The remaining strict blocker is **effective TCO for the required independent Full Backup**. The provider advertises Full Backup support but does not publish the selected VPS plan's backup charge on the current public VPS page. The repository therefore does not assume that backup is included in the $19.20 base price.
+
+Other shortest-path candidates remain VPSnet, ServaRica, VSYS Host, and Onidel.
 
 ### Managed Kubernetes
 
-Clear pass:
+Clear pass remains:
 
 1. **UpCloud Managed Kubernetes** using `PREMIUM-2xCPU-4GB` as the concrete qualifying worker.
 
@@ -93,28 +90,27 @@ No benchmark result has been executed or claimed yet.
 
 ## Data validation
 
-The repository runs `.github/workflows/validate-research-data.yml` on relevant pull-request changes. It validates YAML/schema integrity, provider identity uniqueness, follow-up/derived/benchmark references, source/derived provider counts, strict clear-pass counts, and validation-ready queue counts.
-
-## FX and TCO
-
-`docs/fx-tco-policy.md` retains provider-native prices and applies timestamped FX only in derived output. Ordinary monthly, hourly-cap, prepay, promotion, renewal, setup fee, required IPv4/private network/storage/backup/LB/NAT/egress/tax costs remain separate inputs to effective TCO.
+The repository runs `.github/workflows/validate-research-data.yml` on relevant pull-request changes. It validates YAML/schema integrity, normalized provider identity uniqueness, cross-file references, source/derived counts, strict clear-pass counts, and validation-ready queue counts.
 
 ## Data-quality rules
 
 - Unknown hard fields never silently pass.
+- DDoS-protection capacity is not treated as VPS port speed.
 - `Up to` bandwidth is not automatically treated as a guaranteed hard floor.
 - Shared port speed is not interpreted as guaranteed sustained throughput.
 - VPS/VDS naming does not prove KVM, IPv4, private networking, or dedicated CPU.
 - Physical threads are not silently substituted for explicit vCPU/core requirements.
 - Marketing geography does not prove datacenter geography.
 - Snapshots do not automatically satisfy independent-backup requirements.
+- Backup feature availability does not prove backup cost is included in base VM pricing.
 - Provider-advertised performance is not benchmark evidence.
 - Promotional or annualized prepaid pricing is not ordinary month-to-month pricing.
 
 ## Next work
 
-1. Reduce remaining database-node unknowns for VPSnet, ServaRica, VSYS Host, and Onidel.
-2. Resolve standard-compute unknowns for Onie Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, OrangeVPS, and BulutVDS.
-3. Pin concrete managed-Kubernetes worker architectures for Scaleway, Exoscale, and DigitalOcean.
-4. Continue Batch 016 beyond 136 verified providers.
-5. Execute measured validation only after an exact plan/region is pinned and spend is explicitly chosen.
+1. Capture Server Optima Full Backup price and determine whether effective database-node TCO remains <= $30/month.
+2. Find explicit ServerCheap VPS public-port speed and quicksrv numeric fair-use transfer allowance.
+3. Reduce VPSnet / ServaRica / VSYS Host / Onidel database blockers.
+4. Continue standard-compute unknown reduction for HostBrr, Onie Cloud, Crunchbits, VPSServer, OrangeVPS, and BulutVDS.
+5. Continue Batch 017 beyond 146 verified providers.
+6. Execute measured validation only after an exact plan/region is pinned and spend is explicitly chosen.
