@@ -1,0 +1,236 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch focuses on newly discovered strong-price or configurable providers.
+  - Missing exact price or IPv4 facts remain unknown even when the rest of the plan is unusually strong.
+
+providers:
+  - canonical_name: Advin_Servers
+    confidence: A
+    resource_classes: [bargain_vps, performance_vps]
+    verified_regions: [Miami, Nuremberg, Johor_Bahru, Kansas_City, Los_Angeles, NYC_Metro, Osaka]
+    offers:
+      - plan: KVM_Standard_XS_Miami
+        currency: USD
+        regular_monthly_reference: 8
+        displayed_current_monthly: 6
+        promotional: true
+        vcpu: 4
+        cpu_allocation: shared_burstable
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        monthly_transfer_tb: 5
+        port_mbps: 10000
+        stock_at_verification: available
+      - plan: KVM_Standard_S_Miami
+        currency: USD
+        regular_monthly_reference: 16
+        displayed_current_monthly: 12
+        promotional: true
+        vcpu: 8
+        cpu_allocation: shared_burstable
+        memory_gb: 16
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 15
+        port_mbps: 10000
+        stock_at_verification: available
+      - plan: KVM_Standard_XS_Johor
+        vcpu: 4
+        cpu_allocation: shared_burstable
+        memory_gb: 8
+        local_storage_gb: 64
+        storage_type: nvme
+        monthly_transfer_tb: 2
+        port_mbps: 10000
+        current_numeric_price: unknown_checkout
+    platform:
+      virtualization: kvm
+      nested_virtualization_claimed: true
+      cpu_family_standard: AMD_EPYC_Milan
+      memory_type: DDR4_ECC
+      storage_raid: RAID1_or_RAID10_enterprise_nvme
+    network:
+      default_virtual_server_port_gbps: 10
+      same_location_internal_traffic_free_supported_locations: [Los_Angeles, Nuremberg, Miami, Kansas_City]
+      internal_link_gbps: [10, 40]
+      ipv6_prefix_all_products: /48
+      ipv4_included: unknown
+    availability:
+      headline_sla_percent: 99.99
+      default_policy_sla_percent: 99.9
+      sla_wording_inconsistent: true
+    operations:
+      control_panel: custom_convoy_based
+      experimental_backups: true
+      backup_frequency_typical: daily
+      backup_retention_days_typical: 5
+      backup_reliability_guaranteed: false
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Miami Standard XS clears the price, CPU, RAM, storage, transfer, port, and KVM requirements by advertised specification.
+          - IPv4 inclusion is not explicitly verified, so strict status remains unknown.
+          - Promotional current pricing must be tracked separately from the regular reference price.
+      database-node:
+        status: unknown
+        notes:
+          - Miami Standard S is extremely inexpensive for 16 GB but private-network activation, independent reliable backups, exact SLA interpretation, snapshots, and IPv4 must be resolved.
+          - CPU is shared/burstable rather than dedicated.
+    sources:
+      - https://advinservers.com/cloud
+      - https://clients.advinservers.com/store/miami-kvm-standard-vps
+      - https://docs.advinservers.com/information/network
+      - https://docs.advinservers.com/information/hardware
+      - https://docs.advinservers.com/policies/fair-use
+      - https://docs.advinservers.com/guides/controlpanel
+
+  - canonical_name: HostBrr
+    confidence: B
+    resource_classes: [bargain_vps, memory_optimized_vps, storage_vps]
+    verified_regions: [Frankfurt, Falkenstein, Helsinki]
+    offers:
+      - plan: ECO_Memory_Optimized_8GB
+        current_numeric_price: unknown_dynamic_checkout
+        vcpu: 2
+        cpu_family: AMD_EPYC_or_Intel_Xeon
+        memory_gb: 8
+        memory_type: DDR4_ECC
+        local_storage_gb: 80
+        storage_type: nvme
+        monthly_transfer_tb: 5
+        port_mbps: 10000
+        ipv4_included: true
+        ipv6_prefix: /64
+        backup_slots: 1
+        region: Frankfurt
+      - plan: EPYC_8GBrr
+        current_numeric_price: unknown_dynamic_checkout
+        vcpu: 4
+        cpu_family: AMD_EPYC_9004
+        memory_gb: 8
+        memory_type: DDR5_ECC
+        local_storage_gb: 80
+        storage_type: nvme
+        monthly_transfer_tb: 5
+        port_mbps: 10000
+        ipv4_included: true
+        ipv6_prefix: /64
+        backup_slots: 1
+        region: Falkenstein
+      - plan: EPYC_16GBrr
+        current_numeric_price: unknown_dynamic_checkout
+        vcpu: 8
+        cpu_family: AMD_EPYC_9004
+        memory_gb: 16
+        memory_type: DDR5_ECC
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 20
+        port_mbps: 10000
+        ipv4_included: true
+        ipv6_prefix: /64
+        backup_slots: 1
+        region: Falkenstein
+    availability:
+      provider_uptime_guarantee_percent: 99.9
+    network:
+      ddos_protection: included
+    platform:
+      performance_vps_kvm_claimed: true
+      exact_memory_optimized_product_virtualization: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Multiple observed 8 GB products clear resource/network/IPv4 floors, but the current checkout does not expose a stable numeric price and exact virtualization should be pinned per product group.
+      database-node:
+        status: unknown
+        notes:
+          - The 16 GB EPYC shape is technically strong by advertised resources but current price, private network, snapshots, and independent backup semantics remain unresolved.
+    sources:
+      - https://hostbrr.com/
+      - https://my.hostbrr.com/order/main/packages/largeram/?group_id=67
+      - https://my.hostbrr.com/order/main/packages/largeram/?group_id=23
+
+  - canonical_name: HostSlick
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Lelystad_Netherlands]
+    offers:
+      - plan: KVM_AMD_Ryzen_IV
+        currency: EUR
+        monthly_base: 26.99
+        vcpu: 8
+        memory_gb: 8
+        local_storage_gb: 90
+        storage_type: nvme
+        monthly_transfer_tb: 6
+        port_mbps: 1000
+        ipv4_included: true
+        stock_at_verification: unavailable
+    platform:
+      virtualization: kvm
+      cpu_family: AMD_Ryzen
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified 8 GB tier is above the bargain budget and was out of stock at verification time.
+    sources:
+      - https://hostslick.com/clients/store/amd-ryzen-linux-kvm-vps-netherlands
+
+  - canonical_name: UltaHost
+    confidence: B
+    resource_classes: [managed_vps]
+    verified_regions_count_claim: 20_plus
+    offers:
+      - plan: VPS_Professional
+        currency: USD
+        displayed_monthly: 13.80
+        term_note: observed_official_page_says_billed_for_24_month_term
+        vcpu: 3
+        memory_gb: 4
+        local_storage_gb: 75
+        storage_type: nvme
+        traffic: unlimited
+        ipv4_included: true
+      - plan: VPS_Enterprise
+        currency: USD
+        displayed_monthly: 17.99
+        term_note: promotional_long_term_display
+        vcpu: 4
+        memory_gb: 6
+        local_storage_gb: 100
+        storage_type: nvme
+        traffic: unlimited
+        ipv4_included: true
+      - plan: Windows_Enterprise_VPS
+        currency: USD
+        displayed_monthly: 42.50
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 200
+        storage_type: nvme
+    platform:
+      virtualization: kvm_claimed_for_vps_platform
+      managed: true
+    operations:
+      free_backups: true
+      automated_backups: true
+      vertical_scaling: true
+    availability:
+      uptime_claims_on_page: [99.99, 99]
+      wording_inconsistent: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - No currently observed Linux fixed tier simultaneously supplies 8 GB RAM at or below 15 USD; the 6 GB tier is already 17.99 USD promotional.
+          - Long-term promotional terms must not be treated as ordinary month-to-month pricing.
+    sources:
+      - https://ultahost.com/vps-hosting/free-vps
+      - https://ultahost.com/ja/kvm-vps
