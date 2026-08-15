@@ -1,0 +1,63 @@
+name: standard-compute
+status: reusable-profile
+
+budget:
+  currency: USD
+  monthly_max: 15
+  setup_fee_max: 5
+
+regions:
+  preferred: []
+  acceptable: []
+  excluded: []
+  max_latency_ms: null
+
+compute:
+  min_vcpu: 2
+  min_memory_gb: 8
+  cpu_allocation:
+    accepted: [shared, dedicated]
+    preferred: null
+  architecture: [x86_64]
+
+storage:
+  min_local_gb: 60
+  accepted_types: [nvme, ssd]
+  min_iops: null
+
+network:
+  min_monthly_transfer_tb: 2
+  min_port_mbps: 1000
+  ipv4_required: true
+  ipv6_required: false
+  private_network_required: false
+  private_traffic_unmetered_preferred: true
+
+platform:
+  resource_types: [vps, vds, cloud_vm]
+  virtualization: [kvm]
+
+operations:
+  api_required: false
+  terraform_or_opentofu_required: false
+  cloud_init_required: false
+  hourly_billing_preferred: false
+  snapshots_required: false
+  backups_required: false
+
+availability:
+  min_sla_percent: null
+  replicated_storage_preferred: false
+
+priorities:
+  monthly_cost: 10
+  performance: 8
+  network: 8
+  reliability: 6
+  automation: 4
+  scalability: 4
+  support: 3
+
+notes:
+  - Generic low-cost compute profile.
+  - Do not assume that the lowest advertised price includes IPv4, tax, backups, or monthly billing.
