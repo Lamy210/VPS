@@ -328,10 +328,10 @@ providers:
       node_pools: true
     profile_assessment:
       standard-compute:
-        status: pass
+        status: unknown
         notes:
           - Memory Cube S is below the 15 USD budget and exceeds the generic 8 GB RAM / 2 vCPU / 60 GB storage floor.
-          - The generic profile also requires 2 TB transfer and 1 Gbps port; exact Cube traffic/port terms must still be checked before treating this as a final qualified result.
+          - The generic profile also requires 2 TB transfer and 1 Gbps port; exact Cloud Cubes transfer and network-port terms were not yet verified, so hard-filter status remains unknown.
       managed-kubernetes:
         status: unknown
         notes:
