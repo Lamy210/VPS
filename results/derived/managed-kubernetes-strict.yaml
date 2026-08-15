@@ -1,31 +1,55 @@
 schema_version: 1
 profile: requirements/profiles/managed-kubernetes.yaml
 derived_at: 2026-08-16
-source_policy: verified-batches-only
+source_policy: verified-batches-plus-followups
 rules:
   - Every hard requirement must be explicitly verified before a provider is placed in clear_pass.
   - A managed Kubernetes product alone is insufficient: private networking, load balancing, API, Terraform/OpenTofu, native autoscaling, worker capacity, and monitoring integration must all be checked.
   - Control-plane fees and worker-node costs remain separate TCO components.
   - Unknown worker-plan storage or network capacity produces unknown rather than pass.
 
-clear_pass: []
-
-blocked_by_unknown:
+clear_pass:
   - provider: UpCloud
     service: Managed_Kubernetes
     source_batch: results/verified/batch-001.yaml
-    verified_strengths: [managed_control_plane, private_worker_pools, free_private_network, integrated_cluster_autoscaler, node_group_min_max, scale_node_group_to_zero, api, terraform, complimentary_managed_load_balancer]
-    unresolved_hard_requirements: [monitoring_integration, qualifying_worker_shape_with_2vcpu_4gb_40gb_and_1gbps, ipv4_for_selected_worker_architecture]
-    strict_status: unknown
-    verification_priority: very_high
+    followup: results/verified/followup-003.yaml
+    confidence: A
+    selected_worker:
+      plan: PREMIUM-2xCPU-4GB
+      vcpu: 2
+      memory_gb: 4
+      storage_gb: 50
+      storage_type: maxiops_ssd
+      public_port_mbps: 1000
+      ipv4_included: true
+      ipv6_included: true
+    platform_match:
+      managed_kubernetes: true
+      private_network: true
+      managed_load_balancer: true
+      native_cluster_autoscaler: true
+      node_group_min_max: true
+      api: true
+      terraform: true
+      monitoring_integration: [prometheus, opentelemetry, grafana]
+      horizontal_scaling: true
+      control_plane_development_usd_month: 0
+    validation_priority: high
+    notes:
+      - All current reusable managed-Kubernetes hard requirements are covered by official UpCloud documentation for a concrete qualifying worker architecture.
+      - TCO remains a separate derived comparison because this profile currently has no hard monthly budget.
+      - Operational validation should measure autoscaler reaction time, node readiness, load-balancer provisioning and API limits before recommendation.
 
+blocked_by_unknown:
   - provider: Scaleway
     service: Kapsule
     source_batch: results/verified/batch-004.yaml
-    verified_strengths: [managed_kubernetes, free_shared_control_plane, vpc_integration, node_pool_autoscaling, autohealing, api, terraform]
-    unresolved_hard_requirements: [load_balancer_required, monitoring_integration, qualifying_worker_shape_with_40gb_storage_and_1gbps, ipv4_for_selected_worker_architecture]
+    verified_strengths: [managed_kubernetes, free_shared_control_plane, vpc_integration, node_pool_autoscaling, autohealing, api, terraform, load_balancer, cockpit_monitoring, prometheus_grafana_monitoring]
+    unresolved_hard_requirements: [qualifying_worker_shape_with_at_least_40gb_storage_and_1gbps, ipv4_for_selected_worker_architecture]
     strict_status: unknown
     verification_priority: very_high
+    notes:
+      - Many lower-cost worker shapes expose sub-1-Gbps public bandwidth; pin a concrete >=1-Gbps worker and public IPv4 behavior before strict qualification.
 
   - provider: Exoscale
     service: SKS
@@ -38,8 +62,8 @@ blocked_by_unknown:
   - provider: DigitalOcean
     service: DOKS
     source_batch: results/verified/batch-004.yaml
-    verified_strengths: [free_standard_control_plane, native_node_pool_autoscaling, vpc, managed_load_balancer, api, per_second_worker_billing]
-    unresolved_hard_requirements: [terraform_or_opentofu, monitoring_integration, qualifying_worker_shape, private_network_semantics_for_selected_worker_pool]
+    verified_strengths: [free_standard_control_plane, native_node_pool_autoscaling, vpc, managed_load_balancer, api, terraform, per_second_worker_billing]
+    unresolved_hard_requirements: [monitoring_integration, qualifying_worker_shape, private_network_semantics_for_selected_worker_pool]
     strict_status: unknown
     verification_priority: high
 
@@ -110,7 +134,8 @@ blocked_by_unknown:
     strict_status: unknown
 
 next_verification_actions:
-  - Complete UpCloud first because it already has private workers, Terraform, API, native autoscaling, and a managed load balancer in the verified data.
-  - Complete Scaleway and Exoscale next; both already verify private networking, Terraform, API, and native autoscaling.
-  - Verify DigitalOcean Terraform support and monitoring integration, then pin an exact qualifying worker size and full TCO.
-  - For GKE and AKS, capture a concrete worker shape, VPC/private networking, load balancer, Terraform, and monitoring in one region rather than relying on platform-wide feature assumptions.
+  - Operationally validate UpCloud first: node-pool scale up/down latency, node-ready latency, load-balancer provisioning time, API limits, failure recovery and TCO.
+  - Complete Scaleway next by pinning a >=1-Gbps qualifying worker shape with >=40 GB storage and explicit public IPv4 behavior.
+  - Complete Exoscale by resolving load balancer, monitoring, local storage and selected worker IPv4 facts.
+  - Complete DigitalOcean by pinning a qualifying worker shape, monitoring integration, and selected worker private-network semantics.
+  - For GKE and AKS, capture a concrete worker shape, private networking, load balancer, Terraform, and monitoring in one region rather than relying on platform-wide feature assumptions.
