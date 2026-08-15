@@ -1,11 +1,11 @@
 schema_version: 1
 profile: requirements/profiles/standard-compute.yaml
 derived_at: 2026-08-16
-source_policy: verified-batches-only
+source_policy: verified-batches-plus-followups
 rules:
   - Every hard requirement must be explicitly verified before a resource is placed in clear_pass.
   - Missing virtualization, network-port, IPv4, transfer, contract, or price facts produce unknown rather than pass.
-  - This derived file may be stricter than a preliminary profile_assessment stored in an earlier verification batch.
+  - Targeted follow-up files may resolve a blocker from an earlier source batch without changing the original observed record.
   - Provider-advertised specifications are not performance benchmarks.
 
 clear_pass:
@@ -29,12 +29,34 @@ clear_pass:
       - Dedicated CPU and unusually low price make benchmark validation especially important.
       - Final purchase suitability still depends on independent CPU, storage, and network measurements.
 
+  - provider: HostEons
+    plan: Hybrid_Special_2
+    source_batch: results/verified/batch-003.yaml
+    followup: results/verified/followup-002.yaml
+    confidence: B
+    verified_match:
+      monthly_price_usd: 8.99
+      vcpu_or_cpu: 2_dedicated_ryzen_3950x_vcores
+      memory_gb: 8
+      local_storage_gb: 100
+      storage_type: nvme
+      monthly_transfer_tb: 30
+      port_mbps: 10000
+      ipv4_included: true
+      ipv6_prefix: /64
+      virtualization: kvm
+    benchmark_priority: high
+    notes:
+      - Follow-up verification resolves the exact VDS/Hybrid KVM requirement using HostEons official product and knowledgebase evidence.
+      - Dedicated CPU at a sub-10-USD price makes independent sustained-load and network validation high priority.
+
 blocked_by_unknown:
   - provider: Onie_Cloud
     plan: VM_4_8
     source_batch: results/verified/batch-010.yaml
-    verified_strengths: [4_vcpu, 8gb_ram, 150gb_nvme, 7tb_transfer, 10gbps, ipv4, ipv6, vpc, api, cli, python_sdk, hourly_billing, autoscaling, load_balancing, snapshots, automated_backups]
-    unresolved_hard_requirements: [kvm_virtualization, normalized_usd_tco, promotional_price_persistence]
+    followup: results/verified/followup-002.yaml
+    verified_strengths: [4_vcpu, 8gb_ram, 150gb_nvme, 7tb_transfer, 10gbps_shared, ipv4, ipv6, vpc, api, cli, python_sdk, hourly_billing, autoscaling, load_balancing, snapshots, automated_backups]
+    unresolved_hard_requirements: [exact_public_cloud_hypervisor, normalized_usd_tco, promotional_price_persistence]
     strict_status: unknown
     benchmark_priority_after_clearance: high
 
@@ -52,8 +74,9 @@ blocked_by_unknown:
   - provider: HostBrr
     plan: EPYC_8GBrr
     source_batch: results/verified/batch-009.yaml
-    verified_strengths: [4_vcpu, amd_epyc_9004, 8gb_ddr5_ecc, 80gb_nvme, 5tb_transfer, 10gbps, ipv4, ipv6, backup_slot]
-    unresolved_hard_requirements: [current_numeric_price, exact_kvm_virtualization_for_product_group]
+    followup: results/verified/followup-002.yaml
+    verified_strengths: [4_vcpu, amd_epyc_9004, 8gb_ddr5_ecc, 80gb_nvme, 5tb_transfer, 10gbps, ipv4, ipv6, backup_slot, kvm]
+    unresolved_hard_requirements: [current_numeric_price]
     strict_status: unknown
     benchmark_priority_after_clearance: high
 
@@ -88,15 +111,9 @@ blocked_by_unknown:
   - provider: OrangeVPS
     plan: BASIC_3_NVMe
     source_batch: results/verified/batch-003.yaml
-    verified_strengths: [usd_12_monthly, 4_vcpu, 8gb_ram, 80gb_nvme, 5tb_transfer, 1gbps, ipv4]
+    followup: results/verified/followup-002.yaml
+    verified_strengths: [usd_12_monthly, 4_vcpu, 8gb_ram, 80gb_nvme, 5tb_transfer, 1gbps, ipv4, no_contract, sla_99_9]
     unresolved_hard_requirements: [kvm_virtualization]
-    strict_status: unknown
-
-  - provider: HostEons
-    plan: Hybrid_Special_2
-    source_batch: results/verified/batch-003.yaml
-    verified_strengths: [usd_8_99_monthly, 2_dedicated_vcores, 8gb_ram, 100gb_nvme, 30tb_transfer, 10gbps, ipv4]
-    unresolved_hard_requirements: [kvm_virtualization_for_hybrid_product]
     strict_status: unknown
 
   - provider: BulutVDS
@@ -169,7 +186,40 @@ blocked_by_unknown:
     unresolved_hard_requirements: [current_numeric_price, ipv4_inclusion_for_selected_plan]
     strict_status: unknown
 
+  - provider: FyfeWeb
+    plan: VM_London_8GB
+    source_batch: results/verified/batch-011.yaml
+    verified_strengths: [4_vcpu, 8gb_ram, 72gb_ssd, 2gbps, ipv4, ipv6, daily_backups, sla_99_99]
+    unresolved_hard_requirements: [exact_kvm_virtualization_for_london_product, normalized_usd_tco]
+    strict_status: unknown
+
+  - provider: Netbela
+    source_batch: results/verified/batch-011.yaml
+    verified_strengths: [self_service_vps_available, vds_available, sla_99_9, configurable_resources]
+    unresolved_hard_requirements: [exact_8gb_plan_price, exact_8gb_cpu_ram_storage_transfer_port_ipv4_virtualization]
+    strict_status: unknown
+
 clear_fail_examples:
+  - provider: AFRICLOUD
+    source_batch: results/verified/batch-011.yaml
+    reason: verified_8gb_vm6_costs_90_usd_even_with_recurring_promotion
+
+  - provider: NoAck_Hosting
+    source_batch: results/verified/batch-011.yaml
+    reason: official_vps_service_is_advertised_up_to_100mbps_below_1gbps_floor
+
+  - provider: D4_Networks
+    source_batch: results/verified/batch-011.yaml
+    reason: verified_8gb_cloud_vps_costs_114_95_usd_month
+
+  - provider: Free_Range_Cloud
+    source_batch: results/verified/batch-011.yaml
+    reason: verified_8gb_ranch_tier_costs_21_99_usd_month
+
+  - provider: EstNOC
+    source_batch: results/verified/batch-011.yaml
+    reason: largest_currently_listed_japan_base_plan_has_only_5gb_ram
+
   - provider: FormoHost
     source_batch: results/verified/batch-010.yaml
     reason: largest_verified_taiwan_plan_has_only_6gb_ram_1tb_transfer_and_100mbps_port
@@ -255,17 +305,16 @@ clear_fail_examples:
     reason: no_observed_linux_fixed_tier_provides_8gb_at_or_below_15_usd
 
 next_verification_actions:
-  - Verify KVM implementation and normalized ordinary monthly TCO for Onie Cloud VM 4-8; it is now a high-priority Asia/API-driven near-match.
-  - Resolve CloudXact exact per-plan public port speed and apply FX/setup-fee TCO.
-  - Verify Kencang IPv4 inclusion and whether the advertised up-to-1-Gbps link satisfies the profile's port requirement.
+  - Verify Onie Cloud public VM hypervisor, ordinary monthly TCO, and promotion persistence.
+  - Verify Advin Servers IPv4 inclusion and promotion persistence.
+  - Capture stable current HostBrr numeric pricing; KVM/IPv4/IPv6/backup/network resource facts are now resolved.
+  - Resolve CloudXact exact public port speed and setup-fee-inclusive TCO.
+  - Verify Kencang IPv4 inclusion and whether the advertised up-to-1-Gbps link satisfies the hard port requirement.
   - Verify ServerUtama and Rumahweb exact public port characteristics, datacenter details, IPv4 where unresolved, and normalized TCO.
-  - Verify IPv4 inclusion and promotional-price persistence for Advin Servers Miami Standard XS.
-  - Capture stable current HostBrr pricing and exact KVM status for the selected memory-optimized product.
-  - Verify virtualization technology for OrangeVPS BASIC NVMe.
-  - Verify virtualization technology for HostEons Hybrid Dedicated products.
-  - Verify virtualization technology for BulutVDS EPYC products.
+  - Verify OrangeVPS BASIC NVMe virtualization technology.
+  - Verify BulutVDS EPYC virtualization technology.
   - Verify HostHatch public port speed and KVM implementation.
   - Verify Contabo public port speed and virtualization type, then apply the repository FX/TCO policy.
   - Verify Hetzner effective TCO including required IPv4 and the profile network/virtualization facts.
   - Verify IONOS Cloud Cubes transfer allowance and public network speed.
-  - Define a reproducible exchange-rate policy before resolving local-currency candidates.
+  - Apply the documented FX/TCO policy to local-currency candidates using a timestamped rate snapshot.
