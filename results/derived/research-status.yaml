@@ -3,14 +3,14 @@ updated_at: 2026-08-16
 scope: public_requirement_driven_infrastructure_resource_research
 
 counts:
-  verification_batches: 14
-  unique_verified_providers: 126
+  verification_batches: 15
+  unique_verified_providers: 136
   targeted_followup_files: 4
   strict_clear_passes:
-    standard_compute: 3
+    standard_compute: 4
     database_node: 0
     managed_kubernetes: 1
-  validation_ready_resources: 4
+  validation_ready_resources: 5
   measured_benchmark_resources: 0
 
 strict_clear_passes:
@@ -24,6 +24,9 @@ strict_clear_passes:
     - provider: Advin_Servers
       plan: KVM_Premium_S_Miami
       validation_ready: true
+    - provider: InterServer
+      plan: Cloud_Compute_4_Slices
+      validation_ready: true
   database_node: []
   managed_kubernetes:
     - provider: UpCloud
@@ -35,11 +38,13 @@ high_priority_unknown_reduction:
   standard_compute:
     - Onie_Cloud
     - HostBrr
-    - OrangeVPS
-    - BulutVDS
     - CloudCone
     - Crunchbits
     - VPSServer
+    - OrangeVPS
+    - BulutVDS
+    - CloudXact
+    - Kencang
     - Aruba_Cloud
     - LayerStack
   database_node:
@@ -58,20 +63,20 @@ high_priority_unknown_reduction:
     - NAVER_Cloud_Platform
 
 latest_batches:
-  - batch: 13
-    focus: european_regional_public_cloud
-    providers: [Brightbox, Krystal_Cloud, TransIP, Aruba_Cloud, Leaseweb, Cleura, Open_Telekom_Cloud]
   - batch: 14
     focus: global_low_cost_and_configurable_vps_vds
     providers: [CloudCone, BandwagonHost, GigsGigsCloud, Crunchbits, RamNode, OneProvider, Cloudzy, QuantVPS, VPSServer, Hostwinds]
+  - batch: 15
+    focus: low_cost_kvm_and_configurable_cloud
+    providers: [InterServer, BuyVM, Clouding_io, mivoCloud, EthernetServers, HostNamaste, HostSailor, V_PS, Togglebox, Bacloud]
 
 next_work:
   - Reduce technical and contract unknowns on CloudCone, Crunchbits, VPSServer, Onie Cloud, HostBrr, OrangeVPS, and BulutVDS.
   - Reduce database-node unknowns for VPSnet, ServaRica, VSYS Host, and Onidel.
   - Apply timestamped FX snapshots only after technical hard requirements are cleared.
   - Operationally validate UpCloud Managed Kubernetes autoscaling, provisioning, networking, observability, and TCO.
-  - Benchmark ServaRica, HostEons, and Advin Servers only on exact verified plans and regions.
-  - Continue Batch 015 with additional unverified regional/API providers while keeping provider identity normalization strict.
+  - Benchmark ServaRica, HostEons, Advin Servers, and InterServer only on exact verified plans and regions.
+  - Continue Batch 016 with additional unverified regional/API providers while keeping provider identity normalization strict.
   - Extend automated validation to strict-pass and benchmark-ready count consistency.
 
 quality_invariants:
@@ -80,6 +85,7 @@ quality_invariants:
   - promotional_and_renewal_prices_are_separate
   - annualized_prepaid_price_is_not_ordinary_monthly_price
   - physical_threads_are_not_silently_counted_as_vcpu
+  - shared_port_speed_is_not_guaranteed_sustained_throughput
   - native_currency_is_preserved
   - marketing_region_does_not_prove_datacenter_region
   - snapshots_do_not_automatically_equal_independent_backups
