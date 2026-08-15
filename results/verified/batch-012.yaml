@@ -1,0 +1,358 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch expands verified coverage beyond 100 providers with East and South Asian regional/public-cloud platforms.
+  - Provider-native currency is retained; no implicit FX conversion is used for hard budget decisions.
+  - Dynamic calculators or quote-only services remain price-unknown rather than inferred.
+
+providers:
+  - canonical_name: NAVER_Cloud_Platform
+    confidence: A
+    resource_classes: [regional_public_cloud, api_driven_cloud, managed_kubernetes, managed_database]
+    verified_regions: [Korea, Japan, Singapore, Germany, US_West]
+    offers:
+      - plan: Standard_g2_2vCPU_8GB_Korea
+        currency: KRW
+        monthly_50gb_disk: 85120
+        monthly_100gb_disk: 88000
+        vcpu: 2
+        memory_gb: 8
+        base_disk_options_gb: [50, 100]
+      - plan: SSD_Server_2vCPU_8GB_Korea
+        currency: KRW
+        monthly_50gb_disk: 97360
+        monthly_100gb_disk: 103120
+        vcpu: 2
+        memory_gb: 8
+        base_disk_options_gb: [50, 100]
+        storage_class: ssd
+    network:
+      vpc: true
+      private_subnet: true
+      public_ip_product: true
+      load_balancer: true
+      nat_gateway: true
+    operations:
+      rest_api: true
+      server_api: true
+      storage_api: true
+      snapshot_api: true
+      public_ip_api: true
+      init_script_api: true
+      network_interface_api: true
+      live_migration_supported_for_host_failures: true
+      hourly_and_monthly_billing: true
+    additional_services:
+      kubernetes: Ncloud_Kubernetes_Service
+      managed_postgresql: Cloud_DB_for_PostgreSQL
+      managed_cache: Cloud_DB_for_Cache
+      object_storage: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current 8 GB pricing, API, VPC, and storage options are verified, but native-currency TCO, transfer allowance, public port speed, IPv4 inclusion semantics, and exact KVM requirement remain unresolved.
+      managed-kubernetes:
+        status: unknown
+        notes:
+          - Ncloud Kubernetes Service and VPC exist, but the reusable profile requires a single concrete worker architecture plus autoscaling, load balancer, Terraform/OpenTofu, monitoring, 1-Gbps port, storage, and IPv4 verification together.
+    sources:
+      - https://www.ncloud.com/charge/price/ko
+      - https://www.ncloud.com/charge/price/jp
+      - https://api.ncloud-docs.com/docs/en/compute-vserver
+      - https://guide.ncloud-docs.com/docs/en/server-create-vpc
+      - https://guide.ncloud-docs.com/docs/en/server-manage-vpc
+
+  - canonical_name: NHN_Cloud
+    confidence: A
+    resource_classes: [regional_public_cloud, managed_database, container_cloud]
+    verified_regions: [Korea_Pangyo, Korea_Pyeongchon, Korea_Gwangju, Tokyo, California]
+    pricing:
+      calculator_current: true
+      current_numeric_8gb_price: unknown_dynamic_calculator
+      vat_behavior: region_dependent
+    services:
+      compute_instance: true
+      instance_templates: true
+      auto_scale: true
+      cloud_functions: true
+      block_storage: true
+      object_storage: true
+      backup: true
+      managed_postgresql: true
+      managed_redis: true
+      network_and_security_services: true
+      container_services: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current official calculator and regional compute product are verified, but the dynamic calculator did not expose a stable 8 GB numeric plan snapshot in this verification.
+      database-node:
+        status: unknown
+        notes:
+          - Compute, network, backup, PostgreSQL and Redis services exist, but a concrete self-managed 16 GB database-node shape and all hard networking/SLA/backup details need plan-level capture.
+    sources:
+      - https://www.nhncloud.com/jp/service/compute/instance
+      - https://www.nhncloud.com/jp/pricing/calculator?c=compute&r=null&s=instance
+      - https://www.nhncloud.com/jp/pricing/calculator?c=database&r=null&s=redis-instance
+
+  - canonical_name: KT_Cloud
+    confidence: B
+    resource_classes: [regional_public_cloud, ai_compute, datacenter_cloud]
+    verified_regions: [South_Korea]
+    company_service_scope:
+      public_cloud: true
+      financial_cloud: true
+      datacenter_services: true
+      gpu_and_npu_cloud: true
+    compute:
+      amd_epyc_virtual_server_product_documented: true
+      current_generic_8gb_price: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current company material confirms Public Cloud as a core service, while historical official product material documents AMD EPYC virtual servers; a current generic plan/price/network capture is still required before requirement matching.
+    sources:
+      - https://www.ktcloud.com/company/about?lan=eng
+      - https://tech.ktcloud.com/87
+      - https://www.ktcloud.com/media/press/20260604093554164?lan=kor
+
+  - canonical_name: LayerStack
+    confidence: A
+    resource_classes: [regional_public_cloud, api_driven_cloud, regional_vps]
+    verified_regions: [Hong_Kong, Singapore, Tokyo]
+    platform:
+      general_purpose_cpu_allocation: shared
+      arm_cloud_available: true
+      arm_cpu_family: Ampere_Altra_Max
+      arm_8gb_starting_usd_month: 7
+    network:
+      private_network_same_region: true
+      private_network_layer2_vlan: true
+      private_network_same_region_mbps: 1000
+      private_network_usd_month: 1.95
+      cross_region_private_network_available: true
+      dedicated_bandwidth_available: true
+      hong_kong_dedicated_bandwidth_start_usd_100mbps_month: 25.50
+    automation:
+      public_api: true
+      cloud_server_plans_api: true
+      api_regions_include_hong_kong_singapore_tokyo: true
+    availability:
+      uptime_guarantee_percent: 99.95
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - An 8 GB ARM VM can start at 7 USD and regional API/private-network primitives are strong, but exact selected-plan disk, transfer, public IPv4, public-port and virtualization requirements must be pinned before strict qualification.
+    sources:
+      - https://www.layerstack.com/en/pricing
+      - https://www.layerstack.com/en/vps
+      - https://www.layerstack.com/resources/docs/
+      - https://docs.layerstack.com/api-docs/layerstack-api/plans
+
+  - canonical_name: E2E_Cloud
+    aliases: [E2E_Networks]
+    confidence: A
+    resource_classes: [regional_public_cloud, api_driven_cloud, kubernetes, gpu_cloud]
+    verified_regions: [India]
+    pricing:
+      cpu_compute_price_revision_effective: 2026-08-01
+      current_numeric_8gb_cpu_price: unknown_dynamic_calculator
+      billing_models: [on_demand, committed]
+      stopped_on_demand_compute_billing_pauses: true
+    network:
+      machine_instance_data_transfer_charge: 0
+      reserved_ip_inr_month: 199
+      vpc_ip_reservation_free: true
+      security_groups_free: true
+    operations:
+      public_plans_and_pricing_api: true
+      pricing_calculator: true
+      kubernetes_workers_billed_as_compute: true
+    availability:
+      uptime_sla_percent: 99.9
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current August 2026 CPU pricing regime, data-transfer policy, SLA and API are verified, but a stable numeric 8 GB CPU node price and selected network/IPv4/storage facts require calculator/API capture.
+      kubernetes-worker:
+        status: unknown
+        notes:
+          - Kubernetes workers use underlying compute billing; concrete worker shape, private networking, provisioning automation and all reusable worker hard fields still need verification.
+    sources:
+      - https://docs.e2enetworks.com/docs/myaccount/billing/pricing-update-july-2026/
+      - https://calculator.e2enetworks.com/
+      - https://www.e2enetworks.com/policies/policy-faq
+      - https://docs.e2enetworks.com/docs/tir/network/billing/
+      - https://docs.e2enetworks.com/api/myaccount/other/other/get-plans-and-pricing/
+
+  - canonical_name: Cyfuture_Cloud
+    confidence: A
+    resource_classes: [regional_public_cloud]
+    verified_regions: [India]
+    offers:
+      - plan: 4vCPU_8GB_150GB
+        currency: USD
+        promotional_monthly: 24.02
+        displayed_reference_monthly: 48.04
+        hourly_promotional: 0.03
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 150
+        storage_type: ssd
+      - plan: 4vCPU_16GB_200GB
+        currency: USD
+        promotional_monthly: 34.46
+        displayed_reference_monthly: 68.93
+        hourly_promotional: 0.05
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 200
+        storage_type: ssd
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified 8 GB promotional price is already above the reusable 15 USD monthly ceiling.
+      database-node:
+        status: fail
+        notes:
+          - The verified 16 GB promotional price exceeds the reusable 30 USD database-node ceiling before required add-ons.
+    sources:
+      - https://cyfuture.cloud/pricing
+
+  - canonical_name: Chief_Telecom
+    confidence: A
+    resource_classes: [regional_public_cloud, bare_metal_cloud]
+    verified_regions: [Taiwan]
+    standard_linux_shapes:
+      - plan: VL03
+        ccpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        default_storage_type: sas
+        public_ipv4_included: 1
+      - plan: VL04
+        ccpu: 4
+        memory_gb: 16
+        local_storage_gb: 100
+        default_storage_type: sas
+        public_ipv4_included: 1
+      - plan: VL06
+        ccpu: 8
+        memory_gb: 16
+        local_storage_gb: 100
+        default_storage_type: sas
+        public_ipv4_included: 1
+    pricing:
+      vm_price: quote_or_console_dependent
+      billing: monthly
+    storage:
+      ssd_upgrade_available: true
+      ssd_minimum_gb: 100
+    network:
+      bandwidth_flat_rate_available: true
+      data_transfer_billing_available: true
+      inbound_data_transfer_free: true
+      outbound_under_10tb_ntd_per_gb: 3
+    chief_bmc:
+      pay_as_you_go_vm_available: true
+      subscription_vm_available: true
+      cpu_classes: [shared_basic, dedicated_general_purpose, dedicated_compute_optimized, dedicated_memory_optimized]
+      vpc_and_subnets: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Taiwan 8/16 GB VM shapes and included IPv4 are verified, but default storage is SAS and exact SSD/bandwidth-inclusive TCO is quote/order dependent.
+    sources:
+      - https://www.chief.com.tw/cloud/cloud-computing/computing-services-iaas/
+      - https://en.chief.com.tw/cloud/cloud-computing/computing-services-iaas/
+      - https://www.chief.com.tw/cloud/chiefbmc-virtual-machine-billing-rule/
+
+  - canonical_name: CtrlS
+    confidence: A
+    resource_classes: [regional_public_cloud, datacenter_cloud]
+    verified_regions: [Mumbai, Delhi, Hyderabad, Bengaluru]
+    offers:
+      - plan: large
+        currency: INR
+        monthly_base: 7770
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+      - plan: bxlarge
+        currency: INR
+        monthly_base: 14040
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 200
+      - plan: axlarge
+        currency: INR
+        monthly_base: 9020
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 200
+    storage_addons:
+      ssd_block_storage_inr_per_tb_month: 7750
+      nvme_standard_inr_per_tb_month: 12500
+      nvme_performance_inr_per_tb_month: 25000
+    network_addons:
+      virtual_lb_1gbps_inr_month: 351000
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current standardized 8 GB rate-card prices and regional availability are verified, but native-currency TCO, storage class for included disk, transfer, public port, IPv4 and virtualization need plan-level verification.
+      database-node:
+        status: unknown
+        notes:
+          - 16 GB/8-vCPU/200-GB capacity exists; NVMe add-ons are priced separately, while networking/private-network/SLA/backup details must be captured before hard filtering.
+    sources:
+      - https://www.ctrls.com/cloud-infrastructure-rate-card/
+
+  - canonical_name: Yotta
+    confidence: B
+    resource_classes: [sovereign_cloud, gpu_cloud, hpc_cloud, datacenter_cloud]
+    verified_regions: [India]
+    current_compute_examples:
+      - plan: ECO_PRO_Value
+        currency: INR
+        monthly_base: 11000
+        vcpu: 4
+        memory_gb: 20
+        local_storage_gb: 250
+        gpu_memory_gb: 8
+        network: up_to_10gbps
+        transfer: unlimited
+      - plan: POWER_PRO_Value_T4
+        currency: INR
+        monthly_base: 20000
+        vcpu: 16
+        memory_gb: 64
+        local_storage_gb: 250
+        gpu: NVIDIA_T4_16GB
+        network: up_to_10gbps
+        transfer: unlimited
+    platform:
+      hyperscale_datacenters_india: true
+      sovereign_cloud_positioning: true
+      gpu_ai_cloud: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - Currently public numeric compute examples are GPU/HPC-oriented and not comparable to the reusable low-cost CPU-only VPS profile.
+      gpu_compute:
+        status: candidate
+        notes:
+          - Yotta remains relevant for a future GPU/HPC requirement profile rather than the current bargain compute comparison.
+    sources:
+      - https://www.yotta.com/lp/high-performance-computing/
+      - https://yotta.com/shakticloud/Pricing.html
+      - https://suraksha.yotta.com/pricing/
