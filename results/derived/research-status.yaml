@@ -3,8 +3,8 @@ updated_at: 2026-08-16
 scope: public_requirement_driven_infrastructure_resource_research
 
 counts:
-  verification_batches: 13
-  unique_verified_providers: 116
+  verification_batches: 14
+  unique_verified_providers: 126
   targeted_followup_files: 4
   strict_clear_passes:
     standard_compute: 3
@@ -37,6 +37,9 @@ high_priority_unknown_reduction:
     - HostBrr
     - OrangeVPS
     - BulutVDS
+    - CloudCone
+    - Crunchbits
+    - VPSServer
     - Aruba_Cloud
     - LayerStack
   database_node:
@@ -55,25 +58,28 @@ high_priority_unknown_reduction:
     - NAVER_Cloud_Platform
 
 latest_batches:
-  - batch: 12
-    focus: east_and_south_asia_regional_cloud
-    providers: [NAVER_Cloud_Platform, NHN_Cloud, KT_Cloud, LayerStack, E2E_Cloud, Cyfuture_Cloud, Chief_Telecom, CtrlS, Yotta]
   - batch: 13
     focus: european_regional_public_cloud
     providers: [Brightbox, Krystal_Cloud, TransIP, Aruba_Cloud, Leaseweb, Cleura, Open_Telekom_Cloud]
+  - batch: 14
+    focus: global_low_cost_and_configurable_vps_vds
+    providers: [CloudCone, BandwagonHost, GigsGigsCloud, Crunchbits, RamNode, OneProvider, Cloudzy, QuantVPS, VPSServer, Hostwinds]
 
 next_work:
-  - Reduce technical unknowns on near-pass resources before spending on benchmarks.
+  - Reduce technical and contract unknowns on CloudCone, Crunchbits, VPSServer, Onie Cloud, HostBrr, OrangeVPS, and BulutVDS.
+  - Reduce database-node unknowns for VPSnet, ServaRica, VSYS Host, and Onidel.
   - Apply timestamped FX snapshots only after technical hard requirements are cleared.
   - Operationally validate UpCloud Managed Kubernetes autoscaling, provisioning, networking, observability, and TCO.
   - Benchmark ServaRica, HostEons, and Advin Servers only on exact verified plans and regions.
-  - Continue Batch 014 with unverified regional/API providers while keeping provider identity normalization strict.
+  - Continue Batch 015 with additional unverified regional/API providers while keeping provider identity normalization strict.
   - Extend automated validation to strict-pass and benchmark-ready count consistency.
 
 quality_invariants:
   - unknown_hard_fields_never_pass
   - provider_advertised_performance_is_not_benchmark_evidence
   - promotional_and_renewal_prices_are_separate
+  - annualized_prepaid_price_is_not_ordinary_monthly_price
+  - physical_threads_are_not_silently_counted_as_vcpu
   - native_currency_is_preserved
   - marketing_region_does_not_prove_datacenter_region
   - snapshots_do_not_automatically_equal_independent_backups
