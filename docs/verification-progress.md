@@ -46,25 +46,25 @@ Clear advertised-specification passes:
 3. **Advin Servers — KVM Premium S (Miami)**
 4. **InterServer — Cloud Compute 4 Slices**
 
-InterServer is the newest strict pass: $12/month, 2 CPU cores, 8 GB RAM, 160 GB SSD, 8 TB transfer, one IPv4, KVM, month-to-month billing, and a 10 Gbps shared port. The shared port is not interpreted as guaranteed sustained throughput, so network contention is a required validation target.
+The InterServer shape is $12/month with 2 CPU cores, 8 GB RAM, 160 GB SSD, 8 TB transfer, one IPv4, KVM, month-to-month billing, and a 10 Gbps shared port. The shared port qualifies as the configured interface speed but is not interpreted as guaranteed sustained throughput; contention testing is explicitly required.
 
 These are advertised-specification passes only. They are not performance recommendations until measured validation is completed.
 
-High-priority blocked candidates include Onie Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, CloudXact, Kencang, ServerUtama, Rumahweb, OrangeVPS, BulutVDS, Aruba Cloud, LayerStack, and other records listed in `results/derived/standard-compute-strict.yaml`.
+High-priority blocked candidates include Onie Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, CloudXact, Kencang, ServerUtama, Rumahweb, OrangeVPS, BulutVDS, Aruba Cloud, and LayerStack.
 
-Batch 014/015 classification examples:
+Notable recent classifications:
 
-- **CloudCone SSD VPS 5** clears the technical resource floors at a displayed $4.79/month equivalent, but the verified charge is $57.59 billed annually in advance. Annualized prepaid pricing is not silently treated as ordinary month-to-month pricing.
-- **Crunchbits Xeon 6146 VDS 8 GB** is $8/month with one dedicated physical core / two threads, 150 GB NVMe, 20 TB and 2.5 Gbps. Threads are not silently converted into the profile's explicit vCPU/core-count requirement.
-- **VPSServer** verifies KVM/NVMe/public-IP/hourly billing and global regions, but its exact qualifying 8 GB price and port speed remain dynamic/unpinned.
-- **V.PS Cloud KVM** has KVM/IPv4/IPv6/1 Gbps, but the standard Cloud family is limited to 1 TB/month; its Storage family requires an exact 8 GB price/shape capture before it can be assessed.
-- **Togglebox** publishes enough unit pricing to calculate the exact minimum standard shape; 2 vCPU + 8 GB + 60 GB NVMe + IPv4 is $33.46/month, so it fails the current $15 budget despite strong HA/API/Terraform features.
+- **CloudCone SSD VPS 5** technically clears CPU/RAM/storage/transfer/port/IPv4/KVM but is billed $57.59 annually in advance; its displayed $4.79/month is not treated as an ordinary monthly contract.
+- **Crunchbits Xeon 6146 VDS 8 GB** is $8/month with one dedicated physical core / two threads, 150 GB NVMe, 20 TB and 2.5 Gbps. Thread count is not silently mapped to the profile's vCPU/core-count requirement.
+- **VPSServer** verifies KVM/NVMe/public-IP/hourly billing and global regions, but its exact qualifying 8 GB price and selected-port speed remain dynamic/unpinned.
+- **V.PS Cloud KVM** uses KVM with IPv4/IPv6 and a 1 Gbps port, but the standard Cloud family has 1 TB transfer. Storage KVM has more transfer but still needs an exact 8 GB shape/price capture.
+- **Togglebox** publishes enough unit rates to calculate 2 vCPU + 8 GB + 60 GB NVMe + IPv4 at $33.46/month, so it fails the current $15 budget despite strong HA/API/Terraform features.
 
 ### Database node
 
 `clear_pass` remains empty.
 
-Shortest-path candidates remain:
+Shortest-path candidates:
 
 - **VPSnet** — private network + normalized TCO remain.
 - **ServaRica** — private network + snapshots + independent backup remain.
@@ -93,19 +93,11 @@ No benchmark result has been executed or claimed yet.
 
 ## Data validation
 
-The repository runs `.github/workflows/validate-research-data.yml` on relevant pull-request changes.
-
-Validation covers YAML/schema integrity, provider identity uniqueness, follow-up/derived/benchmark references, research-status counts, and cross-file bookkeeping. Strict-pass and validation-ready count checks are being strengthened as the dataset grows.
+The repository runs `.github/workflows/validate-research-data.yml` on relevant pull-request changes. It validates YAML/schema integrity, provider identity uniqueness, follow-up/derived/benchmark references, source/derived provider counts, strict clear-pass counts, and validation-ready queue counts.
 
 ## FX and TCO
 
-`docs/fx-tco-policy.md` defines the normalization policy:
-
-- retain provider-native prices;
-- use timestamped FX snapshots only in derived output;
-- keep ordinary monthly, hourly-cap, prepay, promotion, renewal, and setup-fee prices separate;
-- include required IPv4, private network, storage, backup, load balancer, NAT, egress, and applicable taxes in effective TCO;
-- avoid false precision where ordinary FX movement could reverse rankings.
+`docs/fx-tco-policy.md` retains provider-native prices and applies timestamped FX only in derived output. Ordinary monthly, hourly-cap, prepay, promotion, renewal, setup fee, required IPv4/private network/storage/backup/LB/NAT/egress/tax costs remain separate inputs to effective TCO.
 
 ## Data-quality rules
 
@@ -121,10 +113,8 @@ Validation covers YAML/schema integrity, provider identity uniqueness, follow-up
 
 ## Next work
 
-Highest-value next steps:
-
 1. Reduce remaining database-node unknowns for VPSnet, ServaRica, VSYS Host, and Onidel.
 2. Resolve standard-compute unknowns for Onie Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, OrangeVPS, and BulutVDS.
 3. Pin concrete managed-Kubernetes worker architectures for Scaleway, Exoscale, and DigitalOcean.
 4. Continue Batch 016 beyond 136 verified providers.
-5. Execute measured validation only after the exact plan/region is pinned and the user chooses to spend on the candidate instance.
+5. Execute measured validation only after an exact plan/region is pinned and spend is explicitly chosen.
