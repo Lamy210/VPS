@@ -1,5 +1,5 @@
 schema_version: 1
-verified_at: 2026-08-16
+verified_at: 2026-08-17
 source_policy: official-only
 purpose: targeted_followup
 notes:
@@ -23,11 +23,14 @@ providers:
     evidence_notes:
       - The current July 2026 Hybrid Dedicated Special announcement identifies Hybrid Special 2 as 2 dedicated Ryzen 3950X vCores, 8 GB RAM, 100 GB NVMe, 30 TB transfer, 10 Gbps, one IPv4, and /64 IPv6 at 8.99 USD/month.
       - HostEons' official VPS/VDS knowledgebase states that its VDS products are KVM-based and describes VDS as a KVM VPS with dedicated CPU cores.
+      - HostEons separately states that KVM is used for all VPS hosting services.
     strict_effect:
-      standard-compute: clear_pass_candidate
+      standard-compute: clear_pass
     sources:
+      - https://my.hosteons.com/store/hybrid-dedicated-server-special
       - https://blog.hosteons.com/2026/07/15/hosteons-hybrid-dedicated-servers-are-back-in-stock-starting-at-just-4-99-month/
       - https://my.hosteons.com/knowledgebase/93/What-Is-the-Difference-Between-KVM-VPS-and-VDS.html
+      - https://my.hosteons.com/knowledgebase/5/Which-virtualisation-technology-do-you-use-for-VPS-Hosting.html
 
   - canonical_name: OrangeVPS
     source_batch: results/verified/batch-003.yaml
@@ -38,12 +41,10 @@ providers:
     unresolved:
       - exact_kvm_virtualization_for_basic_nvme_product
     evidence_notes:
-      - OrangeVPS' current knowledgebase states all VPS products receive datacenter-class IP addresses and discusses the assigned IPv4 for each VPS.
       - Current BASIC 3 remains 4 vCPU, 8 GB RAM, 80 GB NVMe, 5 TB, 1 Gbps at 12 USD/month.
       - The current official product page does not explicitly identify the BASIC NVMe hypervisor as KVM, so strict status remains unknown.
     sources:
       - https://orangevps.com/zh/nvme-vps-zh/
-      - https://portal.orangevps.com/knowledgebase/1/company
 
   - canonical_name: Onie_Cloud
     source_batch: results/verified/batch-010.yaml
@@ -71,7 +72,6 @@ providers:
     sources:
       - https://onie.net/cloud-server
       - https://onie.net/
-      - https://my.onie.net/register
       - https://onie.net/vm-subnet
       - https://onie.net/load-balancer/
 
@@ -89,10 +89,56 @@ providers:
       epyc_8gbrr_storage_type: nvme
     unresolved:
       - current_numeric_price_for_epyc_8gbrr
+      - exact_memory_optimized_product_kvm_linkage
     evidence_notes:
       - HostBrr describes Performance VPS as enterprise KVM nodes.
       - The current EPYC-8GBrr order page confirms 4 vCore EPYC 9004, 8 GB DDR5 ECC, 80 GB NVMe, 5 TB at 10 Gbps, IPv4 + /64 IPv6, and one backup slot.
-      - The public page currently requires billing-cycle selection before exposing the exact numeric price, so the budget hard filter remains unresolved.
+      - The Memory-Optimized checkout page itself does not explicitly repeat the KVM label and requires billing-cycle selection before exposing exact numeric price.
     sources:
       - https://hostbrr.com/
       - https://my.hostbrr.com/order/main/packages/largeram/?group_id=23
+
+  - canonical_name: VSYS_Host
+    source_batch: results/verified/batch-002.yaml
+    resolved:
+      singapore_vps_virtualization: kvm
+      uplink_gbps: 1
+      guaranteed_bandwidth_mbps: 200
+      uptime_sla_percent: 99.97
+      dedicated_ipv4: true
+      snapshots_included: true
+      backups_included: true
+    unresolved:
+      - ordinary_singapore_vps_private_network
+    evidence_notes:
+      - VSYS documents free VLAN/private networking for Singapore dedicated servers and private networking for its private-cloud product.
+      - Those facts are not silently inherited by the ordinary Singapore VPS product; private networking remains unverified for that product class.
+    strict_effect:
+      database-node: remains_unknown
+    sources:
+      - https://vsys.host/vps-singapore
+      - https://vsys.host/dedicated-servers-singapore
+      - https://vsys.host/private-cloud
+
+  - canonical_name: VPSnet
+    source_batch: results/verified/batch-005.yaml
+    resolved:
+      cloud_vps_virtualization: kvm
+      network_mbps: 1000
+      replicated_ceph_nvme: true
+      high_availability: true
+      daily_backups: true
+      snapshots: true
+      sla_percent: 99.95
+      rest_api: true
+    unresolved:
+      - ordinary_cloud_vps_private_network
+      - normalized_usd_tco
+    evidence_notes:
+      - The current Cloud VPS page explicitly states KVM, 1 Gbps networking, replicated Ceph NVMe, HA, free daily backups and snapshots.
+      - Current official documentation did not establish a private network feature for ordinary Cloud VPS; this remains a database-node blocker.
+    strict_effect:
+      database-node: remains_unknown
+    sources:
+      - https://www.vpsnet.com/en/services/vds
+      - https://www.vpsnet.com/en/help/live-help
