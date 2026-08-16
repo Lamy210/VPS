@@ -1,0 +1,103 @@
+schema_version: 1
+verified_at: 2026-08-17
+source_policy: official-only
+purpose: targeted_followup
+notes:
+  - This file updates existing providers only and does not increment the unique-provider count.
+  - Current official observations do not erase prior conflicting official observations without an explicit supersession signal.
+
+providers:
+  - canonical_name: ServerCheap
+    source_batch: results/verified/batch-016.yaml
+    resolved:
+      plan: NVMe_KVM_10GB_New
+      monthly_usd: 6.80
+      billing: monthly
+      vcpu: 4
+      memory_gb: 10
+      nvme_gb: 80
+      ipv4_included: true
+      ipv6_prefix: /64
+      virtualization: kvm
+      uptime_sla_percent: 99.9
+    unresolved:
+      - explicit_public_vps_port_speed
+    evidence_notes:
+      - Current official pages repeatedly label 10 Gbps as DDoS-protection capacity, not VPS interface speed.
+      - No qualifying public port speed was found for the selected VPS plan, so strict standard-compute status remains unknown.
+    sources:
+      - https://servercheap.com/vps/
+      - https://servercheap.com/
+
+  - canonical_name: quicksrv
+    source_batch: results/verified/batch-016.yaml
+    resolved:
+      plan: AMS_Standard_8
+      monthly_eur_vat_included: 7.99
+      vcpu: 3
+      memory_gb: 8
+      nvme_gb: 180
+      port_gbps_shared: 40
+      ipv4_included: true
+      virtualization: kvm
+      daily_offsite_backup: true
+      backup_retention_days: 3
+      monthly_billing: true
+      setup_fee: 0
+    unresolved:
+      - numeric_fair_use_transfer_allowance_tb
+    evidence_notes:
+      - Provider explicitly describes fair-use bandwidth but does not publish a numeric allowance on the current public plan page.
+      - Shared 40 Gbps interface is not interpreted as guaranteed sustained throughput.
+    sources:
+      - https://quicksrv.io/
+
+  - canonical_name: OnetSolutions
+    source_batch: results/verified/batch-018.yaml
+    resolved_current_snapshot:
+      plan: HP_8
+      current_monthly_eur_ex_vat: 15.99
+      commitment: none
+      vcpu: 4
+      cpu_family: AMD_EPYC_9554
+      memory_gb: 8
+      nvme_gb: 80
+      bandwidth_gbps: 1
+      private_network_vpc: true
+    unresolved:
+      - official_price_conflict_with_prior_observation
+      - selected_plan_kvm_virtualization
+      - selected_plan_ipv4_inclusion
+      - normalized_usd_tco_at_decision_time
+    evidence_notes:
+      - Current official landing page shows HP-8 at 15.99 EUR/month excl. VAT with no commitment.
+      - Because prior official verification captured a different official price, the repository preserves the conflict instead of silently overwriting history.
+    sources:
+      - https://onetsolutions.net/en
+
+  - canonical_name: Server_Optima
+    source_batch: results/verified/batch-016.yaml
+    resolved:
+      plan: AMD_EPYC_7763_Plan_1
+      monthly_usd: 19.20
+      vcpu: 4
+      memory_gb: 16
+      nvme_gb: 200
+      storage_layout: raid10
+      network_gbps: 1
+      transfer: unmetered
+      virtualization: kvm
+      private_network: true
+      snapshots: true
+      full_backup_supported: true
+      service_availability_percent: 99.9
+    unresolved:
+      - independent_full_backup_price_for_selected_vps
+      - effective_tco_with_required_backup
+    evidence_notes:
+      - Current official VPS page confirms that snapshots, Full Backup, Private Networking, Firewall, and VM HA are supported.
+      - The public page still does not pin the selected plan's independent Full Backup charge, so the strict database-node TCO remains unknown.
+      - Sydney has lower published bandwidth than US locations for comparable plans; region-specific network facts must not be inherited across regions.
+    sources:
+      - https://www.serveroptima.com/vps
+      - https://www.serveroptima.com/sla

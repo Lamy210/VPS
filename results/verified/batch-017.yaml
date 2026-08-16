@@ -1,0 +1,414 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch expands global VPS and cloud coverage with providers surfaced from regional, managed-hosting, and cloud-platform discovery.
+  - Temporary introductory or sale pricing is kept separate from ordinary pricing.
+  - Up-to or shared network speed is not treated as guaranteed sustained throughput.
+  - Missing hypervisor, IPv4, transfer, or exact configuration values remain unknown rather than inferred.
+
+providers:
+  - canonical_name: Hivelocity
+    confidence: A
+    resource_classes: [performance_vps, performance_vds]
+    verified_regions: [Orangeburg_NY, Tampa_FL, Los_Angeles]
+    offers:
+      - plan: pro_md_amd
+        currency: USD
+        regular_monthly: 20
+        sale_monthly: 15
+        promotional: true
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        monthly_transfer_tb: 10
+        port_mbps: 1000
+      - plan: vds_md_intel
+        currency: USD
+        regular_monthly: 42
+        sale_monthly: 37
+        promotional: true
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        monthly_transfer_tb: 10
+        port_mbps: 1000
+        allocation: virtual_dedicated
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - pro.md.amd reaches the current 15 USD ceiling only through an active sale.
+          - Exact virtualization technology and IPv4 inclusion for the selected product are not pinned by the verified public pricing page, and sale persistence is unresolved.
+    sources:
+      - https://www.hivelocity.net/vps-and-vds/
+      - https://www.hivelocity.net/pricing
+
+  - canonical_name: Fasthosts
+    confidence: A
+    resource_classes: [kvm_vps, cloud_vps]
+    verified_regions: [United_Kingdom]
+    offers:
+      - plan: VPS_6
+        currency: GBP
+        regular_monthly: 18
+        introductory_monthly_first_3_months: 9
+        vcpu: 6
+        memory_gb: 8
+        local_storage_gb: 240
+        storage_type: nvme
+        transfer: unlimited
+        port_mbps: 1000
+        virtualization: kvm
+        stock_note: limited_stock
+      - plan: RAM_VPS_2
+        currency: GBP
+        regular_monthly: 17
+        introductory_monthly_first_3_months: 12
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 120
+        storage_type: nvme
+        transfer: unlimited
+        port_mbps: 1000
+        virtualization: kvm
+        stock_note: limited_stock
+      - plan: Cloud_VPS_20_RAM
+        currency: GBP
+        hourly: 0.035
+        monthly_cap: 25
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 120
+        storage_type: nvme
+        transfer: unlimited
+        port_mbps: 1000
+        ipv4_included: true
+        ipv6_included: true
+        private_network: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Fixed KVM VPS tiers satisfy CPU/RAM/NVMe/traffic/port dimensions, but ordinary GBP-to-USD TCO exceeds or approaches the reusable ceiling only after explicit timestamped FX normalization; short introductory pricing is not ordinary monthly pricing.
+          - Exact IPv4 inclusion for the fixed KVM VPS product is not pinned in this batch, while Cloud VPS explicitly includes dual stack but has a much higher monthly cap.
+    sources:
+      - https://www.fasthosts.co.uk/virtual-private-servers/kvm-vps
+      - https://www.fasthosts.co.uk/virtual-private-servers/openclaw-vps
+      - https://www.fasthosts.co.uk/virtual-private-servers/cloud-vps
+
+  - canonical_name: HostUp
+    confidence: A
+    resource_classes: [regional_vps, configurable_cloud]
+    verified_regions: [Sweden]
+    offers:
+      - plan: VPS_SM
+        currency: SEK
+        ordinary_monthly: 75
+        annualized_monthly_with_annual_prepay: 60
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme
+        monthly_transfer_tb: 5
+      - plan: VPS_MED
+        currency: SEK
+        ordinary_monthly: 150
+        annualized_monthly_with_annual_prepay: 120
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 200
+        storage_type: nvme
+        monthly_transfer_tb: 10
+    operations:
+      hourly_configurable_cloud_available: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - VPS SM has unusually low native-currency pricing and clears CPU/RAM/NVMe/transfer capacity.
+          - Public port speed, IPv4 inclusion, virtualization technology, and normalized USD TCO remain unresolved.
+      database-node:
+        status: unknown
+        notes:
+          - VPS MED clears headline CPU/RAM/NVMe/transfer capacity, but private networking, port, KVM, snapshots/backups, SLA, IPv4, and TCO remain unresolved.
+    sources:
+      - https://hostup.se/vps/
+
+  - canonical_name: Hostman
+    confidence: A
+    resource_classes: [api_driven_cloud, regional_vps]
+    verified_regions: [Netherlands, Germany, United_States, multiple_regions]
+    offers:
+      - plan: 4CPU_8GB
+        currency: USD
+        monthly_base: 17
+        cpu_cores: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme
+        port_mbps: 200
+        transfer: unlimited
+        public_ip_included: true
+      - plan: 8CPU_16GB
+        currency: USD
+        monthly_base: 37
+        cpu_cores: 8
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: nvme
+        port_mbps: 200
+        transfer: unlimited
+        public_ip_included: true
+    operations:
+      terraform_supported: true
+      scalable_resources: true
+      no_contract_claimed: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB tier costs 17 USD and exposes a 200 Mbps channel, failing both the 15 USD and 1 Gbps hard requirements.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB tier costs 37 USD and has a 200 Mbps channel.
+    sources:
+      - https://hostman.com/products/vps-server-hosting/
+      - https://hostman.com/products/cheap-vps/
+      - https://hostman.com/products/terraform/
+
+  - canonical_name: Webyne
+    confidence: A
+    resource_classes: [regional_vps, performance_cloud]
+    verified_regions: [India]
+    offers:
+      - plan: Gold_VPS_Linux_2
+        currency: INR
+        monthly_base: 499
+        cpu_cores: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme
+        port_mbps: 1000
+        port_semantics: up_to
+        transfer_tb: unknown
+      - plan: High_Performance_HP1
+        currency: INR
+        monthly_base: 1800
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: u3_nvme
+        monthly_transfer_tb: 2
+        resource_allocation: dedicated
+        sla_percent: 99.99
+        public_port_mbps: unknown
+      - plan: High_Performance_HP2
+        currency: INR
+        monthly_base: 2999
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 256
+        storage_type: u3_nvme
+        monthly_transfer_tb: 4
+        resource_allocation: dedicated
+        sla_percent: 99.99
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Gold VPS Linux 2 is extremely inexpensive in native currency and has 4 cores, 8 GB RAM, 100 GB NVMe and an up-to-1-Gbps network.
+          - Numeric transfer allowance, virtualization technology, IPv4 inclusion, qualifying port semantics, and normalized USD TCO remain unresolved.
+          - HP1 pins 2 TB transfer and dedicated resources but does not expose a public-port speed on the verified page.
+      database-node:
+        status: unknown
+        notes:
+          - HP2 clears CPU/RAM/NVMe/transfer/SLA capacity but private networking, port speed, KVM, snapshots/backups, IPv4 and TCO remain unresolved.
+    sources:
+      - https://webyne.com/vps-server-india/
+      - https://webyne.com/high-performance-cloud/
+      - https://webyne.com/client/store/high-speed-vps
+
+  - canonical_name: Serverwala
+    confidence: A
+    resource_classes: [regional_cloud, regional_vps]
+    verified_regions: [Nuremberg, Japan, multiple_regions]
+    offers:
+      - plan: AMD_ComputeX3_DE_FKSN
+        currency: USD
+        monthly_base: 44
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        monthly_transfer_tb: 5
+        port_mbps: 1000
+        port_allocation: shared
+      - plan: Japan_Enterprise_6GB
+        currency: USD
+        monthly_base: 60
+        vcpu: 6
+        memory_gb: 6
+        local_storage_gb: 150
+        monthly_transfer_tb: 0.5
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified Nuremberg 8 GB cloud tier costs 44 USD/month; the Japan public list does not provide an 8 GB plan at a competitive price and carries only 500 GB bandwidth on the listed tiers.
+    sources:
+      - https://www.serverwala.com/
+      - https://www.serverwala.com/en-jp/vps/vps-japan
+
+  - canonical_name: ScalaHosting
+    confidence: A
+    resource_classes: [unmanaged_cloud_vps, managed_cloud]
+    pricing:
+      unmanaged_build_1_intro_usd_month: 19.95
+      unmanaged_build_1_renewal_usd_month: 24.95
+      managed_build_1_intro_usd_month: 29.95
+      managed_build_1_renewal_usd_month: 54.95
+      exact_8gb_unmanaged_shape_price: unknown_dynamic_builder
+    platform:
+      storage_type: nvme
+      root_access: true
+      snapshots_included: true
+      dedicated_ip_included: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The dynamic builder does not expose a stable exact 8 GB CPU/RAM/NVMe quote in the parsed official page.
+          - Even the smallest visible unmanaged build starts at 19.95 USD introductory / 24.95 USD renewal, so an exact 8 GB configuration is unlikely to fit the current bargain ceiling but is not inferred from a smaller shape.
+    sources:
+      - https://www.scalahosting.com/linux-vps-hosting.html
+      - https://www.scalahosting.com/cloud-vps-hosting.html
+      - https://www.scalahosting.com/managed-cloud-hosting.html
+
+  - canonical_name: Arct_Cloud
+    display_name: Arct Cloud
+    confidence: A
+    resource_classes: [regional_public_cloud, performance_vps]
+    verified_regions: [Tokyo, Salt_Lake_City, Los_Angeles, Newark, London, Amsterdam, Frankfurt]
+    offers:
+      - plan: vm_tiny
+        currency: USD
+        monthly_base: 34.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        monthly_transfer_tb: 10
+        port_mbps: 10000
+        port_allocation: dedicated
+      - plan: vm_medium
+        currency: USD
+        monthly_base: 69.99
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 10
+        port_mbps: 10000
+        port_allocation: dedicated
+    hardware:
+      cpu_families: [AMD_EPYC, AMD_Ryzen]
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The ordinary 8 GB vm.tiny tier costs 34.99 USD/month despite strong NVMe, transfer, and dedicated-network specifications.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB vm.medium tier costs 69.99 USD/month before database-specific services.
+    sources:
+      - https://www.arct.cloud/
+      - https://www.arct.cloud/blog/japan-vps-hosting
+      - https://www.arct.cloud/blog/salt-lake-city-vps-hosting
+
+  - canonical_name: Raff
+    confidence: A
+    resource_classes: [regional_public_cloud, api_driven_cloud, managed_kubernetes, managed_database]
+    offers:
+      - plan: General_Purpose_2vCPU_8GB
+        currency: USD
+        monthly_base: 19.99
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme
+        transfer: unmetered
+        port_mbps: 3000
+        ipv4_included: 1
+      - plan: General_Purpose_4vCPU_8GB
+        currency: USD
+        monthly_base: 21.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme
+        transfer: unmetered
+        port_mbps: 3000
+        ipv4_included: 1
+      - plan: General_Purpose_4vCPU_16GB
+        currency: USD
+        monthly_base: 52.99
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: nvme
+        transfer: unmetered
+    platform:
+      virtualization: kvm
+      private_network: true
+      api: true
+      terraform: true
+      sla_percent: 99.9
+      backups_and_snapshots: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - Current ordinary 8 GB General Purpose tiers start at 19.99 USD/month, above the 15 USD ceiling.
+      database-node:
+        status: fail
+        notes:
+          - The current 4-vCPU/16-GB tier costs 52.99 USD/month before any additional database requirements.
+    sources:
+      - https://rafftechnologies.com/pricing
+      - https://rafftechnologies.com/products/raff-vm
+      - https://rafftechnologies.com/products/linux-vm
+      - https://rafftechnologies.com/learn/guides/raff-general-purpose-vm-plans-explained
+
+  - canonical_name: OneGbits
+    display_name: 1Gbits
+    confidence: A
+    resource_classes: [regional_vps, game_vps, nvme_vps]
+    offers:
+      - plan: NVMe_Linux_3
+        currency: USD
+        promotional_monthly_36_month_term: 38.67
+        regular_monthly_reference: 64.49
+        cpu_cores: 6
+        memory_gb: 8
+        transfer: unlimited
+        storage_type: nvme
+        exact_storage_gb: unknown
+      - plan: Game_VPS_3
+        currency: USD
+        promotional_monthly_36_month_term: 34.19
+        regular_monthly_reference: 56.99
+        cpu_cores: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        transfer: unlimited
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - Both verified 8 GB VPS lines cost well above 15 USD even on 36-month promotional pricing.
+    sources:
+      - https://1gbits.com/nvme-vps/
+      - https://1gbits.com/game-vps/

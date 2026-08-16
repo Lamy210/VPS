@@ -1,0 +1,97 @@
+schema_version: 1
+updated_at: 2026-08-16
+scope: public_requirement_driven_infrastructure_resource_research
+
+counts:
+  verification_batches: 18
+  unique_verified_providers: 166
+  targeted_followup_files: 5
+  strict_clear_passes:
+    standard_compute: 4
+    database_node: 0
+    managed_kubernetes: 1
+  validation_ready_resources: 5
+  measured_benchmark_resources: 0
+
+strict_clear_passes:
+  standard_compute:
+    - provider: ServaRica
+      plan: KVM_Slim_Slice_2
+      validation_ready: true
+    - provider: HostEons
+      plan: Hybrid_Special_2
+      validation_ready: true
+    - provider: Advin_Servers
+      plan: KVM_Premium_S_Miami
+      validation_ready: true
+    - provider: InterServer
+      plan: Cloud_Compute_4_Slices
+      validation_ready: true
+  database_node: []
+  managed_kubernetes:
+    - provider: UpCloud
+      service: Managed_Kubernetes
+      worker_plan: PREMIUM-2xCPU-4GB
+      validation_ready: true
+
+high_priority_unknown_reduction:
+  standard_compute: [SprintCDN, dogado, ServerCheap, quicksrv, OnetSolutions, Hexabyte, Hivelocity, HostUp, Webyne, Onie_Cloud, HostBrr, CloudCone, Crunchbits, VPSServer, OrangeVPS, BulutVDS]
+  database_node: [Server_Optima, VPSnet, ServaRica, VSYS_Host, Onidel, OnetSolutions]
+  managed_kubernetes: [Scaleway, Exoscale, DigitalOcean, Vultr, Google_Cloud, Microsoft_Azure, NAVER_Cloud_Platform]
+
+fx_snapshot:
+  file: results/derived/fx-snapshot-2026-08-16.yaml
+  observed_at: 2026-08-15T20:54:00Z
+  eur_to_usd: 1.1569
+  standard_compute_effects:
+    GS_Webservices: fail_budget_at_snapshot
+    dogado: budget_pass_but_kvm_unknown
+    Hexabyte: budget_pass_but_technical_and_stock_unknowns
+    quicksrv: budget_pass_but_numeric_transfer_unknown
+    Alpenhost: fail_budget_at_snapshot
+
+latest_batches:
+  - batch: 17
+    focus: regional_vps_and_emerging_cloud_platforms
+    providers: [Hivelocity, Fasthosts, HostUp, Hostman, Webyne, Serverwala, ScalaHosting, Arct_Cloud, Raff, OneGbits]
+  - batch: 18
+    focus: european_and_network_focused_vps_cloud
+    providers: [BlastVPS, dogado, Genesis_Public_Cloud, Linkdata, OnetSolutions, SprintCDN, NoBull_Networks, TakeHost, Hexabyte, GS_Webservices]
+
+latest_followup:
+  file: results/verified/followup-005.yaml
+  providers: [SprintCDN, dogado, Server_Optima]
+  outcome:
+    SprintCDN: ipv4_inclusion_still_unresolved
+    dogado: api_and_private_network_confirmed_but_selected_unmanaged_kvm_still_unresolved
+    Server_Optima: full_backup_support_reconfirmed_but_selected_vps_backup_price_still_unresolved
+
+next_work:
+  - Verify SprintCDN selected-plan IPv4 inclusion; it is one hard field away from a standard-compute pass.
+  - Verify dogado selected Cloud Server KVM/QEMU-KVM implementation; its current FX budget passes.
+  - Find explicit ServerCheap VPS public port speed and quicksrv numeric fair-use transfer allowance.
+  - Resolve OnetSolutions HP-8 price discrepancy and VAT/TCO semantics.
+  - Verify Hexabyte KVM acceleration/public port and watch for stock restoration.
+  - Capture Server Optima independent Full Backup price and calculate effective database-node TCO.
+  - Continue unknown reduction for HostBrr, OrangeVPS, BulutVDS, Crunchbits, and VPSServer.
+  - Operationally validate UpCloud Managed Kubernetes only after spend is explicitly chosen.
+  - Benchmark strict standard-compute passes only after spend is explicitly chosen.
+  - Continue Batch 019 while keeping provider identity normalization strict.
+
+quality_invariants:
+  - unknown_hard_fields_never_pass
+  - provider_advertised_performance_is_not_benchmark_evidence
+  - promotional_and_renewal_prices_are_separate
+  - annualized_prepaid_price_is_not_ordinary_monthly_price
+  - ddos_capacity_is_not_public_port_speed
+  - physical_threads_are_not_silently_counted_as_vcpu
+  - shared_port_speed_is_not_guaranteed_sustained_throughput
+  - up_to_bandwidth_is_not_guaranteed_sustained_throughput
+  - full_virtualization_does_not_prove_kvm
+  - openstack_or_qemu_does_not_prove_kvm_acceleration
+  - native_currency_is_preserved
+  - official_price_conflicts_remain_unresolved
+  - fx_results_are_timestamped_and_expire
+  - marketing_region_does_not_prove_datacenter_region
+  - snapshots_do_not_automatically_equal_independent_backups
+  - provider_count_excludes_targeted_followup_duplicates

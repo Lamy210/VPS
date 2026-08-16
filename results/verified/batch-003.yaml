@@ -1,0 +1,532 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch focuses on low-cost, performance-oriented, and API-driven VPS/VDS candidates.
+  - Promotional, annualized, and renewal pricing are kept distinct where applicable.
+  - Unknown private-network, API, or automation facts remain unknown rather than being inferred.
+
+providers:
+  - canonical_name: OrangeVPS
+    confidence: B
+    resource_classes: [bargain_vps, performance_vds]
+    verified_regions: [Singapore, Hong_Kong, Tokyo, Los_Angeles, Kansas_City]
+    offers:
+      - plan: BASIC_3_NVMe
+        currency: USD
+        monthly_base: 12
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        monthly_transfer_tb: 5
+        port_mbps: 1000
+        cpu_allocation: shared_or_unspecified
+      - plan: BASIC_4_NVMe
+        currency: USD
+        monthly_base: 24
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 8
+        port_mbps: 1000
+        cpu_allocation: shared_or_unspecified
+      - plan: VDS_2
+        currency: USD
+        monthly_base: 36
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        monthly_transfer_tb: 10
+        port_mbps: 1000
+        cpu_allocation: dedicated
+    network:
+      ipv4_included: true
+      private_network: unknown
+    profile_assessment:
+      standard-compute:
+        status: pass
+        notes:
+          - BASIC_3 meets the generic 8 GB, 2+ vCPU, 60+ GB local storage, 2+ TB transfer, 1 Gbps, and <=15 USD headline requirements.
+          - Private networking is still unknown and would matter for profiles that require it.
+      database-node:
+        status: fail
+        notes:
+          - Dedicated-resource VDS pricing exceeds the current 30 USD database profile ceiling at 8 GB, while the 16 GB VPS does not document dedicated CPU allocation.
+    sources:
+      - https://orangevps.com/zh/nvme-vps-zh/
+      - https://orangevps.com/vds/
+
+  - canonical_name: WebHorizon
+    confidence: B
+    resource_classes: [performance_vds]
+    verified_regions: [Singapore, Japan, Netherlands]
+    offers:
+      - plan: EPYC_KVM_VDS_32G_Singapore
+        currency: USD
+        monthly_base: 40
+        dedicated_physical_cores: 2
+        threads: 4
+        cpu_family: AMD_EPYC_7003
+        memory_gb: 32
+        local_storage_gb: 240
+        storage_type: nvme_raid10
+        monthly_transfer_tb: 10
+        port_mbps: 5000
+        stock_at_verification: out_of_stock
+    network:
+      ipv6_prefix: /48
+      ipv4_available: true
+      private_network: unknown
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The currently visible dedicated-resource Singapore tier starts well above the 15 USD standard-compute ceiling.
+      database-node:
+        status: unknown
+        notes:
+          - Dedicated EPYC resources and RAID10 NVMe are attractive, but current visible Singapore inventory was out of stock and private-network/backup details need verification.
+    sources:
+      - https://clients.webhorizon.net/?%2Fcart%2Fvdedicated-servers-singapore%2F=&id=149
+
+  - canonical_name: FlowVPS
+    confidence: B
+    resource_classes: [regional_vps]
+    verified_regions: [Sydney, Melbourne]
+    offers:
+      - plan: 8GB
+        currency: AUD
+        monthly_base: 22
+        annual_prepaid_effective_monthly: 18.3333
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 60
+        storage_type: nvme
+        monthly_transfer_tb: 5
+        port_mbps: 2000
+      - plan: 16GB
+        currency: AUD
+        monthly_base: 44
+        annual_prepaid_effective_monthly: 36.6667
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 120
+        storage_type: nvme
+        monthly_transfer_tb: 10
+        port_mbps: 2000
+    network:
+      ipv4_included: true
+      ipv6_prefix: /56
+      private_network: unknown
+    contract:
+      monthly_available: true
+      annual_prepay_months_charged: 10
+      annual_service_months: 12
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Core specifications fit the generic profile, but AUD-to-USD conversion must be evaluated at decision time and private-network capabilities remain unknown.
+      database-node:
+        status: unknown
+        notes:
+          - The 16 GB tier reaches the CPU/RAM/storage floor, but private networking, snapshots, backups, and SLA need official verification.
+    sources:
+      - https://flowvps.com/pricing
+      - https://billing.flowvps.com/index.php?rp=%2Fstore%2Fsydney-kvm-vps
+
+  - canonical_name: ServaRica
+    confidence: B
+    resource_classes: [performance_vds, bargain_vps]
+    verified_regions: [Montreal]
+    offers:
+      - plan: Unified_Slim_2
+        currency: USD
+        monthly_base: 7
+        annual_total: 77
+        dedicated_cpu: 2
+        memory_gb: 8
+        local_storage_gb: 250
+        storage_type: nvme
+        monthly_transfer_tb: 8
+        port_mbps: 10000
+      - plan: Unified_Slim_4
+        currency: USD
+        monthly_base: 12
+        annual_total: 132
+        dedicated_cpu: 4
+        memory_gb: 16
+        local_storage_gb: 500
+        storage_type: nvme
+        monthly_transfer_tb: 16
+        port_mbps: 10000
+      - plan: Chimera_Hybrid_2
+        currency: USD
+        monthly_base: 10
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 130
+        storage_type: nvme
+        additional_hdd_tb: 4
+        monthly_transfer_tb: 18
+        port_mbps: 1000
+    network:
+      private_network: unknown
+    profile_assessment:
+      standard-compute:
+        status: pass
+        notes:
+          - Unified Slim 2 strongly exceeds generic compute requirements at 7 USD with dedicated CPU and large NVMe storage.
+      database-node:
+        status: unknown
+        notes:
+          - Unified Slim 4 is exceptionally strong on advertised compute/storage/transfer for the price, but the active database profile requires private networking, snapshots, backups, and >=99.9 SLA which still need verification.
+    sources:
+      - https://servarica.com/
+      - https://servarica.com/slim-kvm-plans/
+      - https://servarica.com/all-offers/
+
+  - canonical_name: HostEons
+    confidence: B
+    resource_classes: [performance_vds]
+    verified_regions: [Salt_Lake_City]
+    offers:
+      - plan: Hybrid_Special_2
+        currency: USD
+        monthly_base: 8.99
+        dedicated_cpu: 2
+        cpu_family: AMD_Ryzen_9_3950X
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme
+        monthly_transfer_tb: 30
+        port_mbps: 10000
+      - plan: Hybrid_Special_3
+        currency: USD
+        monthly_base: 11.99
+        dedicated_cpu: 3
+        cpu_family: AMD_Ryzen_9_3950X
+        memory_gb: 12
+        local_storage_gb: 150
+        storage_type: nvme
+        monthly_transfer_tb: 30
+        port_mbps: 10000
+    network:
+      ipv4_included: true
+      ipv6_prefix: /64
+      private_network: unknown
+    profile_assessment:
+      standard-compute:
+        status: pass
+        notes:
+          - Hybrid Special 2 satisfies the generic compute floor and uses dedicated CPU resources at a sub-10 USD monthly price.
+      database-node:
+        status: fail
+        notes:
+          - The visible special range tops out at 12 GB RAM, below the generic 16 GB database profile floor.
+    sources:
+      - https://blog.hosteons.com/
+
+  - canonical_name: RackNerd
+    confidence: B
+    resource_classes: [bargain_vps]
+    verified_regions: [multiple_US_locations]
+    offers:
+      - plan: 8GB_KVM_Special
+        currency: USD
+        annual_total: 119.99
+        annualized_monthly: 9.9992
+        vcpu: 7
+        memory_gb: 8
+        local_storage_gb: 150
+        storage_type: ssd
+        monthly_transfer_tb: 20
+        port_mbps: 1000
+        virtualization: kvm
+    network:
+      ipv4_included: true
+      private_network: unknown
+    contract:
+      monthly_billing_for_special: false
+      annual_prepay_required: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Resource specifications are strong, but the generic profile is monthly-budget based and does not yet define whether annual prepayment is acceptable.
+          - Storage is SSD rather than explicitly NVMe, which is still acceptable to the standard-compute profile.
+      database-node:
+        status: fail
+        notes:
+          - The verified special is 8 GB and CPU allocation is not documented as dedicated.
+    sources:
+      - https://www.racknerd.com/specials/
+
+  - canonical_name: DediRock
+    confidence: B
+    resource_classes: [bargain_vps]
+    verified_regions: [Los_Angeles, New_York]
+    offers:
+      - plan: KVM_VPS_Advanced
+        currency: USD
+        monthly_base: 19.99
+        vcpu: 6
+        memory_gb: 8
+        local_storage_gb: 200
+        storage_type: ssd
+        monthly_transfer_tb: 2
+        port_mbps: 1000
+        virtualization: kvm
+      - plan: KVM_VPS_Premium
+        currency: USD
+        monthly_base: 34.99
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 300
+        storage_type: ssd
+        monthly_transfer_tb: 4
+        port_mbps: 1000
+        virtualization: kvm
+    network:
+      ipv4_included: true
+      private_network: unknown
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB tier exceeds the current 15 USD budget ceiling.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB tier exceeds the 30 USD database budget ceiling and storage is not explicitly NVMe.
+    sources:
+      - https://dedirock.com/kvm-vps-los-angeles/
+      - https://billing.dedirock.com/index.php/store/kvm-vps-hosting
+
+  - canonical_name: Alwyzon
+    confidence: B
+    resource_classes: [performance_vps]
+    verified_regions: [Vienna]
+    offers:
+      - plan: Virtual_Server_E8_plus
+        currency: EUR
+        monthly_base: 20.49
+        vcpu: 4
+        cpu_family: AMD_EPYC_9355P
+        memory_gb: 8
+        local_storage_gb: 240
+        storage_type: nvme_raid10
+        monthly_transfer_tb: 50
+        port_mbps: 5000
+      - plan: Virtual_Server_E16_plus
+        currency: EUR
+        monthly_base: 38.49
+        vcpu: 6
+        cpu_family: AMD_EPYC_9355P
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: nvme_raid10
+        monthly_transfer_tb: 50
+        port_mbps: 5000
+    pricing:
+      vat_included: false
+    platform:
+      virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Specifications are excellent but currency conversion and tax must be evaluated against the 15 USD ceiling at decision time.
+      database-node:
+        status: unknown
+        notes:
+          - CPU family and RAID10 NVMe are attractive, but dedicated CPU allocation, private networking, snapshots, backups, and SLA remain to be verified.
+    sources:
+      - https://www.alwyzon.com/en/virtual-servers
+
+  - canonical_name: Time4VPS
+    confidence: B
+    resource_classes: [bargain_vps]
+    verified_regions: [Lithuania]
+    offers:
+      - plan: Linux_8
+        currency: EUR
+        vcpu: 3
+        memory_gb: 8
+        local_storage_gb: 100
+        monthly_transfer_tb: 16
+        promotional_monthly_24_month_term: 7.12
+        renewal_monthly_24_month_term: 14.24
+        promotional_monthly_12_month_term: 7.88
+        renewal_monthly_12_month_term: 15.76
+        promotional_monthly_1_month_term: 10
+        renewal_monthly_1_month_term: 19.99
+      - plan: Linux_16
+        currency: EUR
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 200
+        monthly_transfer_tb: 32
+        promotional_monthly_24_month_term: 12.75
+        renewal_monthly_24_month_term: 25.49
+    operations:
+      backups: optional_paid
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Hardware/traffic specifications meet the generic floor, but the comparison must use explicit contract and renewal pricing rather than the headline discount.
+      database-node:
+        status: fail
+        notes:
+          - The generic database profile requires private networking, snapshots, backups, and a predictable CPU allocation; these are not established by the current verification.
+    sources:
+      - https://www.time4vps.com/linux-vps/
+      - https://www.time4vps.com/change-of-resources/
+
+  - canonical_name: Webdock
+    confidence: B
+    resource_classes: [api_driven_cloud, developer_vps]
+    verified_regions: [Denmark]
+    offers:
+      - plan: Pro
+        currency: EUR
+        monthly_base: 19.60
+        cpu_threads: 6
+        memory_gb: 10
+        local_storage_gb: 40
+        monthly_transfer_tb: 7
+      - plan: Custom_Profile
+        currency: EUR
+        pricing: dynamic
+        configurable_fields: [cpu_threads, ram_gb, disk_space_gb, network_bandwidth_gbps]
+    operations:
+      api: true
+      custom_profiles_via_api: true
+      instant_vertical_resource_change: true
+      monthly_billing: true
+      setup_fee: 0
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The fixed Pro tier misses the 60 GB local-storage floor, while a custom profile may satisfy it; exact custom-profile price must be queried from the API/control panel.
+      kubernetes-worker:
+        status: unknown
+        notes:
+          - API-driven provisioning and configurable resources are attractive, but private-network and automation requirements still need verification.
+    sources:
+      - https://webdock.io/comparisons/contabo
+      - https://api.webdock.io/
+      - https://webdock.io/en/docs/webdock-control-panel/getting-started/upgrade-and-downgrade
+
+  - canonical_name: LunaNode
+    confidence: A
+    resource_classes: [api_driven_cloud]
+    verified_regions: [Toronto]
+    offers:
+      - plan: m.8
+        currency: USD
+        monthly_base: 28
+        hourly: 0.03889
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 70
+        storage_type: ssd
+        monthly_transfer_tb: 3
+      - plan: m.16
+        currency: USD
+        monthly_base: 56
+        hourly: 0.07778
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 125
+        storage_type: ssd
+        monthly_transfer_tb: 4
+      - plan: c.2
+        currency: USD
+        monthly_base: 40
+        hourly: 0.05556
+        dedicated_cpu: 2
+        memory_gb: 10
+        local_storage_gb: 200
+        storage_type: ssd
+        monthly_transfer_tb: 5
+    network:
+      private_network: true
+      floating_ip_included_per_vm: 1
+      additional_floating_ip_usd_month: 1
+      bandwidth_pooling_same_region: true
+      excess_bandwidth_usd_per_gb: 0.003
+    operations:
+      hourly_billing: true
+      api: true
+      cloud_init: true
+      snapshots: true
+      block_storage: true
+      cloud_firewalls: true
+    platform:
+      virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB memory-optimized tier exceeds the current 15 USD budget ceiling.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB memory tier exceeds the current 30 USD database ceiling and storage is SSD rather than explicitly NVMe.
+      kubernetes-worker:
+        status: unknown
+        notes:
+          - API, cloud-init, private networking, hourly billing, and floating IPs are strong automation primitives; Terraform/OpenTofu support must still be verified against the worker profile.
+    sources:
+      - https://www.lunanode.com/pricing
+      - https://www.lunanode.com/
+      - https://www.lunanode.com/features/vms
+
+  - canonical_name: FiberState
+    confidence: B
+    resource_classes: [bare_metal]
+    verified_regions: [Salt_Lake_City, Los_Angeles, New_York_City, Chicago]
+    offers:
+      - plan: Intel_Xeon_E3_1240v5_SLC
+        currency: USD
+        monthly_base: 49.95
+        physical_cores: 4
+        threads: 8
+        memory_gb: 32
+        local_storage_gb: 1000
+        storage_type: nvme
+        port_mbps: 1000
+        transfer: unlimited
+      - plan: Ryzen_5700G_SLC
+        currency: USD
+        monthly_base: 69.95
+        physical_cores: 8
+        threads: 16
+        memory_gb: 64
+        local_storage_gb: 1000
+        storage_type: nvme
+        port_mbps: 1000
+        transfer: unlimited
+    network:
+      ipv4_included: true
+      ipv6_available: true
+      ipmi_included: true
+      asn: AS26042
+    profile_assessment:
+      standard-compute:
+        status: not_applicable
+        notes:
+          - Current official product pages show dedicated bare-metal servers rather than a public VPS product.
+      bare-metal:
+        status: candidate
+        notes:
+          - The 32 GB entry server is inexpensive for bare metal and may be relevant when consolidation or predictable CPU performance matters.
+    sources:
+      - https://www.fiberstate.com/dedicated-servers
+      - https://www.fiberstate.com/ip-transit

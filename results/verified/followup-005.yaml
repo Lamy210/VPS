@@ -1,0 +1,75 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+purpose: targeted_unknown_reduction
+notes:
+  - This follow-up does not add new providers to the unique-provider count.
+  - Negative search results are recorded where a hard field remains unproven after targeted official-source review.
+  - Facts from a related product family are not silently inherited by the selected product when applicability is not explicit.
+
+providers:
+  - canonical_name: SprintCDN
+    source_batch: results/verified/batch-018.yaml
+    findings:
+      selected_plan: VPS_4
+      kvm_reconfirmed: true
+      unmetered_shared_port_mbps: 1000
+      api_and_cli: true
+      ip_space_statement:
+        provider_owned_ip_space_available: true
+        byoip_supported: true
+      selected_plan_included_ipv4: unknown
+    unresolved:
+      standard_compute: [ipv4_included_for_selected_plan]
+    notes:
+      - Official Cloud VPS, product, and provider FAQ pages were checked for plan-level IPv4 inclusion.
+      - The provider confirms that customers can use provider-owned address space or BYOIP, but this does not prove that VPS 4 includes one IPv4 address in its base price.
+    sources:
+      - https://sprintcdn.com/products/cloud-vps
+      - https://sprintcdn.com/products
+      - https://sprintcdn.com/
+
+  - canonical_name: dogado
+    source_batch: results/verified/batch-018.yaml
+    findings:
+      selected_product: Cloud_Server_4_0
+      full_virtualization_reconfirmed: true
+      explicit_kvm_for_selected_unmanaged_product: unknown
+      rest_api: true
+      api_base_url: https://onehome.dogado.de/api/v1
+      api_selected_product_support: true
+      private_network_addon_for_unmanaged_onevps: true
+      private_network_private_ipv4: true
+      custom_iso_supported_for_cloud_server_4_0: true
+    unresolved:
+      standard_compute: [kvm_virtualization_for_selected_cloud_server]
+    notes:
+      - dogado's managed-vServer comparison explicitly documents QEMU/KVM, but the unmanaged Cloud Server 4.0 pages reviewed here only say full virtualization.
+      - The managed-product QEMU/KVM fact is therefore not automatically applied to the selected unmanaged Cloud Server M 4.0.
+      - API and private-network evidence strengthen the platform classification but do not resolve the reusable standard-compute KVM hard requirement.
+    sources:
+      - https://www.dogado.de/server/vserver
+      - https://www.dogado.de/server/managed-vserver/vergleich
+      - https://help.dogado.de/hc/de/articles/35622985498257-FAQ-API-Schnitstelle-zu-Cloud-Server-4-0
+      - https://help.dogado.de/hc/de/articles/43708437568529-Privates-Netzwerk-Private-Network
+      - https://help.dogado.de/hc/de/articles/45976560369169-oneVPS-Benutzerdefinierte-ISO-Image-installieren-FAQ
+
+  - canonical_name: Server_Optima
+    source_batch: results/verified/batch-016.yaml
+    findings:
+      snapshots_supported: true
+      full_backup_supported: true
+      private_network_supported: true
+      kvm_supported: true
+      selected_plan_backup_price: unknown
+      published_block_storage_price_usd_per_10gb_month: 0.85
+    unresolved:
+      database_node: [effective_tco_with_required_independent_full_backup]
+    notes:
+      - The official VPS page again confirms Full Backup support but does not publish the selected VPS plan's Full Backup charge.
+      - Separate dedicated-server configurator pages expose backup selectors but do not provide a reliable VPS backup price that can be transferred to the selected virtual-server plan.
+      - Strict database TCO therefore remains unknown rather than assuming zero-cost backup.
+    sources:
+      - https://www.serveroptima.com/vps
+      - https://www.serveroptima.com/products/6/customize
+      - https://www.serveroptima.com/products/118/customize

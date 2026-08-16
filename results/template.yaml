@@ -1,0 +1,76 @@
+requirement: requirements/template.yaml
+verified_at: null
+
+resource:
+  provider: null
+  product: null
+  plan: null
+  resource_type: null
+  official_url: null
+  region: null
+  datacenter: null
+
+pricing:
+  currency: null
+  monthly_base: null
+  monthly_effective: null
+  setup_fee: null
+  renewal_monthly: null
+  billing_term: null
+  promotional: false
+
+specification:
+  vcpu: null
+  cpu_model: null
+  cpu_allocation: null
+  memory_gb: null
+  local_storage_gb: null
+  storage_type: null
+  block_storage_gb: null
+  monthly_transfer_tb: null
+  port_mbps: null
+
+network:
+  ipv4_included: null
+  ipv6_available: null
+  private_network: null
+  private_traffic_unmetered: null
+  floating_ip: null
+  load_balancer: null
+  bgp: null
+
+operations:
+  api: null
+  terraform_or_opentofu: null
+  cloud_init: null
+  hourly_billing: null
+  snapshots: null
+  backups: null
+
+platform:
+  virtualization: null
+  containers_supported: null
+  kubernetes_supported: null
+  managed_kubernetes: null
+  node_autoscaling: null
+
+availability:
+  sla_percent: null
+  replicated_storage: null
+  live_migration: null
+  multi_az: null
+
+cost:
+  estimated_monthly_tco: null
+  tco_components: []
+
+assessment:
+  hard_constraints_pass: null
+  score: null
+  strengths: []
+  weaknesses: []
+  rejection_reasons: []
+  unknowns: []
+  confidence: D
+
+sources: []

@@ -1,0 +1,369 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch focuses on low-cost and regional compute candidates.
+  - Contract term, promotion, renewal price, and current stock are kept explicit when visible.
+  - Missing private-network or API information is recorded as unknown, not false.
+
+providers:
+  - canonical_name: Onidel
+    confidence: B
+    resource_classes: [regional_public_cloud, performance_vds]
+    verified_regions: [Singapore, Ho_Chi_Minh, Amsterdam, New_York, Sydney, Melbourne]
+    pricing:
+      current_plan_table: unknown
+      note: Official product page failed to render current plan prices during verification.
+    platform:
+      cpu_family_singapore: AMD_EPYC_Milan
+      storage: triple_replicated_nvme
+      high_availability: true
+      automatic_failover: true
+      sla_percent: 99.9
+      sev_snp_singapore: true
+    network:
+      singapore_port_gbps: 1
+      private_network: true
+      private_traffic_unmetered: true
+      floating_ip: true
+      bgp: true
+      ipv4_included: true
+      ipv6_included: true
+      bandwidth_pooling_same_region: true
+      additional_bandwidth_usd_per_tb: 3
+    operations:
+      manual_snapshots: true
+      automated_backups: true
+      backup_storage_usd_per_gb_month: 0.1
+      vertical_upgrade: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Core infrastructure and networking features are strongly verified.
+          - Current plan price and exact 8 GB specification could not be captured, so budget filtering is impossible.
+      database-node:
+        status: unknown
+        notes:
+          - Replicated NVMe, private networking, SLA, snapshots, and automated backups are attractive database characteristics.
+          - A current 16 GB/4-vCPU price and exact plan specification are still required.
+    sources:
+      - https://onidel.com/services/premium-vps?location=Singapore
+      - https://kb.onidel.com/hc/kb/articles/1773264315-feature-matrix
+
+  - canonical_name: GreenCloud
+    confidence: B
+    resource_classes: [performance_vds]
+    verified_regions: [Singapore, Tokyo]
+    offers:
+      - plan: EPYC VDS Singapore 8 GB
+        currency: USD
+        monthly_base: 10
+        dedicated_physical_cores: 1
+        cpu_family: AMD_EPYC_Milan
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme_gen4_raid10
+        monthly_transfer_tb: 2
+        port_gbps: 10
+        ipv4_included: 1
+        ipv6_prefix: /64
+        backup_or_snapshot_included: 1
+        virtualization: kvm
+        stock_observed: available
+      - plan: EPYC VDS Singapore 16 GB
+        currency: USD
+        monthly_base: 20
+        dedicated_physical_cores: 2
+        cpu_family: AMD_EPYC_Milan
+        memory_gb: 16
+        local_storage_gb: 160
+        storage_type: nvme_gen4_raid10
+        monthly_transfer_tb: 4
+        port_gbps: 10
+        ipv4_included: 1
+        ipv6_prefix: /64
+        backup_or_snapshot_included: 1
+        virtualization: kvm
+        stock_observed: available
+      - plan: EPYC VDS Tokyo 8 GB
+        currency: USD
+        monthly_base: 10
+        dedicated_physical_cores: 1
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme_gen4_raid10
+        monthly_transfer_tb: 2
+        port_gbps: 10
+        stock_observed: unavailable
+      - plan: EPYC VDS Tokyo 16 GB
+        currency: USD
+        monthly_base: 20
+        dedicated_physical_cores: 2
+        memory_gb: 16
+        local_storage_gb: 160
+        storage_type: nvme_gen4_raid10
+        monthly_transfer_tb: 4
+        port_gbps: 10
+        stock_observed: unavailable
+    network:
+      private_network: unknown
+    automation:
+      api: unknown
+      terraform: unknown
+    profile_assessment:
+      standard-compute:
+        status: fail
+        reasons:
+          - The 8 GB plan exposes one dedicated physical core, below the profile minimum of two vCPUs/cores.
+          - The 16 GB plan meets the CPU count but costs 20 USD, above the 15 USD profile budget.
+      database-node:
+        status: fail
+        reasons:
+          - The 16 GB plan exposes two dedicated physical cores, below the four-vCPU/core minimum.
+          - The 32 GB/four-core tier would exceed the database-node 30 USD budget at the observed 40 USD monthly price.
+    sources:
+      - https://greencloudvps.com/billing/store/epyc-nvme-kvm-vds
+
+  - canonical_name: Hostinger
+    confidence: B
+    resource_classes: [bargain_vps]
+    pricing_model:
+      prepaid: true
+      note: Advertised monthly values are total prepaid contract cost divided by contract months; renewal is separate.
+    offers:
+      - plan: KVM 2
+        currency: JPY
+        promotional_monthly_equivalent: 1379
+        renewal_monthly_equivalent: 2349
+        renewal_term_months: 24
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme
+        monthly_transfer_tb: 8
+        port_gbps: 1
+        virtualization: kvm
+      - plan: KVM 4
+        currency: JPY
+        promotional_monthly_equivalent: 2039
+        renewal_monthly_equivalent: 4539
+        renewal_term_months: 24
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 200
+        storage_type: nvme
+        monthly_transfer_tb: 16
+        port_gbps: 1
+        virtualization: kvm
+    platform:
+      cpu_family: AMD_EPYC
+      weekly_backup_included: true
+    network:
+      private_network: unknown
+    automation:
+      public_api: true
+      terraform: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - KVM 2 satisfies CPU, RAM, disk, transfer, port, and KVM hard specifications.
+          - Budget is denominated in USD while this verified price is in JPY; an explicit FX policy is required before pass/fail.
+          - Promotional and renewal prices must be evaluated separately.
+      database-node:
+        status: unknown
+        notes:
+          - KVM 4 meets the 4-vCPU, 16-GB, NVMe, backup, and storage headline requirements.
+          - Required private networking remains unverified.
+    sources:
+      - https://www.hostinger.com/jp/vps-hosting
+
+  - canonical_name: Melbicom
+    confidence: C
+    resource_classes: [regional_public_cloud, vps]
+    verified_asia_regions: [Singapore, Fujairah, Mumbai, Tokyo]
+    pricing:
+      current_8gb_price: unknown
+      current_16gb_price: unknown
+    platform:
+      virtualization: kvm
+      local_storage_type: nvme
+      ipv4_included: 1
+      ipv6_addresses_included: 16
+    network:
+      private_network_product: VMesh
+      private_network: true
+      private_network_additional_fee: true
+      bgp_addon: true
+    automation:
+      api: unknown
+      terraform: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - KVM and regional/private-network capabilities are verified.
+          - Current plan pricing and exact 8 GB resource specification were not captured from the official page.
+      database-node:
+        status: unknown
+        notes:
+          - Private networking is available as a paid add-on.
+          - Current database-sized plan cost and backup properties require verification.
+    sources:
+      - https://www.melbicom.net/virtualserver/asia/
+      - https://www.melbicom.net/virtualserver/tokyo/
+
+  - canonical_name: ExtraVM
+    confidence: A
+    resource_classes: [performance_vps]
+    verified_regions: [Singapore, Tokyo]
+    offers:
+      - plan: Singapore 8 GB
+        currency: USD
+        monthly_base: 32
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 120
+        storage_type: nvme
+        monthly_transfer_tb: 8
+        port_gbps: 2
+        virtualization: kvm
+      - plan: Singapore 16 GB
+        currency: USD
+        monthly_base: 56
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 240
+        storage_type: nvme
+        monthly_transfer_tb: 10
+        port_gbps: 5
+        virtualization: kvm
+    singapore_infrastructure:
+      datacenter: Equinix_SG3
+      cpu_families: [AMD_Ryzen_9, AMD_EPYC_4004_4005]
+      storage_note: local_mirrored_nvme
+      ddos_protection: true
+      asn: AS212238
+    network:
+      private_network: unknown
+    automation:
+      api: unknown
+    profile_assessment:
+      standard-compute:
+        status: fail
+        reasons:
+          - 8 GB plan exceeds the 15 USD monthly budget despite satisfying CPU, RAM, disk, transfer, port, and KVM specifications.
+      database-node:
+        status: unknown
+        notes:
+          - 16 GB plan exceeds the database-node 30 USD budget, so it is not a cost match for that profile.
+          - Private networking and backups were not evaluated because the budget constraint already excludes the plan.
+    sources:
+      - https://extravm.com/singapore-vps
+
+  - canonical_name: VSYS Host
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Singapore]
+    offers:
+      - plan: VS-NVME4-8
+        currency: USD
+        monthly_one_month_term: 18
+        annualized_monthly_with_12_month_prepay: 11
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 4
+        ipv4_included: 1
+        snapshots_included: 1
+        backups_included: 2
+        virtualization: kvm
+      - plan: VS-NVME4-16
+        currency: USD
+        monthly_one_month_term: 21
+        annualized_monthly_with_12_month_prepay: 13
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 200
+        storage_type: nvme
+        monthly_transfer_tb: 4
+        ipv4_included: 1
+        snapshots_included: 1
+        backups_included: 2
+        virtualization: kvm
+    network:
+      premium_uplink_gbps: 1
+      guaranteed_bandwidth_mbps: 200
+      private_network: unknown
+    availability:
+      uptime_guarantee_percent: 99.97
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - One-month 8 GB price exceeds the 15 USD budget, while annualized prepaid pricing is below it.
+          - The profile does not yet specify a maximum contract/prepayment term, so the annualized price cannot silently be treated as pass.
+      database-node:
+        status: unknown
+        notes:
+          - 16 GB plan meets CPU, RAM, NVMe, snapshot, backup, and headline monthly budget requirements.
+          - Required private networking is unverified.
+    sources:
+      - https://vsys.host/vps-singapore
+
+  - canonical_name: CloudBlast
+    confidence: B
+    resource_classes: [elastic_cloud, bargain_vps]
+    verified_regions: [Amsterdam, Salt_Lake_City]
+    region_note: Hong Kong appears inconsistently as available versus coming soon across current official pages and is not treated as verified available in this batch.
+    offers:
+      - plan: VMA41
+        currency: EUR
+        monthly_base: 9.6
+        hourly_base: 0.014
+        vcpu: 4
+        cpu_family: AMD_EPYC
+        memory_gb: 8
+        local_storage_gb: 40
+        storage_type: nvme
+        port_gbps: 10
+        transfer_policy: unlimited_or_10TB_page_inconsistency
+        ipv4_included: 1
+        ipv6_prefix: /64
+      - plan: VMA51
+        currency: EUR
+        monthly_base: 19.2
+        hourly_base: 0.027
+        vcpu: 8
+        cpu_family: AMD_EPYC
+        memory_gb: 16
+        local_storage_gb: 60
+        storage_type: nvme
+        port_gbps: 10
+        transfer_policy: unlimited_or_10TB_page_inconsistency
+        ipv4_included: 1
+        ipv6_prefix: /64
+    addons:
+      backup_storage_eur_per_gb_month: 0.09
+      additional_ipv4_eur_per_month: 2.5
+      block_storage_eur_per_gb_month: 0.15
+    network:
+      private_network: unknown
+    automation:
+      hourly_billing: true
+      api_product_documented: true
+      terraform: unknown
+    profile_assessment:
+      standard-compute:
+        status: fail
+        reasons:
+          - 8 GB plan has only 40 GB local storage, below the 60 GB requirement.
+      database-node:
+        status: unknown
+        notes:
+          - 16 GB plan does not satisfy the 100 GB local-storage requirement without paid block storage.
+          - Required private network remains unverified.
+    sources:
+      - https://cloudblast.io/pricing/

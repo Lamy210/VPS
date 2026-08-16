@@ -1,0 +1,592 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch focuses on regional public-cloud and VPS providers that are often absent from major global-cloud comparisons.
+  - Local-currency prices are preserved in native currency; cross-currency hard filters remain unknown unless another hard constraint independently fails.
+  - Promotional and regular prices are stored separately when the official page exposes both.
+
+providers:
+  - canonical_name: Nevacloud
+    confidence: B
+    resource_classes: [regional_public_cloud, bargain_vps]
+    verified_regions: [Jakarta]
+    offers:
+      - plan: Nevalite_8GB
+        currency: IDR
+        one_month_price: 520000
+        annualized_monthly_price: 457600
+        hourly_price: 774
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme_raid10
+        transfer: unlimited
+      - plan: Nevacloud_8GB
+        currency: IDR
+        one_month_price: 680000
+        annualized_monthly_price: 598400
+        hourly_price: 1012
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme_3x_replication
+        transfer: unlimited
+      - plan: Nevacloud_16GB
+        currency: IDR
+        one_month_price: 1280000
+        annualized_monthly_price: 1126400
+        hourly_price: 1905
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 200
+        storage_type: nvme_3x_replication
+        transfer: unlimited
+    platform:
+      virtualization: kvm
+      premium_cpu_family: AMD_EPYC_Genoa
+      budget_cpu_family: Intel_Xeon_Platinum
+      stated_nvme_iops: 200000
+      stated_nvme_throughput_gbps: 8
+    network:
+      up_to_gbps: 10
+      ipv4_and_ipv6: true
+      private_network: unknown
+      load_balancer_available: true
+    operations:
+      hourly_billing: true
+      instant_deploy_under_seconds: 50
+      api: unknown
+    availability:
+      sla_percent: 99.9
+      premium_storage_replication: 3
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Both 8 GB lines exceed the resource, storage, and traffic floors, but native-currency TCO and exact guaranteed port speed must be evaluated before a final pass.
+      database-node:
+        status: unknown
+        notes:
+          - The 16 GB premium tier has 3x replicated NVMe and a 99.9% SLA, but dedicated CPU allocation, private networking, snapshots, and backup semantics remain unverified.
+    sources:
+      - https://nevacloud.com/harga/
+      - https://nevacloud.com/cloud-vps/
+      - https://nevacloud.com/blog/skema-harga-baru-nevacloud/
+
+  - canonical_name: vHost
+    confidence: A
+    resource_classes: [regional_public_cloud, managed_kubernetes, managed_database, object_storage]
+    verified_regions: [Vietnam, Singapore]
+    offers:
+      - plan: Cloud_Gen4_s4_8_160
+        currency: USD
+        monthly_base: 50
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme
+        network_mbps: 1000
+      - plan: Cloud_Gen4_s6_16_320
+        currency: USD
+        monthly_base: 97
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: nvme
+        network_mbps: 1000
+    network:
+      private_network: true
+      private_network_min_instances: 2
+      floating_ip_available: true
+    operations:
+      weekly_backup_included: true
+      backup_retention_copies: 1
+      snapshots: true
+      terraform_integration: true
+      cloud_api: true
+    availability:
+      sla_percent: 99.9
+      n_plus_1_design: true
+      distributed_storage: true
+    additional_services:
+      kubernetes: true
+      cloud_database: true
+      object_storage_s3_compatible: true
+      block_storage: true
+      private_cloud: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB cloud tier exceeds the 15 USD monthly ceiling.
+      database-node:
+        status: fail
+        notes:
+          - The verified 16 GB tier exceeds the 30 USD database profile ceiling despite strong private-network, backup, snapshot, and SLA characteristics.
+      managed-kubernetes:
+        status: unknown
+        notes:
+          - A managed Kubernetes product and Cloud API/Terraform integration are confirmed, but native node autoscaling, control-plane pricing, and Terraform coverage for Kubernetes itself still need verification.
+    sources:
+      - https://vhost.vn/en/cloud/cloud-server/
+      - https://vhost.vn/tai-lieu/cloud-gen-4-operations/huong-dan-lay-thong-tin-cau-hinh-tren-cloud-gen-4-de-tich-hop-voi-terraform/
+      - https://vhost.vn/cloud/kubernetes/
+      - https://vhost.vn/en/cloud/
+
+  - canonical_name: OneAsiaHost
+    confidence: B
+    resource_classes: [regional_vps, network_focused_vps]
+    verified_regions: [Singapore]
+    offers:
+      - plan: SGKVM_8G
+        currency: USD
+        monthly_base: 40
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme_ceph
+        monthly_transfer_tb: 20
+        port_mbps: 10000
+      - plan: SGKVM_1000MBPS
+        currency: USD
+        monthly_base: 250
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 80
+        transfer: unlimited
+        port_mbps: 1000
+    platform:
+      virtualization: kvm
+      resource_isolation: guaranteed_claimed
+    network:
+      asn: AS59211
+      parent_asn: AS24482
+      singapore_to_tokyo_claimed_latency_ms: 65
+      private_network: unknown
+    availability:
+      sla_percent: 99.5
+    contract:
+      billing: monthly
+      setup_fee: 0
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The metered 8 GB KVM plan has excellent storage and bandwidth but costs 40 USD/month, above the 15 USD ceiling.
+      database-node:
+        status: fail
+        notes:
+          - The provider's 99.5% SLA is below the reusable database profile's 99.9% minimum, independent of price.
+    sources:
+      - https://www.oneasiahost.com/
+
+  - canonical_name: VPSnet
+    confidence: A
+    resource_classes: [bargain_vps, regional_public_cloud, serverless_runtime]
+    verified_regions: [Lithuania]
+    cloud_vps_offers:
+      - plan: KVM_2
+        currency: EUR
+        promotional_monthly: 6.49
+        regular_monthly: 18.99
+        vcpu: 2
+        cpu_family: AMD_EPYC_2_9GHz_plus
+        memory_gb: 8
+        local_storage_gb: 50
+        storage_type: ceph_nvme_replicated
+        monthly_transfer_tb: 15
+        port_mbps: 1000
+        ha: true
+      - plan: KVM_3
+        currency: EUR
+        promotional_monthly: 9.49
+        regular_monthly: 29.99
+        vcpu: 4
+        cpu_family: AMD_EPYC_2_9GHz_plus
+        memory_gb: 16
+        local_storage_gb: 100
+        storage_type: ceph_nvme_replicated
+        monthly_transfer_tb: 30
+        port_mbps: 1000
+        ha: true
+    operations:
+      daily_backups_included: true
+      snapshots: true
+      rest_api: true
+      openapi_spec: true
+      api_can_order_servers: true
+      api_rate_limit_per_minute: 60
+    availability:
+      sla_percent: 99.95
+      own_tier_iii_design_datacenter: true
+      network_backbone_gbps: 200
+    network:
+      private_network: unknown
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - KVM-2 has only 50 GB local storage, below the reusable 60 GB floor; the promotional price does not override that hard failure.
+      database-node:
+        status: unknown
+        notes:
+          - KVM-3 reaches the 16 GB/4-vCPU/100-GB/1-Gbps floors and includes HA, daily backups, and snapshots, but private networking is still unverified and promotional vs regular TCO must be normalized.
+    sources:
+      - https://www.vpsnet.com/en/services/vds
+      - https://www.vpsnet.com/en/services/ai-api
+      - https://www.vpsnet.com/en/services/vps
+
+  - canonical_name: Virtuaal.com
+    confidence: B
+    resource_classes: [regional_vps]
+    verified_regions: [Tallinn]
+    offers:
+      - plan: C_M
+        currency: EUR
+        monthly_base: 34.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: ssd_raid
+        monthly_transfer_tb: 5
+      - plan: C_L
+        currency: EUR
+        monthly_base: 69.99
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 250
+        storage_type: ssd_raid
+        monthly_transfer_tb: 5
+    operations:
+      cloud_init: true
+      vnc_console: true
+      rescue_mode: true
+      annual_discount_up_to_percent: 10
+    network:
+      private_network: unknown
+      port_mbps: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - CPU, RAM, storage, and transfer meet the resource floor, but native-currency TCO and the 1-Gbps hard network requirement remain unresolved.
+      database-node:
+        status: unknown
+        notes:
+          - The 16 GB tier reaches basic compute/storage capacity but private networking, CPU allocation class, backups, snapshots, SLA, and network speed remain to be verified.
+    sources:
+      - https://virtuaalserver.com/
+
+  - canonical_name: BulutVDS
+    confidence: A
+    resource_classes: [bargain_vps, api_driven_cloud]
+    verified_regions: [Istanbul]
+    offers:
+      - plan: EPYC_3
+        currency: USD
+        monthly_base: 9.49
+        approximate_hourly: 0.01
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        transfer: unlimited
+        port_mbps: 10000
+      - plan: EPYC_4
+        currency: USD
+        monthly_base: 12.99
+        approximate_hourly: 0.02
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme
+        transfer: unlimited
+        port_mbps: 10000
+      - plan: EPYC_Pro_1
+        currency: USD
+        monthly_base: 23.99
+        approximate_hourly: 0.03
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 150
+        storage_type: nvme
+        transfer: unlimited
+        port_mbps: 10000
+    network:
+      ipv4_included: true
+      ipv6_prefix: /64
+      private_network: unknown
+    operations:
+      rest_api: true
+      create_server_api: true
+      webhooks: true
+      snapshots: true
+      hourly_billing: true
+    profile_assessment:
+      standard-compute:
+        status: pass
+        notes:
+          - EPYC-4 directly satisfies the reusable 8 GB, 4-vCPU, 100-GB NVMe, unlimited-transfer, 10-Gbps, IPv4, <=15 USD compute requirements.
+      database-node:
+        status: unknown
+        notes:
+          - EPYC Pro 1 satisfies headline CPU/RAM/NVMe/budget and snapshot requirements, but private networking, backup semantics, SLA, and whether CPU resources are dedicated/guaranteed remain unverified.
+      kubernetes-worker:
+        status: unknown
+        notes:
+          - REST provisioning and hourly billing are strong primitives; cloud-init, Terraform/OpenTofu, and private networking still need verification.
+    sources:
+      - https://bulutvds.com/packages
+
+  - canonical_name: Netlen
+    confidence: B
+    resource_classes: [performance_vds, api_driven_cloud]
+    verified_regions: [Turkey]
+    offers:
+      - plan: EPYC_VDS_3
+        currency: TRY
+        monthly_base: 437
+        hourly: 0.64
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: all_flash_ssd
+        transfer: unlimited
+        port_mbps: 10000
+      - plan: EPYC_VDS_4
+        currency: TRY
+        monthly_base: 598
+        hourly: 0.83
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: all_flash_ssd
+        transfer: unlimited
+        port_mbps: 10000
+    cpu:
+      family: AMD_EPYC_7642
+      hardware_cpu_isolation_claimed: true
+    network:
+      ipv4_included: true
+      ipv6_prefix: /64
+      private_network: unknown
+    operations:
+      api: true
+      snapshot_backup: true
+      hourly_billing: true
+    availability:
+      uptime_guarantee_percent: 99.9
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - EPYC VDS 4 exceeds the resource/network floors and uses isolated CPU resources, but native-currency TCO must be normalized before the 15 USD budget filter can be resolved.
+      database-node:
+        status: unknown
+        notes:
+          - Custom configurations support up to 128 GB RAM and 2 TB NVMe, but private networking and the distinction between snapshot backup and a separate required backup system remain unresolved.
+    sources:
+      - https://www.netlen.com.tr/amd-sanal-sunucu
+
+  - canonical_name: ITMCloud
+    confidence: B
+    resource_classes: [regional_public_cloud, managed_vps]
+    verified_regions: [South_Africa]
+    offers:
+      - plan: Pro
+        currency: ZAR
+        monthly_base: 399
+        vat_included: false
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme
+        transfer: unmetered
+        ipv4_count: 1
+      - plan: Business
+        currency: ZAR
+        monthly_base: 799
+        vat_included: false
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 250
+        storage_type: nvme
+        transfer: unmetered
+        ipv4_count: 2
+    platform:
+      virtualization: kvm
+    network:
+      private_vlan: true
+    operations:
+      backups_days_pro: 30
+      backups_days_business: 30
+      managed_support: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The 8 GB plan meets CPU/RAM/storage/traffic and private-network preferences, but port speed and normalized USD TCO remain unresolved.
+      database-node:
+        status: unknown
+        notes:
+          - The 16 GB plan has private VLAN and 30-day backups but CPU allocation class, snapshot support, SLA, port speed, and normalized TCO remain unresolved.
+    sources:
+      - https://www.itmcloud.co.za/
+
+  - canonical_name: NovaCloud_Africa
+    confidence: B
+    resource_classes: [regional_public_cloud]
+    verified_regions: [South_Africa]
+    offers:
+      - plan: 4cpu_8GB
+        currency: ZAR
+        monthly_base: 684
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 20
+        storage_type: premium_boot_volume
+        network_policy: fair_use
+    platform:
+      virtualization: kvm
+    network:
+      vlan_support: true
+      private_lan_claimed_up_to_gbps: 10
+    operations:
+      instant_setup: true
+      cancel_anytime: true
+      monitoring_24_7: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified 8 GB plan includes only a 20 GB boot volume, below the reusable 60 GB local-storage hard requirement.
+      database-node:
+        status: unknown
+        notes:
+          - Higher configurations and storage add-ons need plan-level verification before database suitability can be assessed.
+    sources:
+      - https://cloud.novacloud.africa/
+      - https://www.novacloud.africa/blogs/news/10-essential-tips-for-success-with-novacloud-africa-in-2026
+
+  - canonical_name: Cloudify.ro
+    confidence: A
+    resource_classes: [regional_public_cloud, performance_vds, api_driven_cloud]
+    verified_regions: [Romania]
+    offers:
+      - plan: b2i_8c_8g_shared
+        currency: EUR
+        monthly_cap: 16
+        hourly: 0.032
+        vcpu: 8
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme_ha
+        monthly_transfer_tb: 10
+      - plan: ga3_4c_8g_dedicated
+        currency: EUR
+        monthly_cap: 20
+        vcpu: 4
+        cpu_allocation: dedicated_cpu_pinning
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme_ha
+        monthly_transfer_tb: 10
+      - plan: ga3_8c_16g_dedicated
+        currency: EUR
+        monthly_cap: 40
+        vcpu: 8
+        cpu_allocation: dedicated_cpu_pinning
+        memory_gb: 16
+        local_storage_gb: 240
+        storage_type: nvme_ha
+        monthly_transfer_tb: 10
+    platform:
+      virtualization: kvm
+      control_plane: openstack
+      storage_backend: ceph
+      storage_replication: 3
+    network:
+      private_network: true
+      private_network_technology: vxlan
+      floating_ip_eur_month: 1.5
+      load_balancer_from_eur_month: 3
+    operations:
+      hourly_billing: true
+      monthly_hours_cap: 500
+      no_minimum_contract: true
+      instant_resize: true
+      openstack_api: true
+      snapshots: true
+      backups: true
+    availability:
+      sla_percent: 99.9
+      high_availability: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The shared 8 GB tier has strong storage/transfer and a 16 EUR monthly cap, but current FX and explicit per-instance port speed are required before resolving the USD/1-Gbps hard filters.
+      database-node:
+        status: unknown
+        notes:
+          - The dedicated 16 GB tier exceeds the numerical 30-USD ceiling before FX normalization, while the platform otherwise offers private VXLAN, HA NVMe, snapshots/backups and 99.9 SLA.
+      kubernetes-worker:
+        status: unknown
+        notes:
+          - OpenStack API, hourly billing, VXLAN, Floating IP, and load balancers are strong primitives; Terraform/OpenTofu and cloud-init coverage still need explicit verification.
+    sources:
+      - https://cloudify.ro/en/pricing/cloud-vps
+      - https://cloudify.ro/en
+      - https://cloudify.ro/en/pricing/floating-ip
+      - https://cloudify.ro/en/pricing/load-balancer
+      - https://docs.cloudify.ro/docs/openstack/create-server/
+
+  - canonical_name: NAV.RO
+    confidence: B
+    resource_classes: [regional_public_cloud, resource_pool_cloud]
+    verified_regions: [Romania]
+    offers:
+      - plan: MultiCloud_Bronze_pool
+        currency: EUR
+        monthly_base: 39.95
+        total_vcpu_pool: 8
+        total_memory_gb_pool: 8
+        max_memory_gb_per_vm: 4
+        total_storage_gb: 120
+        storage_type: nvme_cloud_3x_replicated
+        ipv4_count: 4
+        ipv6_count: 4
+        internet_burst_gbps: 1.0
+        private_networks: 1
+      - plan: MultiCloud_Gold_pool
+        currency: EUR
+        monthly_base: 69.95
+        total_vcpu_pool: 16
+        total_memory_gb_pool: 16
+        max_memory_gb_per_vm: 6
+        total_storage_gb: 200
+        storage_type: nvme_cloud_3x_replicated
+        internet_burst_gbps: 1.4
+        private_networks: 1
+    platform:
+      virtualization: kvm
+      resource_pool_model: true
+    network:
+      private_network: true
+      bgp_optional: true
+      traffic_unmetered: true
+    operations:
+      infrastructure_api_claimed: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The resource-pool products do not allow an 8 GB single VM at the verified Bronze/Gold tiers; max per-VM RAM is 4 GB and 6 GB respectively.
+      database-node:
+        status: fail
+        notes:
+          - The verified pool tiers cannot allocate a 16 GB single VM, independent of aggregate pool memory.
+    sources:
+      - https://www.nav.ro/cloud-vps
+      - https://www.nav.ro/servere

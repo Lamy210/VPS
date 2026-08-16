@@ -1,0 +1,553 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - Unknown facts are intentionally preserved as unknown rather than inferred.
+  - Currency conversion is not baked into provider prices.
+  - A profile assessment is conservative: unknown hard constraints do not count as pass.
+
+providers:
+  - canonical_name: HostHatch
+    confidence: B
+    resource_classes: [bargain_vps]
+    verified_regions: [Tokyo, Singapore, Hong Kong, Seoul]
+    offers:
+      - plan: Compute 8 GB
+        currency: USD
+        monthly_base: 9
+        vcpu: 2
+        cpu_allocation: fair-share
+        memory_gb: 8
+        local_storage_gb: 35
+        storage_type: nvme
+        monthly_transfer_tb: 2
+      - plan: Compute 12 GB
+        currency: USD
+        monthly_base: 12
+        vcpu: 4
+        cpu_allocation: mixed
+        dedicated_cores: 1
+        shared_cores: 3
+        memory_gb: 12
+        local_storage_gb: 50
+        storage_type: nvme
+        monthly_transfer_tb: 3
+      - plan: Compute 16 GB
+        currency: USD
+        monthly_base: 15
+        vcpu: 4
+        cpu_allocation: mixed
+        dedicated_cores: 2
+        shared_cores: 2
+        memory_gb: 16
+        local_storage_gb: 75
+        storage_type: nvme
+        monthly_transfer_tb: 4
+    network:
+      private_network: true
+      private_network_scope: same-region
+      private_network_implementation: vlan_or_vxlan
+      private_traffic_unmetered: true
+      private_mtu: 9000
+      public_transfer_accounting: inbound_and_outbound
+      private_network_fee: unknown
+    automation:
+      api_exists: true
+      api_general_availability: false
+      api_access_note: currently limited to a select few users
+      terraform: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - 8 GB plan fails the 60 GB local-storage requirement.
+          - 16 GB plan meets headline RAM, storage, transfer, and USD budget constraints.
+          - Per-VM public port speed and KVM requirement remain unverified in this batch.
+      database-node:
+        status: unknown
+        notes:
+          - 16 GB plan has mixed dedicated/shared CPU and private networking.
+          - Required snapshot and backup properties were not fully verified in this batch.
+    sources:
+      - https://hosthatch.com/products
+      - https://docs.hosthatch.com/networking/
+      - https://docs.hosthatch.com/api/
+
+  - canonical_name: Contabo
+    confidence: B
+    resource_classes: [bargain_vps]
+    verified_regions: [Tokyo]
+    offers:
+      - plan: Cloud VPS 10
+        currency: EUR
+        monthly_base: 6.85
+        vcpu: 3
+        memory_gb: 8
+        local_storage_gb: 75
+        storage_type: nvme
+        alternative_storage_gb: 150
+        alternative_storage_type: ssd
+        outgoing_transfer_tb: 10
+        incoming_transfer: unlimited
+        included_snapshots: 1
+      - plan: Cloud VPS 20
+        currency: EUR
+        monthly_base: 10.65
+        vcpu: 6
+        memory_gb: 12
+        local_storage_gb: 100
+        storage_type: nvme
+        outgoing_transfer_tb: 10
+        incoming_transfer: unlimited
+        included_snapshots: 2
+      - plan: Cloud VPS 30
+        currency: EUR
+        monthly_base: 21.30
+        vcpu: 8
+        memory_gb: 24
+        local_storage_gb: 200
+        storage_type: nvme
+        outgoing_transfer_tb: 10
+        incoming_transfer: unlimited
+    network:
+      private_network: true
+      private_network_scope: same-location
+      private_network_implementation: layer2
+      private_traffic_unmetered: true
+      private_network_monthly_fee_per_cloud_vps_eur: 2.29
+      public_port_mbps: unknown
+    automation:
+      private_network_api: true
+      cli: true
+      general_compute_api: unknown
+      terraform: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Headline RAM, storage, and transfer are strong for the price.
+          - KVM and minimum public port speed were not verified in this batch.
+          - USD budget comparison requires an explicit exchange-rate policy.
+      database-node:
+        status: unknown
+        notes:
+          - Private networking and snapshots are available.
+          - The profile requires backups; snapshot presence alone is not treated as backup verification.
+    sources:
+      - https://contabo.com/en/locations/asia-japan/
+      - https://contabo.com/en/private-networking/
+
+  - canonical_name: Hetzner
+    confidence: B
+    resource_classes: [elastic_cloud]
+    pricing_effective_note: Uses the price adjustment effective 2026-06-15 where applicable.
+    offers:
+      - plan: CX33
+        region_group: Germany_and_Finland
+        currency: EUR
+        monthly_base: 8.49
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        monthly_transfer_tb: 20
+        public_ipv4_included: false
+      - plan: CX43
+        region_group: Germany_and_Finland
+        currency: EUR
+        monthly_base: 15.99
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 20
+        public_ipv4_included: false
+      - plan: CPX32
+        region: Singapore
+        currency: EUR
+        monthly_base: 48.99
+        vcpu: 4
+        memory_gb: 8
+        monthly_transfer_tb: 0.5
+        additional_transfer_eur_per_tb: 7.40
+      - plan: CPX42
+        region: Singapore
+        currency: EUR
+        monthly_base: 93.49
+        vcpu: 8
+        memory_gb: 16
+        monthly_transfer_tb: 0.5
+        additional_transfer_eur_per_tb: 7.40
+    network:
+      private_network: true
+      private_network_scope: provider-network
+      floating_ip: true
+    automation:
+      api: true
+      cli: true
+      terraform: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - EU CX33 is cost-efficient and meets RAM/storage/transfer headline constraints.
+          - Public IPv4 is extra and exact TCO is not complete in this batch.
+          - Minimum port speed and KVM requirement remain unverified here.
+          - Singapore is a materially different price/transfer class and must not inherit EU economics.
+      database-node:
+        status: unknown
+        notes:
+          - Private networks, snapshots, and backups exist in the cloud platform.
+          - Full database-profile hard-filter verification is deferred to a dedicated resource comparison.
+    sources:
+      - https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/
+      - https://www.hetzner.com/cloud/
+
+  - canonical_name: netcup
+    confidence: B
+    resource_classes: [bargain_vps, performance_vds]
+    offers:
+      - plan: VPS 1000 G12
+        currency: EUR
+        monthly_base: 10.37
+        hourly_base: 0.017
+        price_tax_note: displayed price includes 19 percent VAT
+        vcpu: 4
+        memory_gb: 8
+        memory_type: ddr5_ecc
+        local_storage_gb: 256
+        storage_type: nvme
+        transfer: included_amount_unknown
+        snapshots: true
+      - plan: VPS 2000 G12
+        currency: EUR
+        monthly_base: 19.25
+        hourly_base: 0.031
+        price_tax_note: displayed price includes 19 percent VAT
+        vcpu: 8
+        memory_gb: 16
+        memory_type: ddr5_ecc
+        local_storage_gb: 512
+        storage_type: nvme
+        transfer: included_amount_unknown
+        snapshots: true
+      - plan: RS 1000 G12
+        currency: EUR
+        monthly_one_month_term: 12.79
+        advertised_starting_monthly_with_longer_term: 10.40
+        dedicated_cores: 4
+        cpu_family: AMD_EPYC_9645
+        memory_gb: 8
+        memory_type: ecc
+        local_storage_gb: 256
+        storage_type: nvme
+        max_network_gbps: 2.5
+        min_availability_percent: 99.9
+        snapshots: true
+      - plan: RS 2000 G12
+        currency: EUR
+        monthly_one_month_term: 21.43
+        advertised_starting_monthly_with_longer_term: 17.35
+        dedicated_cores: 8
+        cpu_family: AMD_EPYC_9645
+        memory_gb: 16
+        memory_type: ecc
+        local_storage_gb: 512
+        storage_type: nvme
+        min_availability_percent: 99.9
+        snapshots: true
+    verified_regions: [Vienna, Nuremberg, Amsterdam, Manassas, Singapore]
+    network:
+      cloud_vlan_option: true
+      ipv4_plus_ipv6: true
+      ipv6_only_option: true
+      exact_private_network_properties: unknown
+    automation:
+      api: true
+      hourly_billing: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - VPS 1000 exceeds the storage requirement at a low headline cost.
+          - Exact included transfer quantity and minimum port speed were not verified in this batch.
+      database-node:
+        status: unknown
+        notes:
+          - RS 2000 provides 16 GB ECC RAM, dedicated EPYC cores, and 512 GB NVMe within the profile headline budget range.
+          - Required private-network and backup semantics were not fully verified.
+    sources:
+      - https://www.netcup.com/en/server/vps
+      - https://www.netcup.com/en/server/root-server
+
+  - canonical_name: UpCloud
+    confidence: A
+    resource_classes: [elastic_cloud, managed_kubernetes]
+    verified_regions: [Singapore]
+    offers:
+      - plan: Starter 8 GB 2 CPU
+        currency: USD
+        monthly_base: 20
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 40
+        port_mbps: 500
+      - plan: Starter 8 GB 4 CPU
+        currency: USD
+        monthly_base: 24
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 40
+      - plan: Starter 16 GB 2 CPU
+        currency: USD
+        monthly_base: 28
+        vcpu: 2
+        memory_gb: 16
+        local_storage_gb: 50
+      - plan: Starter 16 GB 4 CPU
+        currency: USD
+        monthly_base: 32
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 50
+    pricing:
+      data_transfer_fee: zero_subject_to_fair_transfer_policy
+      billing_note: hourly billing capped at 28 days per month for listed plans
+    network:
+      private_network: true
+      global_private_network: true
+      private_network_fee: 0
+      nat_essentials_available: true
+      complimentary_managed_load_balancer_one_node: true
+    managed_kubernetes:
+      control_plane_fee_for_up_to_30_workers: 0
+      private_worker_pools: true
+      cni: cilium
+      cluster_autoscaler_integrated: true
+      node_group_min_max: true
+      individual_node_group_scale_to_zero: true
+      whole_cluster_scale_to_zero: false
+    automation:
+      api: true
+      sdk: true
+      terraform: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        reasons:
+          - 8 GB starter price exceeds the 15 USD monthly budget.
+          - 8 GB starter local storage is below the 60 GB requirement.
+      managed-kubernetes:
+        status: unknown
+        notes:
+          - Private networking, Terraform, control-plane pricing, and node autoscaling are verified strengths.
+          - All profile hard constraints, including monitoring integration and final load-balancer semantics, have not yet been completed in this batch.
+    sources:
+      - https://upcloud.com/global/pricing/
+      - https://upcloud.com/docs/products/managed-kubernetes/autoscaling/
+
+  - canonical_name: Vultr
+    confidence: C
+    resource_classes: [elastic_cloud, managed_kubernetes]
+    pricing:
+      current_worker_plan_price: unknown
+      note: Exact current regional plan price was not captured from an official source in this batch.
+    managed_kubernetes:
+      product: Vultr Kubernetes Engine
+      existing_vpc_supported: true
+      automatic_vpc_creation: true
+      mixed_compute_node_pools: true
+      automatic_node_pool_scaling: true
+      min_max_nodes: true
+      minimum_worker_memory_gb: 2
+      block_storage_csi: true
+    automation:
+      api: true
+      cli: true
+      terraform: true
+      terraform_node_pool_autoscaler_fields: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current official price capture is required before budget filtering.
+      managed-kubernetes:
+        status: unknown
+        notes:
+          - VPC and native node-pool autoscaling capabilities are verified.
+          - Exact TCO and remaining profile fields need current pricing/add-on verification.
+    sources:
+      - https://docs.vultr.com/products/compute/kubernetes/faq
+      - https://docs.vultr.com/products/compute/kubernetes/management/node-pool/scale
+
+  - canonical_name: OVHcloud
+    confidence: B
+    resource_classes: [bargain_vps, elastic_cloud]
+    verified_regions: [Singapore]
+    offers:
+      - plan: VPS-2 2027
+        currency: SGD
+        monthly_base_ex_tax: 10.88
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 75
+        storage_type: nvme
+        port_gbps: 1
+        apac_monthly_transfer_tb_before_throttle: 1
+        post_quota_bandwidth_mbps: 10
+        daily_backup: true
+      - plan: VPS-3 2027
+        currency: SGD
+        monthly_base_ex_tax: 15.64
+        vcpu: 6
+        memory_gb: 12
+        local_storage_gb: 100
+        storage_type: nvme
+        port_gbps: 2
+        apac_monthly_transfer_tb_before_throttle: 1
+        post_quota_bandwidth_mbps: 10
+        daily_backup: true
+      - plan: VPS-4 2027
+        currency: SGD
+        monthly_base_ex_tax: 30
+        vcpu: 8
+        memory_gb: 24
+        local_storage_gb: 200
+        storage_type: nvme
+        port_gbps: 3
+        apac_monthly_transfer_tb_before_throttle: 3
+        post_quota_bandwidth_mbps: 10
+        daily_backup: true
+      - plan: Public Cloud b3-8
+        currency: SGD
+        hourly_base: 0.0758
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 50
+        storage_type: nvme
+        public_port_mbps: 500
+        private_port_gbps: 4
+      - plan: Public Cloud b3-16
+        currency: SGD
+        hourly_base: 0.1515
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 100
+        storage_type: nvme
+        public_port_gbps: 1
+        private_port_gbps: 4
+    network:
+      cheap_vps_private_network: unknown
+      public_cloud_private_network: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        reasons:
+          - VPS-2 and VPS-3 APAC quota is 1 TB before throttling, below the 2 TB requirement.
+      database-node:
+        status: unknown
+        notes:
+          - VPS backup and storage characteristics are attractive, but required private networking was not verified for the VPS class.
+    sources:
+      - https://www.ovhcloud.com/en-sg/vps/configurator/
+      - https://www.ovhcloud.com/en-sg/public-cloud/prices/
+
+  - canonical_name: Gcore
+    confidence: B
+    resource_classes: [elastic_cloud, managed_kubernetes]
+    verified_regions: [Tokyo]
+    offers:
+      - plan: Tokyo Standard 8 GB promotional VM
+        currency: USD
+        monthly_promotional: 32.34
+        monthly_reference_before_promotion: 64.9
+        promotional: true
+        vcpu: 2
+        memory_gb: 8
+        egress_fee: 0
+    managed_kubernetes:
+      control_plane_fee: 0
+      control_plane_sla_percent: 99.9
+      worker_egress_fee: 0
+      node_pool_autoscaling: true
+      min_max_nodes: true
+      autohealing: true
+      public_ipv4_option: true
+      affinity_anti_affinity: true
+    automation:
+      api: true
+      terraform: unknown
+    profile_assessment:
+      standard-compute:
+        status: fail
+        reasons:
+          - Tokyo 8 GB promotional VM price exceeds the 15 USD standard-compute budget.
+      managed-kubernetes:
+        status: unknown
+        notes:
+          - Free control plane and node-pool autoscaling are verified.
+          - Terraform and all required add-on/TCO fields were not verified in this batch.
+    sources:
+      - https://gcore.com/go/tokyo-cloud-promotion
+      - https://gcore.com/cloud/managed-kubernetes
+
+  - canonical_name: Civo
+    confidence: A
+    resource_classes: [elastic_cloud, managed_kubernetes]
+    verified_cpu_regions: [London, Frankfurt, New_York, Phoenix, Mumbai]
+    offers:
+      - plan: Compute Standard 8 GB
+        currency: USD
+        hourly_base: 0.059524
+        calculated_monthly_at_730h: 43.45252
+        calculated_field: true
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme
+        data_transfer_fee: 0
+      - plan: Compute Standard 16 GB
+        currency: USD
+        hourly_base: 0.119048
+        calculated_monthly_at_730h: 86.90504
+        calculated_field: true
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 150
+        storage_type: nvme
+        data_transfer_fee: 0
+      - plan: Kubernetes Standard 8 GB
+        currency: USD
+        hourly_base: 0.059524
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 60
+        storage_type: nvme
+        data_transfer_fee: 0
+    network:
+      private_network: true
+      custom_private_networks: true
+    managed_kubernetes:
+      control_plane_fee: 0
+      cluster_autoscaler: true
+      default_autoscaler_min_nodes: 1
+      default_autoscaler_max_nodes: 10
+      autoscaler_limits_editable: true
+    automation:
+      api: true
+      cli: true
+      terraform: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        reasons:
+          - 8 GB standard compute monthly equivalent exceeds the 15 USD budget.
+      managed-kubernetes:
+        status: unknown
+        notes:
+          - Private networking, Terraform, free control plane, and Cluster Autoscaler are verified.
+          - Complete load-balancer and monitoring requirements remain to be verified before pass.
+    sources:
+      - https://www.civo.com/pricing
+      - https://www.civo.com/docs/kubernetes/advanced/scaling-nodes
+      - https://www.civo.com/docs/overview/regions

@@ -1,0 +1,92 @@
+name: generic-resource-search
+status: draft
+
+budget:
+  currency: USD
+  monthly_max: null
+  annual_max: null
+  setup_fee_max: null
+
+regions:
+  preferred: []
+  acceptable: []
+  excluded: []
+  max_latency_ms: null
+
+compute:
+  min_vcpu: null
+  min_memory_gb: null
+  cpu_allocation:
+    accepted: [shared, dedicated]
+    preferred: null
+  cpu_families: []
+  architecture: [x86_64]
+
+storage:
+  min_local_gb: null
+  accepted_types: [nvme, ssd]
+  min_iops: null
+  min_block_storage_gb: null
+  object_storage_required: false
+
+network:
+  min_monthly_transfer_tb: null
+  min_port_mbps: null
+  ipv4_required: true
+  ipv6_required: false
+  private_network_required: false
+  private_traffic_unmetered_preferred: true
+  floating_ip_required: false
+  load_balancer_required: false
+  bgp_required: false
+
+platform:
+  resource_types:
+    - vps
+    - vds
+    - cloud_vm
+  virtualization: []
+  container_runtime_required: false
+  kubernetes_required: false
+  managed_kubernetes_required: false
+  autoscaling_required: false
+
+operations:
+  api_required: false
+  terraform_or_opentofu_required: false
+  cloud_init_required: false
+  hourly_billing_preferred: false
+  snapshots_required: false
+  backups_required: false
+  monitoring_integration_required: false
+
+availability:
+  min_sla_percent: null
+  multi_az_required: false
+  live_migration_preferred: false
+  replicated_storage_preferred: false
+
+scaling:
+  initial_instance_count: null
+  expected_instance_count_12m: null
+  vertical_scaling_required: false
+  horizontal_scaling_required: false
+
+compliance_and_risk:
+  data_residency_required: false
+  required_countries: []
+  excluded_countries: []
+  provider_age_min_years: null
+  official_company_information_required: true
+
+priorities:
+  # Values are relative weights. They do not need to total 100.
+  monthly_cost: 10
+  performance: 8
+  network: 8
+  reliability: 8
+  automation: 6
+  scalability: 6
+  support: 4
+
+notes: []

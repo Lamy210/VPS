@@ -1,0 +1,424 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch expands European, North American, and network-focused VPS/cloud coverage.
+  - Conflicting current prices across a provider's own pages are recorded as an inconsistency rather than silently selecting the lower price.
+  - Full virtualization does not prove KVM when the selected product page does not explicitly name the hypervisor.
+  - OpenStack/QEMU usage does not prove KVM acceleration for the exact instance family.
+  - Shared or unmetered ports are interface characteristics, not sustained-throughput guarantees.
+  - Native-currency pricing is preserved until a timestamped FX/TCO derivation is applied.
+
+providers:
+  - canonical_name: BlastVPS
+    confidence: A
+    resource_classes: [regional_vps]
+    offers:
+      - plan: VPS_Pro
+        currency: USD
+        monthly_base: 29.99
+        vcpu: 4
+        cpu_family: AMD_Ryzen_9
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        transfer: unlimited
+        virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified 8 GB unmanaged KVM tier costs 29.99 USD/month, above the reusable 15 USD ceiling.
+    sources:
+      - https://blastvps.com/unmanaged-vps
+      - https://blastvps.com/linux-vps
+
+  - canonical_name: dogado
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Germany]
+    offers:
+      - plan: Cloud_Server_M_4_0
+        currency: EUR
+        introductory_monthly_first_6_months: 5.49
+        regular_monthly: 10.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 200
+        storage_type: nvme
+        port_mbps: 1000
+        traffic: flat_included
+        ipv4_included: true
+        ipv6_included: true
+        virtualization: full_virtualization_unspecified_hypervisor
+      - plan: Cloud_Server_L_4_0
+        currency: EUR
+        introductory_monthly_first_6_months: 9.99
+        regular_monthly: 19.99
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 400
+        storage_type: nvme
+        port_mbps: 1000
+        traffic: flat_included
+        ipv4_included: true
+        ipv6_included: true
+        virtualization: full_virtualization_unspecified_hypervisor
+    contract:
+      minimum_term_months: 1
+    availability:
+      advertised_percent: 99.9
+    operations:
+      backup_service_optional: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Cloud Server M 4.0 clears CPU/RAM/NVMe/port/IPv4/traffic and short-contract dimensions with a low regular EUR price.
+          - The selected public VPS page says full virtualization but does not explicitly identify KVM/QEMU-KVM for this product; the reusable profile requires KVM.
+          - USD TCO requires the repository's timestamped FX policy.
+      database-node:
+        status: unknown
+        notes:
+          - Cloud Server L 4.0 clears headline CPU/RAM/NVMe/network/availability capacity, but private networking, KVM for the selected product, snapshot semantics, independent-backup TCO, and normalized USD TCO remain unresolved.
+    sources:
+      - https://www.dogado.de/server/linux-vps
+      - https://www.dogado.de/server/server-mieten
+      - https://www.dogado.de/cloud-hosting/
+
+  - canonical_name: Genesis_Public_Cloud
+    display_name: Genesis Public Cloud
+    confidence: A
+    resource_classes: [api_driven_cloud, performance_cloud]
+    offers:
+      - plan: t5sd_4xlarge
+        currency: USD
+        monthly_base: 17
+        cpu_cores: 1
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: ssd
+        network_max_mbps: 1600
+        resource_allocation: shared_core
+      - plan: m7asx_large
+        currency: USD
+        monthly_base: 20
+        cpu_cores: 1
+        memory_gb: 8
+        local_storage_gb: 200
+        storage_type: local_ssd
+        network_max_mbps: 2500
+        resource_allocation: shared_core
+      - plan: c5d_xlarge
+        currency: USD
+        monthly_base: 50
+        cpu_cores: 2
+        memory_gb: 8
+        local_storage_gb: 200
+        storage_type: ssd
+        network_max_mbps: 5000
+        resource_allocation: dedicated_core
+    billing:
+      metering_interval_seconds: 30
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The low-cost 8 GB shapes expose only one CPU core; the first observed 2-core/8-GB local-storage shape costs 50 USD/month.
+    sources:
+      - https://www.genesishosting.com/genesis_public_cloud_vm_pricing_table.html
+
+  - canonical_name: Linkdata
+    confidence: A
+    resource_classes: [regional_vps, dedicated_resource_vm]
+    verified_regions: [London, Erbil]
+    offers:
+      - plan: LS_2x8
+        currency: USD
+        monthly_base: 35
+        cpu_cores: 2
+        memory_gb: 8
+        local_storage_gb: 60
+        storage_type: ssd
+        transfer: unlimited
+        oversubscription_core_or_ram: false
+      - plan: LS_4x16
+        currency: USD
+        monthly_base: 70
+        cpu_cores: 4
+        memory_gb: 16
+        local_storage_gb: 120
+        storage_type: ssd
+        transfer: unlimited
+        oversubscription_core_or_ram: false
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - LS 2x8 costs 35 USD/month, above the 15 USD ceiling.
+      database-node:
+        status: fail
+        notes:
+          - LS 4x16 costs 70 USD/month and uses SSD rather than the required NVMe storage class.
+    sources:
+      - https://linkdata.com/shared-servers/
+
+  - canonical_name: OnetSolutions
+    confidence: A
+    resource_classes: [performance_vps, database_oriented_vps, regional_public_cloud]
+    offers:
+      - plan: HP_8
+        currency: EUR
+        official_price_observations:
+          - {monthly: 15.99, vat: excluded, source: main_site}
+          - {monthly: 12.79, vat: unspecified_in_excerpt, source: high_performance_page}
+        current_price_consistency: conflicting_official_pages
+        vcpu: 4
+        cpu_family: AMD_EPYC_9554
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: enterprise_nvme
+        bandwidth: 1gbps
+        ipv4_included: true
+        ipv6_included: true
+        private_network: true
+        virtualization: kvm
+        daily_offsite_backups: true
+        snapshots: true
+        availability_percent: 99.9
+      - plan: HP_16
+        currency: EUR
+        observed_monthly_main_site: 31.99
+        vcpu: 8
+        cpu_family: AMD_EPYC_9554
+        memory_gb: 16
+        local_storage_gb: 160
+        storage_type: enterprise_nvme
+        bandwidth: 1gbps
+        private_network: true
+        virtualization: kvm
+        daily_offsite_backups: true
+        snapshots: true
+        availability_percent: 99.9
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - HP-8 clears the technical KVM/CPU/RAM/NVMe/network/IP/private-network dimensions and includes backups/snapshots.
+          - Current official pages expose different HP-8 prices, so effective ordinary price is not pinned; USD TCO and VAT handling remain derived decisions.
+      database-node:
+        status: unknown
+        notes:
+          - HP-16 has excellent technical/database characteristics but the observed main-site base price is 31.99 EUR before USD normalization, already above the profile's 30 USD headline threshold in native numeric terms; a strict TCO decision remains in derived output rather than this source record.
+    sources:
+      - https://onetsolutions.net/en
+      - https://onetsolutions.net/en/vps-server
+      - https://onetsolutions.net/en/high-performance-vps-server
+      - https://onetsolutions.net/en/vps-server-performance
+
+  - canonical_name: SprintCDN
+    confidence: A
+    resource_classes: [api_driven_cloud, bargain_vps, network_focused_vps]
+    offers:
+      - plan: VPS_4
+        currency: USD
+        monthly_base: 13
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme
+        transfer: unmetered
+        port_mbps: 1000
+        port_allocation: shared
+        virtualization: kvm
+        ipv4_included: unknown
+      - plan: Medium
+        currency: USD
+        monthly_base: 15
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 150
+        storage_type: nvme
+        transfer: unmetered
+        port_mbps: 10000
+        port_allocation: shared
+        virtualization: kvm
+        ipv4_included: unknown
+    operations:
+      api: true
+      cli: true
+      snapshots: true
+      backups: true
+      hourly_billing: true
+      monthly_billing: true
+    availability:
+      network_uptime_sla_percent: 99.99
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - VPS 4 directly clears price, CPU, RAM, NVMe, transfer, configured port speed and KVM requirements.
+          - Official VPS/product pages were searched for IPv4/IP-address inclusion, but no plan-level included IPv4 fact was found; strict qualification therefore remains blocked only by explicit IPv4 inclusion.
+        verification_priority: very_high
+    sources:
+      - https://sprintcdn.com/products/cloud-vps
+      - https://sprintcdn.com/products
+      - https://sprintcdn.com/
+
+  - canonical_name: NoBull_Networks
+    display_name: NoBull Networks
+    confidence: A
+    resource_classes: [performance_vps]
+    verified_regions: [Seattle]
+    offers:
+      - plan: Elite_6X_VPS
+        currency: USD
+        monthly_base: 46.99
+        vcpu: 6
+        memory_gb: 8
+        local_storage_gb: 200
+        storage_type: raid_backed_ssd_or_nvme_by_node
+        monthly_transfer_tb: 55
+        port_mbps: 1000
+        ipv4_included: 1
+        virtualization: kvm
+        snapshot_included: 1
+        backup_included: 1
+    availability:
+      network_uptime_sla_percent: 99.9
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - Elite 6X costs 46.99 USD/month despite strong transfer, KVM, IPv4, snapshot and backup features.
+    sources:
+      - https://nobullnetworks.com/products/epyc-vps/
+
+  - canonical_name: TakeHost
+    confidence: A
+    resource_classes: [performance_vds, regional_vps]
+    verified_regions: [Frankfurt]
+    offers:
+      - plan: Germany_VPS_8GB
+        currency: EUR
+        monthly_base: 20
+        dedicated_cpu_cores: 4
+        cpu_frequency_ghz: 5.7
+        memory_gb: 8
+        local_storage_gb: 200
+        storage_type: nvme
+        network_port_gbps: 20
+        guaranteed_bandwidth_gbps: 3
+        ipv6_prefix: /48
+        ipv4_included: unknown
+        virtualization: kvm
+      - plan: Germany_VPS_16GB
+        currency: EUR
+        monthly_base: 40
+        dedicated_cpu_cores: 6
+        memory_gb: 16
+        local_storage_gb: 350
+        storage_type: nvme
+        network_port_gbps: 20
+        guaranteed_bandwidth_gbps: 3
+        virtualization: kvm
+    availability:
+      advertised_percent: 99.99
+    contract:
+      setup_fee: 0
+      cancel_anytime: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Technical CPU/RAM/NVMe/KVM/network capacity is excellent, but the native EUR price requires normalized USD TCO and IPv4 inclusion was not pinned for the selected plan.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB tier is 40 EUR/month before any database add-ons, above the intended 30 USD class even before normalization; source data remains native currency.
+    sources:
+      - https://www.takehost.biz/virtual-servers
+
+  - canonical_name: Hexabyte
+    confidence: A
+    resource_classes: [api_driven_cloud, regional_public_cloud]
+    verified_regions: [Umea_Sweden]
+    offers:
+      - plan: e3_large
+        currency: EUR
+        monthly_cap: 7.69
+        hourly_billing: true
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: high_availability_nvme_triple_replication
+        monthly_outgoing_transfer_tb: 20
+        ipv4_included: 1
+        ipv6_included: 1
+        virtualization: qemu_openstack_exact_kvm_acceleration_unknown
+        public_port_mbps: unknown
+        stock_at_verification: out_of_stock
+      - plan: e3_xlarge
+        currency: EUR
+        monthly_cap: 13.65
+        hourly_billing: true
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 160
+        storage_type: high_availability_nvme_triple_replication
+        monthly_outgoing_transfer_tb: 20
+        ipv4_included: 1
+        ipv6_included: 1
+        stock_at_verification: out_of_stock
+    platform:
+      cpu_family: AMD_EPYC_7713
+      cloud_management: OpenStack
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - e3.large has excellent native-currency price, CPU/RAM/NVMe/transfer/IP capacity and hourly billing.
+          - Current cloud instances are explicitly out of stock.
+          - The official public page identifies OpenStack/QEMU usage but does not pin KVM acceleration or a selected-instance public port of >=1 Gbps, so those hard fields remain unknown; USD TCO also requires FX normalization.
+    sources:
+      - https://hexabyte.se/en/vps/?currency=eur
+      - https://hexabyte.se/en/vps/
+
+  - canonical_name: GS_Webservices
+    display_name: GS Webservices
+    confidence: A
+    resource_classes: [regional_vps, api_driven_cloud]
+    verified_regions: [Frankfurt, Nuremberg]
+    offers:
+      - plan: ng_Cloud_L
+        currency: EUR
+        monthly_base_vat_included: 13.03
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: nvme
+        monthly_transfer_tb: 25
+        fair_use: true
+        port_mbps: 1000
+        port_guaranteed: true
+        ipv4_included: 1
+        ipv6_prefix: /64
+        virtualization: kvm
+        setup_fee: 0
+    contract:
+      minimum_term_months: 1
+      notice_days: 14
+    operations:
+      api: true
+      ui: true
+      custom_iso: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - ng-Cloud L explicitly clears CPU/RAM/NVMe/25-TB-transfer/guaranteed-1-Gbps/IPv4/KVM/monthly-contract dimensions.
+          - The only remaining reusable hard decision is timestamped EUR-to-USD TCO normalization against the 15 USD budget ceiling.
+        verification_priority: very_high
+    sources:
+      - https://gsweb.services/en/server/cloud-server-offers-vps-gs-webservices/
+      - https://gsweb.services/en/agb/

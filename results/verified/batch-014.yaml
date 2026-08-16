@@ -1,0 +1,384 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch expands global low-cost and configurable VPS/VDS coverage after the first 100+ verified providers.
+  - Annualized prepaid pricing is kept separate from ordinary month-to-month pricing.
+  - Physical-core/thread counts are not silently converted into vCPU counts for hard-filter purposes.
+  - Dynamic configurators remain unknown where an exact 8 GB resource/price snapshot is not exposed by the public page.
+
+providers:
+  - canonical_name: CloudCone
+    confidence: A
+    resource_classes: [bargain_vps]
+    verified_regions: [Missouri_US]
+    offers:
+      - plan: SSD_VPS_5
+        currency: USD
+        annual_total: 57.59
+        displayed_annualized_monthly: 4.79
+        billing_term: annual_prepaid
+        vcpu: 8
+        memory_gb: 8
+        local_storage_gb: 111
+        storage_type: ssd_raid10
+        monthly_transfer_tb: 5
+        port_mbps: 1000
+        ipv4_included: 1
+        ipv6_included: 3
+        virtualization: kvm
+      - plan: SSD_VPS_6
+        currency: USD
+        annual_total: 125.69
+        displayed_annualized_monthly: 10.47
+        billing_term: annual_prepaid
+        vcpu: 10
+        memory_gb: 16
+        local_storage_gb: 223
+        storage_type: ssd_raid10
+        monthly_transfer_tb: 6
+        port_mbps: 1000
+        ipv4_included: 1
+        ipv6_included: 3
+        virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - SSD VPS 5 clears the technical CPU/RAM/storage/transfer/port/IPv4/KVM floors.
+          - The verified product is billed annually in advance; the reusable profile does not currently declare annual prepayment acceptable, so the displayed annualized monthly value is not treated as an ordinary monthly pass.
+      database-node:
+        status: fail
+        notes:
+          - The verified 16 GB tier uses SSD rather than the database profile's required NVMe storage type.
+    sources:
+      - https://cloudcone.com/vps/
+
+  - canonical_name: BandwagonHost
+    confidence: A
+    resource_classes: [regional_vps, network_focused_vps]
+    offers:
+      - plan: 160G_KVM_PROMO
+        currency: USD
+        monthly_base: 39.99
+        vcpu: 5
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: ssd_raid10
+        monthly_transfer_tb: 4
+        port_mbps: 1000
+        ipv4_included: true
+        ipv6_prefix: /64
+        virtualization: kvm
+        snapshots_included: true
+        automatic_backups_included: true
+        secondary_private_network_interface: true
+        sla_percent: 99.95
+      - plan: 320G_KVM_PROMO
+        currency: USD
+        monthly_base: 79.99
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: ssd_raid10
+        monthly_transfer_tb: 5
+        port_mbps: 1000
+        ipv4_included: true
+        ipv6_prefix: /64
+        virtualization: kvm
+        snapshots_included: true
+        automatic_backups_included: true
+        secondary_private_network_interface: true
+        sla_percent: 99.95
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified ordinary 8 GB monthly tier costs 39.99 USD, above the 15 USD ceiling.
+      database-node:
+        status: fail
+        notes:
+          - The verified 16 GB tier costs 79.99 USD and uses SSD rather than required NVMe.
+    sources:
+      - https://bandwagonhost.com/cart.php
+
+  - canonical_name: GigsGigsCloud
+    confidence: A
+    resource_classes: [regional_vps, asia_network_vps]
+    verified_regions: [Singapore, Japan]
+    offers:
+      - plan: SG_CNStandard_K05
+        currency: USD
+        monthly_base: 98.80
+        vcpu: 6
+        memory_gb: 8
+        local_storage_gb: 120
+        storage_type: ssd
+        monthly_transfer_tb: 6
+        port_peak_mbps: 10000
+        ipv4_included: 1
+        vm_snapshots_included: 5
+        virtualization: kvm
+      - plan: TYO_CNStandard_K05
+        currency: USD
+        monthly_base: 98.80
+        vcpu: 6
+        memory_gb: 8
+        local_storage_gb: 120
+        storage_type: ssd
+        monthly_transfer_tb: 6
+        port_peak_mbps: 10000
+        virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified Singapore and Japan 8 GB KVM tiers cost 98.80 USD/month, far above the reusable budget.
+    sources:
+      - https://www.gigsgigscloud.com/cloud-server/singapore-cloud-vps-kvm/
+      - https://www.gigsgigscloud.com/cloud-server/japan-cloud-vps-kvm/
+      - https://clientarea.gigsgigscloud.com/cart/sg--standard-route/
+
+  - canonical_name: Crunchbits
+    confidence: A
+    resource_classes: [performance_vds, configurable_vps]
+    verified_regions: [Valley_Forge_PA, Spokane_WA]
+    offers:
+      - plan: Xeon_6146_VDS_8GB
+        currency: USD
+        monthly_base: 8
+        dedicated_physical_cores: 1
+        cpu_threads: 2
+        cpu_family: Intel_Xeon_Gold_6146
+        memory_gb: 8
+        local_storage_gb: 150
+        storage_type: nvme
+        monthly_transfer_tb: 20
+        port_mbps: 2500
+        ipv4_included: true
+        ipv6_prefix: /64
+        backup_slots: 1
+    platform:
+      general_vps_virtualization: kvm
+      exact_xeon_6146_vds_hypervisor: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Price, memory, NVMe, transfer, port and IP requirements are strong.
+          - The plan exposes one dedicated physical core with two threads rather than an explicit two-vCPU value; thread count is not silently substituted for the profile's min_vcpu requirement.
+          - The exact hypervisor of the Xeon 6146 VDS product is not explicitly pinned by the verified VDS page, even though Crunchbits' general VPS platform is KVM.
+    sources:
+      - https://www.crunchbits.com/vds/xeon-6146
+      - https://www.crunchbits.com/vps
+
+  - canonical_name: RamNode
+    confidence: A
+    resource_classes: [api_driven_cloud, performance_vps, performance_vds]
+    offers:
+      - plan: Standard_VPS_8GB
+        currency: USD
+        monthly_base: 40
+        hourly: 0.060
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 180
+        storage_type: ssd
+        monthly_transfer_tb: 12
+        ipv4_included: true
+      - plan: Premium_VPS_8GB
+        currency: USD
+        monthly_base: 48
+        hourly: 0.071
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 200
+        storage_type: nvme
+        monthly_transfer_tb: 14
+        ipv4_included: true
+      - plan: VDS_16GB
+        currency: USD
+        monthly_base: 90
+        hourly: 0.134
+        dedicated_cores: 4
+        memory_gb: 16
+        local_storage_gb: 400
+        storage_type: nvme
+        monthly_transfer_tb: 20
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The lowest verified 8 GB tier costs 40 USD/month.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB four-dedicated-core VDS costs 90 USD/month before any other required services.
+    sources:
+      - https://ramnode.com/pricing/
+      - https://ramnode.com/products/cloud-vps/
+
+  - canonical_name: OneProvider
+    confidence: A
+    resource_classes: [api_driven_cloud, high_performance_instance]
+    verified_regions: [Tokyo, multiple_global_regions]
+    offers:
+      - plan: High_Performance_8GB
+        currency: USD
+        approximate_monthly: 22
+        hourly: 0.0306
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 125
+        storage_type: nvme
+        port_mbps: 1000
+      - plan: High_Performance_16GB
+        currency: USD
+        approximate_monthly: 40
+        hourly: 0.0556
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 250
+        storage_type: nvme
+        port_mbps: 1000
+    platform:
+      virtualization: kvm
+      hourly_billing: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB high-performance instance is approximately 22 USD/month, above the 15 USD ceiling.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB high-performance instance is approximately 40 USD/month before database-specific add-ons.
+    sources:
+      - https://oneprovider.com/en/onecloud/pricing?language=en
+      - https://oneprovider.com/en/onecloud/ssd-virtual-servers?language=en
+      - https://oneprovider.com/en/dedicated-servers/tokyo-japan
+
+  - canonical_name: Cloudzy
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Singapore, Sydney, multiple_global_regions]
+    offers:
+      - plan: 8GB_DDR5
+        currency: USD
+        promotional_monthly: 26.475
+        regular_monthly: 52.95
+        promotion_percent: 50
+        vcpu: 4
+        cpu_family: AMD_EPYC
+        memory_gb: 8
+        local_storage_gb: 240
+        storage_type: nvme
+        monthly_transfer_tb: 7
+        port_gbps: 40
+        dedicated_ipv4: true
+        ipv6: true
+        virtualization: kvm
+    contract:
+      hourly_monthly_yearly: true
+      egress_fee: 0
+      no_contract: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - Even the current 50-percent promotional 8 GB price is 26.475 USD/month, above the 15 USD ceiling.
+    sources:
+      - https://cloudzy.com/ja/proxmox-cloud-server/
+
+  - canonical_name: QuantVPS
+    confidence: A
+    resource_classes: [managed_vps, ai_vps]
+    verified_regions: [New_York]
+    offers:
+      - plan: VPS_Lite
+        currency: USD
+        monthly_base: 59.99
+        vcpu: 4
+        cpu_family: AMD_EPYC
+        memory_gb: 8
+        local_storage_gb: 75
+        storage_type: nvme
+        network: 1Gbps_plus_with_10Gbps_burst
+        transfer: unmetered
+        dedicated_ip: true
+        automatic_backups: true
+    contract:
+      cancel_anytime: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - VPS Lite costs 59.99 USD/month, above the reusable 15 USD budget.
+    sources:
+      - https://www.quantvps.com/ai/codex-vps
+
+  - canonical_name: VPSServer
+    confidence: A
+    resource_classes: [api_driven_cloud, configurable_vps]
+    verified_regions: [Tokyo, Singapore, multiple_global_regions]
+    pricing:
+      starter_monthly_from_usd: 4
+      starter_hourly_from_usd: 0.005
+      exact_8gb_configuration_price: unknown_dynamic_calculator
+      hourly_servers_billed_per_minute: true
+    platform:
+      virtualization: kvm
+      storage_type: nvme
+    network:
+      included_transfer_range_tb: [1, 5]
+      public_ip_included: 1
+      additional_transfer_usd_per_gb: 0.01
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - KVM, NVMe, public IP, configurable resources, hourly/per-minute billing and global locations are verified.
+          - The public calculator does not expose a stable exact 8 GB / >=2 vCPU / >=60 GB / >=2 TB configuration price and port speed in the parsed page, so the budget/network hard filters remain unresolved.
+    sources:
+      - https://www.vpsserver.com/kvm-vps/
+      - https://www.vpsserver.com/plans/
+      - https://www.vpsserver.com/vps-tokyo/
+
+  - canonical_name: Hostwinds
+    confidence: A
+    resource_classes: [managed_vps, unmanaged_vps]
+    offers:
+      - plan: Unmanaged_Linux_8GB
+        currency: USD
+        monthly_base: 38.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 150
+        storage_type: ssd
+        monthly_transfer_tb: 3
+      - plan: Unmanaged_Linux_16GB
+        currency: USD
+        monthly_base: 76.99
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 300
+        storage_type: ssd
+        monthly_transfer_tb: 5
+    network:
+      vps_port_mbps: 1000
+    operations:
+      snapshots_available: true
+      nightly_backups_available: true
+      api_available: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified unmanaged 8 GB tier costs 38.99 USD/month.
+      database-node:
+        status: fail
+        notes:
+          - The verified 16 GB tier costs 76.99 USD/month and uses SSD rather than required NVMe.
+    sources:
+      - https://www.hostwinds.com/vps/unmanaged-linux
+      - https://www.hostwinds.com/vps/linux

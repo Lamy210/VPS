@@ -1,0 +1,122 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+purpose: targeted_followup_for_existing_provider_records
+notes:
+  - Entries here do not increment the unique provider verification count.
+  - Follow-ups exist to resolve hard-filter unknowns from earlier batches.
+
+providers:
+  - canonical_name: Onidel
+    original_source_batch: results/verified/batch-002.yaml
+    followup_status: unresolved
+    newly_reconfirmed:
+      premium_storage: triple_replicated_nvme
+      automatic_failover: true
+      sla_percent: 99.9
+      private_network: true
+      private_network_bandwidth_charges: none
+      rest_api: true
+      manual_snapshots: true
+      automated_backups: true
+      backup_retained_copies: 2
+      backup_storage_usd_per_gb_month: 0.1
+      bgp: true
+      floating_ip: true
+    still_unresolved:
+      - current_premium_plan_table_numeric_prices
+      - current_16gb_plan_availability_and_price
+      - kvm_virtualization_explicitly_stated_on_current_product_page
+    notes:
+      - The official pricing widget returned `Unable to load plans` during this verification.
+      - Do not infer a 16 GB Premium VPS from older discovery data until the current plan table can be captured.
+    sources:
+      - https://onidel.com/services/premium-vps?location=Singapore
+
+  - canonical_name: KVMVPS.co.za
+    original_source_batch: results/verified/batch-006.yaml
+    followup_status: unresolved
+    newly_reconfirmed:
+      professional_monthly_zar: 399
+      professional_dedicated_vcpu: 4
+      professional_memory_gb: 8
+      professional_nvme_gb: 120
+      traffic: unlimited
+      ipv4_ipv6: true
+      snapshots: included
+      backups: included
+      virtualization: kvm
+      custom_max_vcpu: 32
+      custom_max_memory_gb: 128
+      datacenters: [Cape_Town, Johannesburg]
+    still_unresolved:
+      - exact_16gb_custom_price
+      - private_network
+      - public_port_speed
+      - explicit_sla_percentage_on_current_page
+    notes:
+      - This remains a strong database follow-up candidate only after the missing network/SLA/custom-price facts are confirmed.
+    sources:
+      - https://kvmvps.co.za/
+
+  - canonical_name: Cherry_Servers
+    original_source_batch: results/verified/batch-004.yaml
+    followup_status: database_budget_fail_for_verified_tokyo_vds
+    verified_offer:
+      plan: CLOUD_VDS_2_GEN_2
+      region: Tokyo
+      stock: in_stock
+      currency: USD
+      hourly: 0.118
+      monthly: 69.03
+      annual: 828.36
+      displayed_discounted_annual: 704.11
+      vcpu: 4
+      physical_cores: 2
+      cpu_family: AMD_EPYC_9354P_or_similar
+      memory_gb: 16
+      local_storage_gb: 100
+      storage_type: nvme
+      port_mbps: 1000
+      monthly_egress_tb: 3
+      ingress: unmetered
+      resource_allocation: dedicated
+    assessment:
+      database-node: fail
+      reason: verified_monthly_price_exceeds_30_usd_budget
+    sources:
+      - https://www.cherryservers.com/pricing/virtual-servers/g2-4-16gb-100nv-ded
+
+  - canonical_name: IONOS
+    original_source_batch: results/verified/batch-004.yaml
+    followup_status: unresolved_standard_compute_network_fields
+    pricing_reconfirmed:
+      memory_cube_s:
+        vcpu: 2
+        memory_gb: 8
+        direct_attached_nvme_gb: 120
+        hourly_usd: 0.019
+        thirty_day_usd: 13.68
+      memory_cube_m:
+        vcpu: 4
+        memory_gb: 16
+        direct_attached_nvme_gb: 240
+        hourly_usd: 0.035
+        thirty_day_usd: 25.20
+    platform:
+      direct_attached_nvme: true
+      billing: pay_as_you_go_down_to_minute
+      suspended_cube_continues_billing: true
+    still_unresolved:
+      - included_or_billable_public_transfer_quantity_for_cube
+      - public_port_speed_for_cube
+      - kvm_virtualization_requirement
+    assessment:
+      standard-compute: unknown
+      database-node: unknown
+    notes:
+      - Memory Cube S remains numerically attractive for the 15 USD compute budget, but no pass is allowed until transfer, port, and virtualization hard fields are resolved.
+    sources:
+      - https://cloud.ionos.com/prices
+      - https://cloud.ionos.com/compute/cloud-cubes
+      - https://docs.ionos.com/cloud/compute-services/cubes/overview

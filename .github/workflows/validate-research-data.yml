@@ -1,0 +1,47 @@
+name: Validate research data
+
+on:
+  pull_request:
+    paths:
+      - "data/**"
+      - "requirements/**"
+      - "results/**"
+      - "scripts/validate_research_data.py"
+      - "scripts/check_derived_counts.py"
+      - ".github/workflows/validate-research-data.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "data/**"
+      - "requirements/**"
+      - "results/**"
+      - "scripts/validate_research_data.py"
+      - "scripts/check_derived_counts.py"
+      - ".github/workflows/validate-research-data.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Install validator dependency
+        run: python -m pip install --disable-pip-version-check "PyYAML==6.0.2"
+
+      - name: Validate research data
+        run: python scripts/validate_research_data.py
+
+      - name: Validate derived counts
+        run: python scripts/check_derived_counts.py

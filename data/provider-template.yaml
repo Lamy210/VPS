@@ -1,0 +1,38 @@
+canonical_name: null
+status: discovered
+confidence: D
+
+identity:
+  brand_names: []
+  parent_company: null
+  official_domain: null
+  headquarters_country: null
+  asns: []
+
+services:
+  resource_types: []
+  # examples: vps, vds, cloud_vm, bare_metal, managed_kubernetes,
+  # managed_database, managed_cache, object_storage, serverless_container
+
+regions: []
+
+discovery:
+  source_groups: []
+  discovered_at: null
+  notes: []
+
+verification:
+  official_site_found: false
+  public_compute_confirmed: false
+  current_pricing_confirmed: false
+  network_features_confirmed: false
+  automation_features_confirmed: false
+  last_verified_at: null
+
+relationships:
+  aliases: []
+  sibling_brands: []
+  reseller_of: null
+  acquired_by: null
+
+sources: []

@@ -1,0 +1,104 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+purpose: targeted_followup
+notes:
+  - Existing providers only; this file does not increase the unique-provider count.
+  - Absence of a feature from public documentation is stored as unresolved, not false.
+
+providers:
+  - canonical_name: Advin_Servers
+    source_batch: results/verified/batch-009.yaml
+    target_profile: standard-compute
+    resolved:
+      selected_plan: KVM_Premium_S_Miami
+      ordinary_monthly_usd: 10
+      vcpu: 4
+      memory_gb: 8
+      local_storage_gb: 128
+      storage_type: nvme
+      monthly_transfer_tb: 5
+      port_gbps: 10
+      virtualization: kvm
+      primary_ipv4_present: true
+      monthly_billing: true
+      no_contract: true
+    evidence_notes:
+      - The current Premium S product is a normal 10 USD/month tier, avoiding reliance on the separate Standard XS promotional price.
+      - Advin's Cloud page identifies the VPS platform as KVM and monthly billed with no contract.
+      - The VPS IPv4 add-on page states that an additional address is added while the existing/primary IPv4 is retained, establishing a primary IPv4 on the VPS service.
+    strict_effect:
+      standard-compute: clear_pass_candidate
+    sources:
+      - https://clients.advinservers.com/store/miami-kvm-premium-vps
+      - https://advinservers.com/vps/epyc-genoa
+      - https://advinservers.com/cloud
+      - https://clients.advinservers.com/store/addons
+
+  - canonical_name: VPSnet
+    source_batch: results/verified/batch-005.yaml
+    target_profile: database-node
+    resolved:
+      kvm: true
+      selected_plan: KVM_3
+      vcpu: 4
+      memory_gb: 16
+      nvme_gb: 100
+      replicated_ceph_nvme: true
+      transfer_tb: 30
+      public_port_gbps: 1
+      daily_backups: true
+      snapshots: true
+      backup_remote_separate_server: true
+      backup_retention_days: 7
+      sla_percent: 99.95
+    unresolved:
+      - customer_private_network
+      - normalized_usd_tco
+    public_documentation_search_note:
+      - Current Cloud VPS, VPS, control-panel, infrastructure, and help pages expose HA, backup, snapshots, API/server management, and public networking but do not establish a customer-configurable private network for the Cloud VPS product.
+      - This remains unknown rather than being recorded as unavailable.
+    sources:
+      - https://www.vpsnet.com/en/services/vds
+      - https://www.vpsnet.com/en/advantages/control-panel
+      - https://www.vpsnet.com/en/help/live-help
+
+  - canonical_name: VSYS_Host
+    source_batch: results/verified/batch-002.yaml
+    target_profile: database-node
+    unresolved:
+      - customer_configurable_private_network_for_standard_singapore_vps
+    public_documentation_search_note:
+      - VSYS documents private networks/VLAN/vRack for private-cloud and dedicated/high-bandwidth server products.
+      - These documents do not establish that the ordinary Singapore VPS product can join a customer-configurable private network, so the hard field remains unresolved.
+    sources:
+      - https://vsys.host/vps-singapore
+      - https://vsys.host/private-cloud
+      - https://vsys.host/20gbps-servers
+
+  - canonical_name: ServaRica
+    source_batch: results/verified/batch-003.yaml
+    target_profile: database-node
+    resolved:
+      selected_plan: KVM_Slim_Slice_4
+      ordinary_monthly_usd: 12
+      dedicated_cpu: 4
+      memory_gb: 16
+      nvme_gb: 500
+      transfer_tb_at_10gbps: 16
+      ipv4_included: true
+      kvm: true
+      sla_percent_at_least: 99.9
+    unresolved:
+      - customer_private_network
+      - snapshots
+      - independent_backups_for_selected_kvm_plan
+    public_documentation_search_note:
+      - Current KVM plan and cart pages clearly establish capacity, KVM, IPv4, and network limits.
+      - The public home page describes daily-backup add-ons generally, but current evidence does not establish both snapshot and independent-backup products for the selected KVM plan.
+      - No customer private-network feature for the selected KVM VPS was established by the current official-site search.
+    sources:
+      - https://servarica.com/slim-kvm-plans/
+      - https://servarica.com/all-offers/
+      - https://servarica.com/
+      - https://clients.servarica.com/store/v3-kvm-slices

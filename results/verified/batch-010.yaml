@@ -1,0 +1,483 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch focuses on local and regional providers in Taiwan, Vietnam, Indonesia, the Philippines, and Malaysia.
+  - Native-currency prices remain native until an explicit FX/TCO policy is applied.
+  - Marketing location and actual datacenter location remain separate when the official page is ambiguous.
+  - "`Up to` bandwidth is not silently treated as a guaranteed port floor."
+
+providers:
+  - canonical_name: FormoHost
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Taipei]
+    offers:
+      - plan: Taiwan_VPS_4
+        currency: USD
+        monthly_base: 75
+        service_fee_percent: 10
+        vcpu: 4
+        memory_gb: 6
+        local_storage_gb: 60
+        storage_type: nvme
+        monthly_transfer_tb: 1
+        port_mbps: 100
+        ipv4_included: true
+    platform:
+      virtualization: kvm
+    contract:
+      longer_cycles_discount_available: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The largest currently listed Taiwan plan has only 6 GB RAM, 1 TB transfer, and a 100 Mbps port; all are below the reusable hard floors.
+    sources:
+      - https://www.formohost.com/taiwan-vps/
+      - https://www.formohost.com/clients/index.php?rp=/store/vps-asia-taiwan
+
+  - canonical_name: FussionHost
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Manila]
+    offers:
+      - plan: Philippines_VPS_8
+        currency: USD
+        monthly_base: 39.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 50
+        storage_type: nvme
+        monthly_transfer_tb: 1
+        port_mbps: 100
+        ipv4_included: true
+      - plan: Philippines_VPS_16
+        currency: USD
+        monthly_base: 69.99
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 50
+        storage_type: nvme
+        monthly_transfer_tb: 1
+        port_mbps: 100
+        ipv4_included: true
+    platform:
+      virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB plan fails price, storage, transfer, and port hard requirements.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB plan is above budget and below storage/port floors.
+    sources:
+      - https://fussionhost.com/philippines-vps/
+
+  - canonical_name: ServerUtama
+    confidence: B
+    resource_classes: [regional_vps, managed_vps]
+    marketed_region: Indonesia
+    infrastructure_location_note: official_homepage_references_equinix_frankfurt_tier_iii
+    offers:
+      - plan: VPS_8GB
+        currency: IDR
+        monthly_base: 100000
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 50
+        storage_type: ssd_unspecified
+        monthly_transfer_tb: 10
+        ipv4_included: true
+      - plan: VPS_12GB
+        currency: IDR
+        monthly_base: 130000
+        vcpu: 4
+        memory_gb: 12
+        local_storage_gb: 100
+        storage_type: ssd_unspecified
+        monthly_transfer_tb: 15
+        ipv4_included: true
+      - plan: VPS_16GB
+        currency: IDR
+        monthly_base: 180000
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 150
+        storage_type: ssd_unspecified
+        monthly_transfer_tb: 20
+        ipv4_included: true
+    platform:
+      virtualization: kvm
+    operations:
+      automatic_backup_rotations: 4
+      instant_activation_claim_minutes: 5
+    availability:
+      sla_percent: 99.9
+    network:
+      public_port_mbps: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The 8 GB tier fails the 60 GB storage floor.
+          - The 12 GB tier clears CPU/RAM/storage/transfer/KVM/IPv4 capacity floors, but public port speed, exact datacenter geography, and normalized USD TCO remain unresolved.
+      database-node:
+        status: fail
+        notes:
+          - Storage is not explicitly NVMe, so the verified 16 GB tier does not satisfy the database profile's NVMe-only storage requirement.
+    sources:
+      - https://serverutama.com/layanan
+      - https://member.serverutama.com/index.php?rp=/store/vps
+      - https://www.serverutama.com/
+
+  - canonical_name: Herza_Cloud
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Manila]
+    datacenter: STT_Mekati
+    offers:
+      - plan: KVM_PH_4
+        currency: USD
+        monthly_base: 20.50
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: ssd
+        monthly_transfer_tb: 3
+        port_mbps: 10000
+        port_shared: true
+        ipv4_included: true
+      - plan: KVM_PH_6
+        currency: USD
+        monthly_base: 49
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 150
+        storage_type: ssd
+        monthly_transfer_tb: 5
+        port_mbps: 10000
+        port_shared: true
+        ipv4_included: true
+    platform:
+      virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB plan exceeds the 15 USD budget despite strong transfer and shared 10 Gbps connectivity.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB plan exceeds the 30 USD budget and storage is not explicitly NVMe in the checkout specification.
+    sources:
+      - https://herza.cloud/vps-phillipines/
+      - https://clients.herza.cloud/index.php?rp=/store/vps-manila
+
+  - canonical_name: GOFIBER
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Vietnam]
+    offers:
+      - plan: Cloud_VN_4
+        currency: VND
+        monthly_base: 490000
+        vat_excluded_percent: 10
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 90
+        storage_type: nvme
+        port_mbps: 200
+      - plan: Cloud_VN_5
+        currency: VND
+        monthly_base: 990000
+        vat_excluded_percent: 10
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 150
+        storage_type: nvme
+        port_mbps: 200
+    platform:
+      virtualization: kvm
+    availability:
+      uptime_claim_percent: 99.9
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB plan exposes a 200 Mbps port, below the 1 Gbps hard network floor.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB plan also exposes only 200 Mbps, below the database profile's 1 Gbps floor.
+    sources:
+      - https://gofiber.vn/thue-vps
+      - https://gofiber.com.vn/thue-vps
+
+  - canonical_name: Kencang
+    confidence: B
+    resource_classes: [regional_vps]
+    verified_regions: [Indonesia]
+    offers:
+      - plan: K_4
+        currency: IDR
+        monthly_base: 149900
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: ssd
+        transfer: unlimited
+        port_mbps: 1000
+        port_wording: up_to
+      - plan: K_5
+        currency: IDR
+        monthly_base: 299000
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 200
+        storage_type: ssd
+        transfer: unlimited
+        port_mbps: 1000
+        port_wording: up_to
+    platform:
+      virtualization: kvm
+    network:
+      ipv4_included: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - K-4 clears CPU/RAM/storage capacity and advertises up to 1 Gbps with unlimited bandwidth, but IPv4 inclusion, guaranteed port floor, and normalized USD TCO remain unresolved.
+      database-node:
+        status: fail
+        notes:
+          - Storage is SSD rather than explicitly NVMe, so K-5 fails the strict NVMe-only database requirement.
+    sources:
+      - https://kencang.com/vps-iix-murah
+
+  - canonical_name: CloudXact
+    confidence: A
+    resource_classes: [api_driven_cloud, regional_vps]
+    verified_regions: [global_nodes_including_asia]
+    offers:
+      - plan: KVM_2
+        currency: TWD
+        monthly_base: 590
+        setup_fee: 199
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme
+        monthly_transfer_tb: 8
+        ipv4_included: true
+        ipv6_included: true
+        listed_symmetric_speed_text: 300_MB
+      - plan: KVM_4
+        currency: TWD
+        monthly_base: 990
+        setup_fee: 199
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 200
+        storage_type: nvme
+        monthly_transfer_tb: 16
+        ipv4_included: true
+        ipv6_included: true
+        listed_symmetric_speed_text: 300_MB
+    platform:
+      virtualization: kvm
+      cpu_family: AMD_EPYC
+    operations:
+      public_api: true
+      weekly_backup_included: true
+    network:
+      feature_section_claims_gbps: 1
+      exact_plan_port_mbps: unknown_due_page_wording_inconsistency
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - KVM-2 clears CPU/RAM/NVMe/transfer/IPv4 capacity floors, but the plan speed text conflicts with a generic 1 Gbps feature claim and native-currency TCO/setup fee must be normalized.
+      database-node:
+        status: unknown
+        notes:
+          - KVM-4 reaches CPU/RAM/NVMe/transfer capacity and includes weekly backup, but private networking, snapshots, SLA, exact port speed, and normalized TCO remain unresolved.
+    sources:
+      - https://cloudxactcp.com/store/vps-hosting
+
+  - canonical_name: Rumahweb
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Indonesia]
+    availability_zones: [TechnoVillage, DCI]
+    offers:
+      - plan: XL
+        currency: IDR
+        monthly_base: 500000
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: ssd
+        transfer: unlimited
+      - plan: X2L
+        currency: IDR
+        monthly_base: 937500
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 300
+        storage_type: ssd
+        transfer: unlimited
+    platform:
+      virtualization: kvm
+      isolated_resources_claimed: true
+      availability_zone_count: 2
+    availability:
+      sla_percent: 99.9
+    network:
+      public_port_mbps: unknown
+      ipv4_included: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - XL clears CPU/RAM/storage/KVM capacity floors, but port speed, IPv4 inclusion, and normalized USD TCO remain unresolved.
+      database-node:
+        status: fail
+        notes:
+          - The verified X2L storage is SSD rather than explicitly NVMe, so it does not satisfy the strict database storage requirement.
+    sources:
+      - https://www.rumahweb.com/vps-murah/
+
+  - canonical_name: H2Cloud
+    confidence: A
+    resource_classes: [bargain_vps, regional_vps]
+    verified_regions: [Vietnam]
+    offers:
+      - plan: High_Speed_4_8_80
+        currency: VND
+        monthly_base: 220000
+        vcpu: 4
+        cpu_family: Intel_Xeon_Platinum_8171M
+        memory_gb: 8
+        memory_type: DDR4_ECC
+        local_storage_gb: 80
+        storage_type: nvme
+        monthly_transfer_tb: 1
+        port_mbps: 10000
+        direct_peering: [FPT, Viettel]
+        stock_at_verification: 0
+      - plan: High_Speed_4_8_80_annual_sale
+        currency: VND
+        annual_total: 980000
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        monthly_transfer_tb: 1
+        port_mbps: 10000
+        stock_at_verification: 0
+    platform:
+      virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The observed 8 GB high-speed plan has only 1 TB monthly transfer, below the 2 TB hard floor, and was out of stock at verification.
+    sources:
+      - https://kvm.h2cloud.vn/store/vps-amd-viet-nam
+      - https://kvm.h2cloud.vn/store/nvme-cloud-server-vn
+
+  - canonical_name: Onie_Cloud
+    confidence: A
+    resource_classes: [api_driven_cloud, regional_public_cloud, object_storage]
+    verified_regions: [Vietnam, United_States]
+    offers:
+      - plan: VM_4_8
+        currency: VND
+        displayed_promotional_monthly: 288000
+        promotion_page_discount_label: 40_percent_monthly
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 150
+        storage_type: nvme
+        monthly_transfer_tb: 7
+        port_mbps: 10000
+        object_storage_included_gb: 50
+    network:
+      vpc: true
+      ipv4_included: true
+      ipv6_included: true
+      load_balancing: true
+    operations:
+      hourly_billing: true
+      monthly_billing: true
+      rest_api: true
+      cli: true
+      python_sdk: true
+      autoscaling: true
+      snapshots: true
+      automated_backups: true
+      deploy_under_seconds_claimed: 60
+    availability:
+      sla_percent: 99.9
+    platform:
+      virtualization: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - VM 4-8 clears CPU/RAM/NVMe/transfer/port/IPv4 capacity floors and exposes strong automation/networking features.
+          - KVM virtualization, normalized USD TCO, and promotional-price persistence remain unresolved hard fields.
+      kubernetes-worker:
+        status: unknown
+        notes:
+          - VPC, API/CLI/SDK, hourly billing, autoscaling, load balancing, and 10 Gbps networking are promising self-managed-cluster primitives; Terraform/OpenTofu and cloud-init remain unverified.
+    sources:
+      - https://onie.net/cloud-server
+      - https://onie.net/
+      - https://xinchao.onie.net/
+
+  - canonical_name: ModernOne
+    aliases: [Nocser]
+    confidence: A
+    resource_classes: [regional_vps, regional_cloud]
+    verified_regions: [Malaysia]
+    offers:
+      - plan: CLOUD_4P
+        currency: USD
+        monthly_base: 75
+        vcpu: 4
+        cpu_allocation: dedicated_claimed
+        memory_gb: 8
+        local_storage_gb: 100
+        storage_type: nvme
+        port_mbps: 50
+        transfer: unlimited
+        ipv4_included: true
+      - plan: CLOUD_8P
+        currency: USD
+        monthly_base: 120
+        vcpu: 8
+        cpu_allocation: dedicated_claimed
+        memory_gb: 16
+        local_storage_gb: 100
+        storage_type: nvme
+        port_mbps: 50
+        transfer: unlimited
+        ipv4_included: true
+    availability:
+      sla_percent: 99.9
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB cloud-server tier is far above budget and exposes only a 50 Mbps port.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB tier is far above budget and exposes only a 50 Mbps port despite dedicated-resource claims.
+    sources:
+      - https://www.nocser.net/cloud-server/
+      - https://www.nocser.net/vps/

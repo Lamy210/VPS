@@ -1,0 +1,279 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch converts IX/PeeringDB/ecosystem discovery leads into official-site provider records.
+  - Providers are not recommendations merely because they appear here.
+  - Native currency remains unconverted until the repository FX/TCO policy is applied.
+
+providers:
+  - canonical_name: AFRICLOUD
+    confidence: A
+    resource_classes: [regional_public_cloud, api_driven_cloud]
+    verified_regions: [Lisbon, Johannesburg, Lagos]
+    offers:
+      - plan: VM6
+        currency: USD
+        regular_monthly: 180
+        promotional_monthly: 90
+        recurring_promo_claimed: true
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 180
+        storage_type: nvme
+        port_gbps: 6
+        monthly_transfer_tb: 3
+        transfer_policy: soft_cap_then_8mbps
+      - plan: VM8
+        currency: USD
+        regular_monthly: 320
+        promotional_monthly: 160
+        recurring_promo_claimed: true
+        vcpu: 8
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: nvme
+        port_gbps: 8
+        monthly_transfer_tb: 4
+    network:
+      asn: AS209179
+      vpc: true
+      floating_ip: true
+      ipv6_included: true
+    operations:
+      rest_api: true
+      terraform_ready_claimed: true
+      automated_deployment: true
+    availability:
+      uptime_target_percent: 99.9
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified 8 GB tier is far above the reusable 15 USD monthly ceiling even under the recurring promotional price.
+      database-node:
+        status: fail
+        notes:
+          - The verified 16 GB tier exceeds the 30 USD database budget ceiling.
+    sources:
+      - https://africloud.com/
+      - https://africloud.com/about
+
+  - canonical_name: NoAck_Hosting
+    confidence: A
+    resource_classes: [regional_vps, network_focused_vps]
+    verified_regions: [Stockholm]
+    platform:
+      virtualization: kvm
+    network:
+      vps_bandwidth_up_to_mbps: 100
+      backbone_gbps: 200
+      asn: AS30893
+      bgp_services: true
+    operations:
+      daily_backups_included: true
+    availability:
+      uptime_guarantee_percent: 99
+    pricing:
+      starting_sek_month: 70
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The official VPS service is advertised with up to 100 Mbps bandwidth, below the reusable 1 Gbps hard floor.
+      database-node:
+        status: fail
+        notes:
+          - The provider's advertised 99% uptime guarantee is below the 99.9% database-node hard requirement.
+    sources:
+      - https://noackhosting.com/
+      - https://noackhosting.com/hosting/
+
+  - canonical_name: OrionVM
+    confidence: A
+    resource_classes: [wholesale_iaas, regional_public_cloud]
+    verified_regions: [Australia, United_States]
+    pricing:
+      public_fixed_price_table: false
+      pricing_model: wholesale_capacity_and_term_dependent
+    compute:
+      predefined_vm_sizes: false
+      configurable_cpu_memory_ratios: true
+      performance_tiers: [high_cpu, standard, high_memory]
+    storage:
+      classes: [ssd_min_30000_iops, standard_ssd, archival]
+    network:
+      customer_networks: true
+    operations:
+      open_api: true
+      white_label: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Public fixed 8 GB pricing is not available; OrionVM is a wholesale IaaS rather than a normal retail VPS comparison target.
+      database-node:
+        status: unknown
+        notes:
+          - Flexible high-memory shapes and SSD tiers are relevant, but retail price, backup, SLA and profile-specific networking must be evaluated by quote.
+    sources:
+      - https://www.orionvm.com/cloud-infrastructure/
+      - https://www.orionvm.com/wholesale-cloud-faqs/
+      - https://docs.orionvm.com/resources/performance-tiers/
+
+  - canonical_name: D4_Networks
+    confidence: A
+    resource_classes: [regional_vps, dedicated_server]
+    offers:
+      - plan: Enterprise_Cloud_VPS
+        currency: USD
+        monthly_base: 114.95
+        vcpu: 8
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        transfer: unmetered
+    platform:
+      virtualization: kvm
+    operations:
+      daily_backups_included: true
+      instant_deployment_under_seconds: 60
+    availability:
+      uptime_sla_percent: 99.99
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified 8 GB Cloud VPS exceeds the reusable 15 USD budget by a large margin.
+    sources:
+      - https://www.d4networks.com/
+
+  - canonical_name: FyfeWeb
+    confidence: A
+    resource_classes: [regional_vps, performance_vds]
+    verified_regions: [United_Kingdom]
+    offers:
+      - plan: 8GB_6C_VPS
+        currency: GBP
+        monthly_base: 16.99
+        vcpu: 6
+        memory_gb: 8
+        local_storage_gb: 92
+        storage_type: ssd_raid
+        port_mbps: 350
+        monthly_transfer_tb: 10
+        ipv4_included: true
+        virtualization: kvm
+      - plan: VM_London_8GB
+        currency: GBP
+        monthly_base: 14.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 72
+        storage_type: ssd
+        port_mbps: 2000
+        ipv4_included: true
+        ipv6_included: true
+        daily_backups: true
+        uptime_percent: 99.99
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The general 8 GB VPS fails the 1 Gbps network hard floor at 350 Mbps.
+          - The London 8 GB tier meets the technical capacity/network floor but requires normalized GBP-to-USD TCO and exact KVM verification for that specific London product before strict qualification.
+      database-node:
+        status: fail
+        notes:
+          - The ordinary 16 GB VPS has only a 550 Mbps port, below the database-node 1 Gbps hard floor.
+    sources:
+      - https://fyfeweb.com/vps-hosting
+      - https://portal.fyfeweb.com/store/virtual-private-servers
+      - https://fyfeweb.com/london-vps
+
+  - canonical_name: Free_Range_Cloud
+    confidence: A
+    resource_classes: [regional_vps, network_services]
+    offers:
+      - plan: Ranch
+        currency: USD
+        monthly_base: 21.99
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 120
+        storage_type: ssd
+        monthly_transfer_tb: 11
+        ipv4_included: true
+        ipv6_prefix: /64
+    platform:
+      kvm_used_for_standard_promotional_vps: true
+      vmware_used_for_some_vancouver_specialty_vps: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The current 8 GB Ranch tier exceeds the 15 USD reusable budget ceiling.
+    sources:
+      - https://freerangecloud.com/products.php
+      - https://legacy.freerangecloud.com/index.php?rp=/store/virtual-private-servers
+      - https://legacy.freerangecloud.com/index.php?rp=/store/promotions
+
+  - canonical_name: Netbela
+    confidence: B
+    resource_classes: [regional_vps, performance_vds, managed_vps]
+    verified_regions: [Netherlands]
+    pricing:
+      self_service_vps_starting_eur_month: 5.15
+      vds_starting_eur_month: 29.50
+      exact_self_service_8gb_price: unknown
+    managed_configurable_resources:
+      dedicated_cpu_eur_per_core_month: 3.50
+      ram_eur_per_gb_month: 2.00
+      storage_eur_per_100gb_month: 10.00
+    availability:
+      cloud_vps_vds_uptime_sla_percent: 99.9
+    backups:
+      cloud_vps_daily_backup_available_as_addon: true
+      managed_vps_offsite_backups: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Retail VPS starts cheaply, but the exact 8 GB self-service shape, port speed, IPv4, transfer and virtualization details require plan-level capture.
+      database-node:
+        status: unknown
+        notes:
+          - Dedicated-resource VDS and a 99.9% SLA are available, but exact 16 GB pricing/network/private-network/backup semantics need deeper verification.
+    sources:
+      - https://netbela.com/
+      - https://netbela.com/vds
+      - https://netbela.com/sla
+
+  - canonical_name: EstNOC
+    confidence: A
+    resource_classes: [multi_region_vps]
+    verified_regions: [Tokyo, Tallinn, multiple_global_regions]
+    japan:
+      datacenter: Equinix_TY8
+      asn: AS206804
+      virtualization: kvm
+      listed_top_plan:
+        plan: VPS_JP_XXL
+        currency: EUR
+        annual_term_effective_monthly: 50
+        memory_gb: 5
+        cpu_cores: 4
+        local_storage_gb: 60
+        storage_type: ssd
+        port_mbps: 1000
+        monthly_transfer_tb: 4
+        ipv4_included: true
+      contract_note: listed_prices_based_on_annual_payment
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The largest currently listed Japan base plan has only 5 GB RAM, below the 8 GB reusable floor; upgrades may exist but are not priced in the official table.
+    sources:
+      - https://www.estnoc.ee/vps/japan.html
+      - https://cp.estnoc.ee/

@@ -1,0 +1,342 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch focuses on API-driven public cloud and managed Kubernetes capabilities.
+  - Cloud products are not ranked directly against bargain VPS products on headline RAM price alone.
+  - Where a pricing page is dynamic or region-dependent, feature verification and price verification remain separate.
+
+providers:
+  - canonical_name: DigitalOcean
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes]
+    offers:
+      - plan: Basic_8GiB
+        currency: USD
+        monthly_cap: 48
+        per_second_billing: true
+        vcpu: 4
+        cpu_allocation: shared
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: ssd
+        monthly_transfer_gib: 5000
+      - plan: Basic_16GiB
+        currency: USD
+        monthly_cap: 96
+        per_second_billing: true
+        vcpu: 8
+        cpu_allocation: shared
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: ssd
+        monthly_transfer_gib: 6000
+    network:
+      vpc: true
+      vpc_monthly_fee: 0
+      same_datacenter_vpc_traffic_free: true
+      cross_datacenter_vpc_peering_usd_per_gib: 0.01
+      nat_gateway_usd_month: 40
+    managed_kubernetes:
+      service: DOKS
+      control_plane_usd_month: 0
+      ha_control_plane_usd_month: 40
+      node_pool_autoscaling: true
+      load_balancer_start_usd_month: 12
+      worker_billing: per_second
+    operations:
+      api: true
+      cli: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GiB Basic Droplet exceeds the 15 USD generic bargain-compute ceiling.
+      managed-kubernetes:
+        status: candidate
+        notes:
+          - Free managed control plane, native autoscaling, VPC integration, and per-second worker billing are strong matches; full TCO must add worker nodes, load balancer, volumes, and optional HA control plane.
+    sources:
+      - https://www.digitalocean.com/pricing/droplets
+      - https://docs.digitalocean.com/products/droplets/details/pricing/
+      - https://www.digitalocean.com/pricing/kubernetes
+      - https://docs.digitalocean.com/products/networking/vpc/details/pricing/
+
+  - canonical_name: Akamai_Cloud
+    aliases: [Linode, LKE]
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes, dedicated_compute]
+    regions:
+      asia_pacific: true
+    managed_kubernetes:
+      service: LKE
+      standard_control_plane_additional_cost_usd_month: 0
+      ha_control_plane_addon_usd_month: 60
+      enterprise_control_plane_usd_month: 300
+      node_pool_autoscaling: true
+      standard_lke_vpc_isolated_networking: false
+      enterprise_lke_vpc_isolated_networking: true
+      max_worker_nodes_standard: 250
+      max_worker_nodes_enterprise: 500
+    compute:
+      dedicated_cpu_available: true
+      current_generation_cpu: AMD_EPYC
+      regional_pricing_varies: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - Asia-Pacific dedicated compute pricing is far above the generic 15 USD bargain-compute ceiling.
+      managed-kubernetes:
+        status: unknown
+        notes:
+          - LKE provides native node-pool autoscaling and a no-additional-cost standard control plane.
+          - The reusable managed-Kubernetes profile currently requires private networking; standard LKE does not provide VPC-isolated networking, while LKE Enterprise does and costs 300 USD/month plus resources.
+    sources:
+      - https://www.akamai.com/cloud/pricing/asia-pacific
+      - https://techdocs.akamai.com/cloud-computing/docs/lke-enterprise
+
+  - canonical_name: Kamatera
+    confidence: B
+    resource_classes: [api_driven_cloud]
+    verified_regions: [Tokyo, Singapore, Hong_Kong, multiple_global_regions]
+    offers:
+      - plan: Type_A_8GB_example
+        currency: USD
+        monthly_example: 32
+        vcpu: 2
+        cpu_allocation: non_dedicated_no_guarantee
+        memory_gb: 8
+        local_storage_gb: 50
+        storage_type: nvme
+        monthly_transfer_tb: 5
+    cpu_classes:
+      type_A: non_dedicated_no_guarantee
+      type_B: dedicated_physical_thread_reserved
+      type_D: dedicated_physical_core_reserved
+      type_T: burstable_dedicated_thread
+    network:
+      private_network: true
+      load_balancer_available: true
+      firewall_available: true
+    operations:
+      api: true
+      hourly_billing: true
+      monthly_billing: true
+      live_vertical_scaling: true
+      no_long_term_contract: true
+    availability:
+      stated_uptime_percent: 99.95
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The official 8 GB Type-A example exceeds the 15 USD ceiling and has only 50 GB local storage.
+      kubernetes-worker:
+        status: unknown
+        notes:
+          - REST API, hourly billing, private networking, and broad global locations are promising for self-managed elastic clusters; Terraform/OpenTofu and automated node lifecycle still require profile-specific verification.
+    sources:
+      - https://www.kamatera.com/products/cloud-servers/
+      - https://www.kamatera.com/pricing/
+      - https://www.kamatera.com/faq/answer/which-cpu-types-are-offered-by-kamatera/
+      - https://www.kamatera.com/knowledgebase/api-documentation/
+      - https://www.kamatera.com/cloud-vps/japan-vps-hosting/
+
+  - canonical_name: Scaleway
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes, serverless_container]
+    verified_regions: [Paris, Amsterdam, Warsaw]
+    offers:
+      - plan: DEV1_L
+        currency: EUR
+        approximate_monthly: 31.27
+        hourly: 0.04284
+        vcpu: 4
+        memory_gb: 8
+        bandwidth_mbps: 400
+      - plan: BASIC3_X2C_8G
+        currency: EUR
+        approximate_monthly: 43.23
+        hourly: 0.05923
+        vcpu: 2
+        memory_gb: 8
+        bandwidth_mbps: 350
+      - plan: COMPUTE3_X4C_8G
+        currency: EUR
+        approximate_monthly: 85.41
+        hourly: 0.117
+        vcpu: 4
+        memory_gb: 8
+        cpu_allocation: dedicated_physical_cores
+        bandwidth_mbps: 1000
+    pricing:
+      egress_included_in_instance_price: true
+      public_ipv4_excluded: true
+      storage_excluded_from_list_price: true
+    managed_kubernetes:
+      service: Kapsule
+      shared_control_plane_additional_cost: 0
+      node_pool_autoscaling: true
+      autohealing: true
+      vpc_integration: true
+      terraform_supported: true
+      api_supported: true
+      max_nodes: up_to_500_by_control_plane_tier
+    operations:
+      instance_autoscaling_groups_api: true
+      hourly_instance_billing: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - Current 8 GB European instance tiers exceed the 15 USD generic bargain-compute ceiling; lower-priced DEV1-L also misses the 1 Gbps network floor.
+      managed-kubernetes:
+        status: candidate
+        notes:
+          - Free shared control plane, VPC integration, pool autoscaling, autoheal, API, and Terraform support align strongly with the managed-Kubernetes profile.
+    sources:
+      - https://www.scaleway.com/en/pricing/virtual-instances/
+      - https://www.scaleway.com/en/kubernetes-kapsule/
+      - https://www.scaleway.com/en/docs/kubernetes/faq/
+      - https://www.scaleway.com/en/developers/api/autoscaling
+      - https://www.scaleway.com/en/developers/api/kubernetes
+
+  - canonical_name: Exoscale
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes, managed_database]
+    verified_regions: [Europe]
+    compute_shapes:
+      - {name: Large, memory_gb: 8, vcpu: 4, root_disk_gb: 10}
+      - {name: Extra_Large, memory_gb: 16, vcpu: 4, root_disk_gb: 10}
+    pricing:
+      current_numeric_compute_price: unknown_dynamic_page
+      billed_by_second: true
+    network:
+      private_network: true
+      private_network_fee: 0
+      private_network_bandwidth_limit: none_stated
+      intra_instance_traffic_free: true
+      internal_interzone_traffic_free: true
+    operations:
+      rest_api: true
+      official_terraform_provider: true
+      cli: true
+      cloud_init: true
+      instance_pools: true
+    managed_kubernetes:
+      service: SKS
+      managed_control_plane: true
+      cluster_autoscaler_support: true
+      private_network_nodepools: true
+      terraform_supported: true
+    availability:
+      stated_uptime_percent: 99.95
+      zones: 8
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Current exact numeric compute price could not be captured from the dynamic official price table; budget filtering is therefore intentionally unresolved.
+      managed-kubernetes:
+        status: candidate
+        notes:
+          - Managed control plane, autoscaler support, free Private Networks, API, Terraform, and cloud-init form a strong automation stack.
+    sources:
+      - https://www.exoscale.com/pricing/
+      - https://calculator.exoscale.com/
+      - https://www.exoscale.com/products/
+      - https://calculator.exoscale.com/networking/
+
+  - canonical_name: Cherry_Servers
+    confidence: B
+    resource_classes: [api_driven_cloud, bargain_vps, performance_vds]
+    verified_regions: [Lithuania, Netherlands, United_States, Singapore, Sweden, Germany, Japan]
+    cloud_vps:
+      max_memory_gb: 6
+      max_vcpu: 6
+      included_transfer_tb: 1
+      starting_hourly_usd: 0.018
+      resource_allocation: shared
+    cloud_vds:
+      max_memory_gb: 64
+      max_vcpu: 16
+      max_local_nvme_gb: 400
+      starting_hourly_usd: 0.098
+      resource_allocation: dedicated
+    network:
+      private_subnets: true
+      floating_ips: true
+      ddos_protected_ips: true
+    operations:
+      rest_api: true
+      cli: true
+      rapid_provisioning: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Cloud VPS currently tops out below the reusable profile's 8 GB RAM floor; Cloud VDS can satisfy RAM but exact 8 GB VDS pricing and regional availability require plan-level verification.
+      database-node:
+        status: unknown
+        notes:
+          - Dedicated VDS and NVMe tiers are promising, but exact 16 GB pricing, backup, SLA, and database-profile networking details remain to be verified.
+    sources:
+      - https://www.cherryservers.com/virtual-servers/cloud-vps
+      - https://www.cherryservers.com/virtual-servers
+      - https://www.cherryservers.com/pricing/virtual-servers/s1-2-8gb-3000hdd-shared
+
+  - canonical_name: IONOS
+    confidence: A
+    resource_classes: [api_driven_cloud, managed_kubernetes, managed_database]
+    cloud_cubes_regions: [New_Jersey, Europe]
+    offers:
+      - plan: Basic_Cube_M
+        currency: USD
+        monthly_30_day_cap: 18.72
+        hourly: 0.026
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 240
+      - plan: Memory_Cube_S
+        currency: USD
+        monthly_30_day_cap: 13.68
+        hourly: 0.019
+        vcpu: 2
+        memory_gb: 8
+        local_storage_gb: 120
+      - plan: Memory_Cube_M
+        currency: USD
+        monthly_30_day_cap: 25.20
+        hourly: 0.035
+        vcpu: 4
+        memory_gb: 16
+        local_storage_gb: 240
+    platform:
+      virtualization: vmware
+      storage_backend: ssd_san
+    operations:
+      api: true
+      pay_as_you_go_per_minute: true
+      live_scaling: true
+      load_balancing_included: true
+      no_minimum_contract: true
+    availability:
+      stated_platform_availability_percent: 99.99
+    managed_kubernetes:
+      api: true
+      node_pools: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - Memory Cube S is below the 15 USD budget and exceeds the generic 8 GB RAM / 2 vCPU / 60 GB storage floor.
+          - The generic profile also requires 2 TB transfer and 1 Gbps port; exact Cloud Cubes transfer and network-port terms were not yet verified, so hard-filter status remains unknown.
+      managed-kubernetes:
+        status: unknown
+        notes:
+          - Managed Kubernetes API support is confirmed, but native node-pool autoscaling and reusable-profile network requirements still need verification.
+    sources:
+      - https://www.ionos.com/cloud/cloud-servers
+      - https://docs.ionos.com/cloud/support/general-information/price-list/ionos-cloud-inc
+      - https://docs.ionos.com/cloud/containers/managed-kubernetes/api-how-tos

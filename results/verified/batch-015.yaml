@@ -1,0 +1,384 @@
+schema_version: 1
+verified_at: 2026-08-16
+source_policy: official-only
+notes:
+  - This batch expands low-cost KVM, configurable cloud, and regional VPS coverage.
+  - Shared port speed is recorded as an interface/uplink characteristic, not as guaranteed sustained throughput.
+  - Native-currency pricing is not silently converted to USD inside source verification records.
+  - Exact configurable-resource prices are calculated only when every unit price is explicitly published by the provider.
+
+providers:
+  - canonical_name: InterServer
+    confidence: A
+    resource_classes: [bargain_vps, cloud_compute]
+    verified_regions: [New_York, Dallas, Los_Angeles]
+    offers:
+      - plan: Cloud_Compute_4_Slices
+        currency: USD
+        monthly_base: 12
+        cpu_cores: 2
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: ssd
+        monthly_transfer_tb: 8
+        port_mbps: 10000
+        port_allocation: shared
+        ipv4_included: 1
+        virtualization: kvm
+      - plan: Cloud_Compute_8_Slices
+        currency: USD
+        monthly_base: 24
+        cpu_cores: 4
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: ssd
+        monthly_transfer_tb: 16
+        port_mbps: 10000
+        port_allocation: shared
+        ipv4_included: 1
+        virtualization: kvm
+    contract:
+      billing: month_to_month
+      annual_discount: false
+      cancel_anytime: true
+    network:
+      additional_ipv4_usd_month: 3
+      max_additional_ipv4: 5
+    profile_assessment:
+      standard-compute:
+        status: pass
+        notes:
+          - Cloud Compute 4 Slices explicitly satisfies the reusable profile's monthly price, CPU, RAM, SSD, transfer, port-interface, IPv4, KVM, and monthly-billing hard requirements.
+          - The 10 Gbps port is shared and is not treated as a 10 Gbps sustained-throughput guarantee; benchmark validation should measure effective throughput and contention.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB tier uses SSD rather than the database profile's required NVMe storage type.
+    sources:
+      - https://www.interserver.net/vps/?id=10439
+      - https://www.interserver.net/vps/ubuntu-vps.html
+      - https://www.interserver.net/vps/faq.html
+      - https://www.interserver.net/tips/kb/shared-10-gbps-ports-on-vpss/
+
+  - canonical_name: BuyVM
+    confidence: A
+    resource_classes: [performance_vds, kvm_slice]
+    offers:
+      - plan: High_Volume_8GB
+        currency: USD
+        monthly_base: 30
+        cpu_cores: 2
+        memory_gb: 8
+        local_storage_gb: 160
+        storage_type: ssd
+        transfer: unmetered
+        port_mbps: 1000
+        ipv4_included: 1
+        virtualization: kvm
+      - plan: High_Volume_16GB
+        currency: USD
+        monthly_base: 60
+        cpu_cores: 4
+        memory_gb: 16
+        local_storage_gb: 320
+        storage_type: ssd
+        transfer: unmetered
+        port_mbps: 1000
+        ipv4_included: 1
+        virtualization: kvm
+    operations:
+      free_snapshots_per_location: 5
+      nightly_backup_addon: true
+      backup_addon_percent_of_base_price: 10
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified 8 GB tier costs 30 USD/month, above the 15 USD ceiling.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB tier costs 60 USD/month and uses SSD rather than required NVMe.
+    sources:
+      - https://buyvm.net/kvm-dedicated-server-slices/
+
+  - canonical_name: Clouding_io
+    display_name: Clouding.io
+    confidence: A
+    resource_classes: [configurable_cloud, api_driven_cloud]
+    verified_regions: [Barcelona]
+    pricing_units:
+      ram_eur_per_gb_month: 1.25
+      cpu_eur_per_vcpu_month: 2.50
+      nvme_eur_per_gb_month: 0.10
+    calculated_standard_shape:
+      vcpu: 2
+      memory_gb: 8
+      local_storage_gb: 60
+      storage_type: nvme_triple_replica
+      cpu_ram_storage_eur_month: 21.00
+      monthly_transfer_tb: 4
+    operations:
+      hourly_billing: true
+      rapid_deployment: true
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - A technically sized 2-vCPU/8-GB/60-GB-NVMe configuration calculates to 21 EUR/month from the provider's published unit rates before any unresolved IP/network/TCO normalization.
+          - Exact hypervisor, public port speed, IPv4 charging semantics, and normalized USD TCO remain to be pinned before deriving a strict result.
+    sources:
+      - https://clouding.io/en/
+
+  - canonical_name: mivoCloud
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [New_York, Chisinau, Iasi]
+    offers:
+      - plan: S4
+        currency: EUR
+        monthly_base: 20
+        annualized_monthly_with_annual_prepay: 17
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 120
+        storage_type: ssd
+        monthly_transfer_tb: 4
+        port_mbps: 1000
+        port_allocation: shared
+        ipv4_included: 1
+        virtualization: kvm
+      - plan: S7
+        currency: EUR
+        monthly_base: 35
+        annualized_monthly_with_annual_prepay: 29.75
+        vcpu: 7
+        memory_gb: 14
+        local_storage_gb: 210
+        storage_type: ssd
+        monthly_transfer_tb: 5
+        port_mbps: 1000
+        port_allocation: shared
+        ipv4_included: 1
+        virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - S4 satisfies the technical hard floors except that budget comparison requires normalized USD TCO; ordinary monthly and annual-prepay rates are kept separate.
+      database-node:
+        status: fail
+        notes:
+          - The product line uses SSD rather than the database profile's required NVMe, and the verified 14 GB tier remains below the 16 GB RAM floor.
+    sources:
+      - https://mivocloud.com/ssd-kvm-vps
+
+  - canonical_name: EthernetServers
+    confidence: A
+    resource_classes: [bargain_vps]
+    verified_regions: [Miami, Los_Angeles, New_Jersey, Frankfurt, London]
+    offers:
+      - plan: SSD_VPS_8GB
+        currency: USD
+        monthly_base: 24
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 320
+        storage_type: ssd
+        monthly_transfer_tb: 8
+        port_mbps: 10000
+        ipv4_included: 1
+        ipv6_prefix: /64
+        virtualization: kvm
+        stock_at_verification: unavailable
+      - plan: SSD_VPS_16GB
+        currency: USD
+        monthly_base: 48
+        vcpu: 6
+        memory_gb: 16
+        local_storage_gb: 640
+        storage_type: ssd
+        monthly_transfer_tb: 10
+        port_mbps: 10000
+        ipv4_included: 1
+        ipv6_prefix: /64
+        virtualization: kvm
+        stock_at_verification: unavailable
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified 8 GB tier costs 24 USD/month and was unavailable at verification time.
+      database-node:
+        status: fail
+        notes:
+          - The verified 16 GB tier costs 48 USD/month and uses SSD rather than required NVMe.
+    sources:
+      - https://www.ethernetservers.com/vps-hosting
+
+  - canonical_name: HostNamaste
+    confidence: B
+    resource_classes: [regional_vps]
+    offers:
+      - plan: KVM_8192
+        current_numeric_price: unknown_dynamic_checkout
+        vcpu: 4
+        memory_gb: 8
+        vswap_gb: 8
+        local_storage_gb: 200
+        storage_type: raid10_unspecified_medium
+        monthly_transfer_tb: 8
+        ipv4_included: 1
+        ipv6_included: true
+        virtualization: kvm
+        sla_percent: 99.9
+    verified_regions: [United_States, France, Europe, Canada]
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The checkout verifies the required RAM, CPU, storage capacity, transfer, IPv4 and KVM facts.
+          - Current numeric price, exact SSD/NVMe medium, and public port speed are not exposed in the captured checkout page.
+    sources:
+      - https://www.hostnamaste.com/clients/cart.php?a=add&pid=54
+
+  - canonical_name: HostSailor
+    confidence: A
+    resource_classes: [performance_vps]
+    verified_regions: [Netherlands]
+    offers:
+      - plan: Captain
+        currency: USD
+        monthly_base: 31.99
+        cpu_cores: 8
+        cpu_family: AMD_EPYC_9534
+        memory_gb: 8
+        local_storage_gb: 150
+        storage_type: nvme_raid10
+        monthly_transfer_tb: 8
+        port_mbps: 1000
+        ipv4_included: 1
+        ipv6_prefix: /64
+        virtualization: kvm
+        sla_percent: 99.9
+      - plan: Commodore
+        currency: USD
+        monthly_base: 50.99
+        cpu_cores: 16
+        cpu_family: AMD_EPYC_9534
+        memory_gb: 16
+        local_storage_gb: 200
+        storage_type: nvme_raid10
+        monthly_transfer_tb: 12
+        port_mbps: 1000
+        ipv4_included: 1
+        ipv6_prefix: /64
+        virtualization: kvm
+        sla_percent: 99.9
+    operations:
+      automated_backups_claimed: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The 8 GB Captain plan costs 31.99 USD/month.
+      database-node:
+        status: fail
+        notes:
+          - The 16 GB Commodore plan costs 50.99 USD/month, above the 30 USD database-node ceiling.
+    sources:
+      - https://hostsailor.com/kvm-vps-nvme
+
+  - canonical_name: V_PS
+    display_name: V.PS
+    parent_company: xTom_OU
+    confidence: A
+    resource_classes: [regional_vps, network_focused_vps]
+    verified_regions: [Singapore, Tokyo, Osaka, Hong_Kong, Sydney, Amsterdam, Frankfurt, London, Duesseldorf, Tallinn, San_Jose]
+    platform:
+      virtualization: qemu_kvm
+      hypervisor_management: proxmox_ve
+      ipv4_included: 1
+      ipv6_included: 1
+      sla_percent: 99.9
+    cloud_kvm:
+      starting_monthly_eur: 6.95
+      port_mbps: 1000
+      monthly_transfer_tb: 1
+      exact_8gb_price: unknown
+    storage_kvm:
+      starting_monthly_eur: 6.95
+      port_mbps: 1000
+      starting_monthly_transfer_tb: 5
+      exact_8gb_price: unknown
+    profile_assessment:
+      standard-compute:
+        status: unknown
+        notes:
+          - The standard Cloud KVM family cannot satisfy the 2 TB hard transfer floor because each Cloud VPS is allocated 1 TB.
+          - Storage KVM starts with sufficient transfer, but an exact 8 GB CPU/RAM/storage/price snapshot is not exposed on the captured public page, so provider-wide qualification remains unresolved.
+    sources:
+      - https://v.ps/vps/
+      - https://v.ps/faq/
+
+  - canonical_name: Togglebox
+    confidence: A
+    resource_classes: [api_driven_cloud, configurable_cloud, ha_cloud]
+    verified_regions: [Dallas, Philadelphia]
+    pricing_units:
+      vcpu_usd_month: 3.74
+      ram_usd_per_gb_month: 1.91
+      nvme_usd_per_gb_month: 0.14
+      ipv4_usd_month: 2.30
+    calculated_standard_shape:
+      vcpu: 2
+      memory_gb: 8
+      storage_gb: 60
+      storage_type: nvme_3x_replicated
+      ipv4_count: 1
+      calculated_monthly_usd: 33.46
+      monthly_transfer_tb: 10
+      port_mbps: 1000
+    platform:
+      automatic_host_failover: true
+      sla_percent: 99.9
+    operations:
+      hourly_billing: true
+      monthly_cap_hours: 672
+      no_contract: true
+      included_backup_slots: 1
+      api: true
+      terraform: true
+      mcp: true
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The exact minimum reusable shape calculates to 33.46 USD/month from the provider's published unit rates including required IPv4, above the 15 USD ceiling.
+    sources:
+      - https://www.togglebox.com/cloud-vps/pricing/
+      - https://www.togglebox.com/cloud-vps/
+
+  - canonical_name: Bacloud
+    confidence: A
+    resource_classes: [regional_vps]
+    verified_regions: [Lithuania, Chicago, Coventry, Netherlands]
+    offers:
+      - plan: Linux_KVM_NVMe_4
+        currency: EUR
+        monthly_base: 24
+        min_order_months: 1
+        vcpu: 4
+        memory_gb: 8
+        local_storage_gb: 80
+        storage_type: nvme
+        port_mbps: 500
+        virtualization: kvm
+    profile_assessment:
+      standard-compute:
+        status: fail
+        notes:
+          - The verified 8 GB Linux KVM tier has a 500 Mbps port, below the reusable 1 Gbps hard floor; its 24 EUR/month price is also above the intended bargain class.
+    sources:
+      - https://www.bacloud.com/kvm-vps
+      - https://www.bacloud.com/unmanaged-vps
